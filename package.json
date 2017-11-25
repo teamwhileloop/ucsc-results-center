@@ -1,0 +1,21 @@
+{
+  "name": "ucsc-result-center",
+  "version": "2.0.0",
+  "description": "Unofficial Results Center for University of Colombo School of Computing",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "team whileLOOP",
+  "license": "ISC",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-sass": "^3.1.0",
+    "gulp-uglify": "^3.0.0",
+    "gulp-uglifycss": "^1.0.8",
+    "gulp-util": "^3.0.8",
+    "gulp-watch": "^4.3.11",
+    "run-sequence": "^2.2.0"
+  }
+}
