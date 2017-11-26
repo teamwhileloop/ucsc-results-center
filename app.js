@@ -4,6 +4,7 @@ const port = process.env.PORT || 3000;
 // Imports
 let logger = require('./modules/logger');
 let credentials = require('./modules/credentials');
+let postman = require('./modules/postman');
 
 const express = require('express');
 const path = require('path');
