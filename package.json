@@ -19,5 +19,10 @@
     "gulp-util": "^3.0.8",
     "gulp-watch": "^4.3.11",
     "run-sequence": "^2.2.0"
+  },
+  "dependencies": {
+    "ejs": "^2.5.7",
+    "express": "^4.16.2",
+    "mysql": "^2.15.0"
   }
 }
