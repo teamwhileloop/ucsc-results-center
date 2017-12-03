@@ -1,0 +1,60 @@
+.loading-screen {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-image: url('/public/img/background.svg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-color: $white;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  .logo {
+    height: 40px;
+  }
+
+  .loading-text {
+    font-size: 10px;
+    text-align: center;
+    color: $info-text;
+    max-width: 450px;
+  }
+
+  .loader-container {
+    margin: 20px;
+    height: 4px;
+    width: 300px;
+    background: lighten($whileloop-purple, 45%);
+    border-radius: 10px;
+    position: relative;
+
+    .loader-bouncer {
+      background-color: $whileloop-purple;
+      width: 40px;
+      height: 4px;
+      position: absolute;
+      left: 10px;
+      transform: skewX(45deg);
+      animation: mymove 0.8s infinite ease-in-out alternate;
+    }
+  }
+}
+
+body {
+  padding: 0;
+  margin: 0;
+}
+
+@keyframes mymove {
+  0% {
+    left: 0;
+    width:120px;
+  }
+  100% {
+    left: 180px;
+    width:120px;
+  }
+}

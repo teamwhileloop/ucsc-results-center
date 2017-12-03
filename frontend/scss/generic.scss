@@ -1,0 +1,16 @@
+body{
+  background-image: url('/public/img/background.svg');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.justify-text {
+  text-align: justify !important;
+  text-justify: inter-word !important;
+}
+
+brand-whileloop:before {
+  content: "whileLOOP";
+  color: $whileloop-purple;
+  font-weight: bold;
+}

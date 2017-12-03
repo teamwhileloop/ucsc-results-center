@@ -1,0 +1,59 @@
+.login-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+
+  .stat-corner {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    top: 0;
+    left: 10px;
+    margin: 10px 10px;
+    font-size: 10px;
+    color: #666;
+
+    div.row {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+
+      i {
+        margin: 0 10px;
+      }
+    }
+  }
+
+  div.login-card.card {
+    margin: 20vh 10px !important;
+    width: 600px !important;
+  }
+
+
+  @media only screen and (max-width: 500px) {
+    div.login-card.card {
+      margin: 20vh 10px !important;
+      width: 18rem !important;
+    }
+  }
+
+
+  .card-body {
+    .alert.alert-warning {
+      font-size: 12px;
+    }
+    .card-subtitle {
+      font-size: 10px;
+      margin: -10px 0;
+    }
+    p {
+      font-size: 12px;
+      color: #666;
+    }
+  }
+}

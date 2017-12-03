@@ -63,22 +63,8 @@ gulp.task('javascript-production',function(){
 });
 
 gulp.task('watch',function () {
-    watch('./app/**/*.js',function () {
-        gulp.src('./app/**/*.js')
-            .pipe(concat('application.js'))
-            .pipe(gulp.dest('../public/js'));
-        gutil.log('Scripts reloaded')
-    });
-    watch('./scss/**/*.scss',function () {
-        gulp.src('./scss/**/*.scss')
-            .pipe(sass().on('error', sass.logError))
-            .pipe(gulp.dest('../public/css'));
-        gutil.log('Styles reloaded');
-    });
-    watch('./app/**/*.html',function () {
-        gulp.src('./app/**/*.html')
-            .pipe(gulp.dest('../public/html'));
-        gutil.log('Templates reloaded');
+    watch('./**',function () {
+        runSequence('styles','javascript','templates');
     });
 });
 
