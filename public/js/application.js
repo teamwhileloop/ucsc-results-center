@@ -1,0 +1,1 @@
+function i(i){var t=document.getElementById("facebookSupportBox"),e=document.getElementById("supportIndicator");i?(t.style.visibility="hidden",e.style.visibility="visible"):(t.style.visibility="visible",e.style.visibility="hidden")}

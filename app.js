@@ -35,7 +35,8 @@ http.listen(port, function(){
 });
 
 // Static Files
-app.use('/',express.static(path.join(__dirname, 'public')));
+app.use('/public',express.static(path.join(__dirname, 'public')));
+app.use('/cdn',express.static(path.join(__dirname, 'node_modules')));
 
 // Middlewares
 app.use('/api',function (req,res,next) {

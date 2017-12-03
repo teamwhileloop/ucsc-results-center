@@ -1,0 +1,72 @@
+.facebook-support-chat {
+  visibility: hidden;
+  position: fixed;
+  bottom: 0;
+  margin: 0 10px;
+  box-shadow: 0 0 29px 0 rgba(0, 0, 0, 0.25);
+  z-index: 10000;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  transition: all 0.2s linear;
+
+  .fb-support-header {
+    display: flex;
+    flex-direction: row;
+    background-color: $whileloop-purple;
+    padding: 5px 10px;
+    color: $white;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+
+    span {
+      flex: 1;
+    }
+    i {
+      cursor: pointer;
+      color: #ccc;
+      transition: all 0.2s linear;
+
+      &:hover {
+        color: $white-ccc !important;
+      }
+
+      &:active {
+        color: $bootstrap-color-danger !important;
+      }
+    }
+  }
+}
+
+.help-box {
+  position: fixed;
+  bottom: 0;
+  background-color: $whileloop-purple;
+  margin: 15px;
+  padding: 10px;
+  border-radius: 25px;
+  color: $white;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 0;
+  box-shadow: 0 3px 6px 0 rgba(168, 168, 168, 0.9);
+
+  &:hover .help-label {
+    width: 50px;
+    opacity: 1 !important;
+    font-size: 14px;
+  }
+
+  &:active {
+    background-color: darken($whileloop-purple, 10%);
+  }
+
+  .help-label {
+    text-align: center;
+    width: 0;
+    opacity: 0;
+    transition: all 0.2s linear;
+  }
+}

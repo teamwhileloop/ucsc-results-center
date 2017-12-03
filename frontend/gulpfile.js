@@ -1,13 +1,13 @@
-var gulp = require('gulp');
-var runSequence = require('run-sequence');
-var uglify = require('gulp-uglify');
-var concat = require('gulp-concat');
-var sass = require('gulp-sass');
-var uglifycss = require('gulp-uglifycss');
-var watch = require('gulp-watch');
-var gutil = require('gulp-util');
-var rename = require("gulp-rename");
-var clean = require('gulp-clean');
+let gulp = require('gulp');
+let runSequence = require('run-sequence');
+let uglify = require('gulp-uglify');
+let concat = require('gulp-concat');
+let sass = require('gulp-sass');
+let uglifycss = require('gulp-uglifycss');
+let watch = require('gulp-watch');
+let gutil = require('gulp-util');
+let rename = require("gulp-rename");
+let clean = require('gulp-clean');
 
 gulp.task('default', function() {
     runSequence('styles','javascript','templates')
@@ -22,18 +22,20 @@ gulp.task('clean', function() {
 });
 
 gulp.task('styles',function(){
-    return gulp.src('./scss/**/*.scss')
+    return gulp.src('./scss/styles.scss')
         .pipe(sass().on('error', sass.logError))
+        .pipe(concat('styles.css'))
         .pipe(gulp.dest('../public/css'));
 });
 
 gulp.task('styles-production',function(){
-    return gulp.src('./scss/**/*.scss')
+    return gulp.src('./scss/styles.scss')
         .pipe(sass().on('error', sass.logError))
         .pipe(uglifycss({
             "maxLineLen": 0,
             "uglyComments": true
         }))
+        .pipe(concat('styles.css'))
         .pipe(gulp.dest('../public/css'));
 });
 
@@ -45,7 +47,6 @@ gulp.task('javascript',function(){
 
 gulp.task('templates',function(){
     return gulp.src('./app/**/*.html')
-        .pipe(rename({dirname: ''}))
         .pipe(gulp.dest('../public/html'));
 });
 
