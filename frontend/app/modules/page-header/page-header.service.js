@@ -1,4 +1,4 @@
-app.service('PageHeaderService',function ($rootScope) {
+app.service('ApplicationService',function ($rootScope) {
     return {
         openSidebar: function () {
             $rootScope.$broadcast('sidebar.open')
@@ -17,6 +17,9 @@ app.service('PageHeaderService',function ($rootScope) {
         },
         showNavigationIndicator: function (infoBoxData = {}) {
             $rootScope.$broadcast('navigationIndicator.show',infoBoxData)
+        },
+        pushNotification: function (notificationData = {}) {
+            $rootScope.$broadcast('push-notification',notificationData)
         }
     };
 });
