@@ -36,10 +36,20 @@
 
     <!--Application CSS-->
     <link href="public/css/styles.css" rel="stylesheet">
+
+    <!--Angular Material-->
+    <link rel="stylesheet" href="cdn/angular-material/angular-material.css">
+    <script src="cdn/angular-aria/angular-aria.js"></script>
+    <script src="cdn/angular-animate/angular-animate.js"></script>
+    <script src="cdn/angular-material/angular-material.js"></script>
 </head>
 
 <body ng-app="ucscResultsCenter" ng-cloak>
     <div id="fb-root"></div>
+    <div ng-include="'public/html/modules/page-header/view.html'"
+         class="page-header-main-root"
+         ng-cloak
+         ng-controller="PageHeaderController as CtrlPageHeader"></div>
     <div ng-view id="routeView"></div>
 
     <!--Facebook Support-->

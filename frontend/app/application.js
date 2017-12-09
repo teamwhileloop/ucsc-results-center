@@ -1,1 +1,4 @@
-let app = angular.module('ucscResultsCenter', ['ngRoute']);
+let app = angular.module('ucscResultsCenter', [
+    'ngRoute',
+    'ngMaterial']
+);

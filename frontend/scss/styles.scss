@@ -1,7 +1,14 @@
 @import "variables";
 @import "generic";
+@import "animations";
 
 //Modules
 @import "modules/facebook-support";
 @import "modules/loading-mask";
 @import "modules/login";
+@import "modules/main-page";
+
+@import "modules/page-header";
+@import "modules/sidebar";
+@import "modules/main-search";
+@import "modules/navigation-indicator";

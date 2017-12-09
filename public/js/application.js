@@ -1,4 +1,7 @@
-let app = angular.module('ucscResultsCenter', ['ngRoute']);
+let app = angular.module('ucscResultsCenter', [
+    'ngRoute',
+    'ngMaterial']
+);
 app.config(function($routeProvider) {
     $routeProvider
         .when("/",{
@@ -45,9 +48,85 @@ app.service('LoadingMaskService',function ($rootScope) {
         }
     };
 });
-app.controller('LoginController',function ($scope,LoadingMaskService) {
-    LoadingMaskService.deactivate();
+app.controller('LoginController',function ($scope,LoadingMaskService,PageHeaderService,$timeout) {
+
+    $timeout(function () {
+        LoadingMaskService.deactivate();
+    }, 5000);
+
     this.ss = ()=>{
-        LoadingMaskService.activate();
+        PageHeaderService.displayPageHeader();
+        PageHeaderService.showNavigationIndicator({
+            enabled: true,
+            icon: 'fingerprint',
+            text: 'Authenticating using Facebook'
+        });
     }
+});
+app.controller('PageHeaderController',function ($scope, $timeout, $mdSidenav) {
+
+    $scope.pageHeaderVisibility = false;
+    $scope.navigationIndicatorVisibility = false;
+    $scope.navigationInfoBox = {};
+
+    $scope.toggleSideBar = function() {
+        $mdSidenav("sidebar")
+            .toggle()
+            .then(function() {});
+    };
+
+    $scope.closeSideBar = function () {
+        $mdSidenav('sidebar').close();
+    };
+
+    $scope.$on('sidebar.open', (_event, _args)=> {
+        $mdSidenav('sidebar').open();
+    });
+
+    $scope.$on('sidebar.close', (_event, _args)=> {
+        $mdSidenav('sidebar').close();
+    });
+
+    $scope.$on('pageHeader.hide', (_event, _args)=> {
+        $scope.pageHeaderVisibility = false;
+    });
+
+    $scope.$on('pageHeader.show', (_event, _args)=> {
+        $scope.pageHeaderVisibility = true;
+    });
+
+    $scope.$on('navigationIndicator.show', (_event, args)=> {
+        $scope.navigationInfoBox = Object.assign({
+            icon: 'swap_horiz',
+            enabled: false,
+            text: 'Loading content'
+        },args);
+        $scope.navigationIndicatorVisibility = true;
+    });
+
+    $scope.$on('navigationIndicator.hide', (_event, _args)=> {
+        $scope.navigationIndicatorVisibility = false;
+    });
+});
+app.service('PageHeaderService',function ($rootScope) {
+    return {
+        openSidebar: function () {
+            $rootScope.$broadcast('sidebar.open')
+        },
+        closeSideBar: function () {
+            $rootScope.$broadcast('sidebar.close')
+        },
+        displayPageHeader: function () {
+            $rootScope.$broadcast('pageHeader.show')
+        },
+        hidePageHeader: function () {
+            $rootScope.$broadcast('pageHeader.hide')
+        },
+        hideNavigationIndicator: function () {
+            $rootScope.$broadcast('navigationIndicator.hide')
+        },
+        showNavigationIndicator: function (infoBoxData = {}) {
+            $rootScope.$broadcast('navigationIndicator.show',infoBoxData)
+        }
+    };
 });

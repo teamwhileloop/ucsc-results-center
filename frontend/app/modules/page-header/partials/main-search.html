@@ -1,0 +1,37 @@
+<md-autocomplete id='mainsearch'
+                 ng-disabled="ctrl.isDisabled"
+                 md-no-cache="ctrl.noCache"
+                 md-selected-item="ctrl.selectedItem"
+                 md-search-text-change="ctrl.searchTextChange(ctrl.searchText)"
+                 md-search-text="ctrl.searchText"
+                 md-selected-item-change="ctrl.selectedItemChange(item)"
+                 md-items="item in ctrl.querySearch(ctrl.searchText)"
+                 md-item-text="item.name" md-min-length="0"
+                 placeholder="Pick an Angular repository"
+                 d-menu-class="autocomplete-custom-template">
+    <md-item-template>
+        <div class='autocomplete-main'>
+
+            <div class='autocomplete-panel-a'>
+                <img class='autocomplete-result-image'
+                     src='https://secure.gravatar.com/avatar/c33772e076a3a31c1559140ff3d55192?s=160&d=retro&r=pg'>
+            </div>
+
+            <div class='autocomplete-panel-b'>
+                <div class='autocomplete-panel-b-x'>
+                    {{ item.name }}
+                </div>
+                <div class='autocomplete-panel-b-y'>
+                    14000662 / Current GPA 3.44 / Computer Science <span class="badge badge-pill badge-primary">2nd Year</span>
+                </div>
+            </div>
+
+        </div>
+    </md-item-template>
+
+    <md-not-found>
+        <div class='autocomplete-nomatch'>
+            No states matching "{{ctrl.searchText}}" were found.
+        </div>
+    </md-not-found>
+</md-autocomplete>

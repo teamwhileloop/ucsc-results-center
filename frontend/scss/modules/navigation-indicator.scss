@@ -1,0 +1,29 @@
+.navigation-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .md-container.md-mode-indeterminate {
+    background-color: $bootstrap-color-warning;
+    box-shadow: 0 0 25px 0 rgba(168, 168, 168, 0.9);
+
+    .md-bar {
+      background-color: $bootstrap-color-danger;
+    }
+  }
+  .navigation-text {
+    background-color: $bootstrap-color-warning;
+    padding: 2px 15px 5px 10px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    font-size: 14px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    box-shadow: 0 0 25px 0 rgba(168, 168, 168, 0.9);
+
+    i {
+      margin: 0 5px 0 0;
+    }
+  }
+}

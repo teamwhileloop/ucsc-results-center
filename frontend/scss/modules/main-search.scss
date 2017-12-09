@@ -1,0 +1,16 @@
+#mainsearch {
+  position: relative;
+  top: 12px;
+  left: calc(50vw - 200px);
+  width: 400px;
+}
+
+.mainsearch {
+  position: absolute;
+}
+
+@media only screen and (max-width: 1200px) {
+  #mainsearch {
+    display: none;
+  }
+}
