@@ -54,7 +54,7 @@ gulp.task('javascript-production',function(){
     return gulp.src('./app/**/*.js')
         .pipe(concat('application.js'))
         .pipe(uglify({
-            mangle: {toplevel: true},
+            mangle: false,
             compress: {
                 warnings: false
             }
