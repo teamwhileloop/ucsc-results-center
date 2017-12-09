@@ -1,6 +1,6 @@
 let gulp = require('gulp');
 let runSequence = require('run-sequence');
-let uglify = require('gulp-uglify');
+let uglify = require('gulp-uglify-es').default;
 let concat = require('gulp-concat');
 let sass = require('gulp-sass');
 let uglifycss = require('gulp-uglifycss');
