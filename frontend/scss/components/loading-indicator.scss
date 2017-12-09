@@ -1,0 +1,13 @@
+.loading-indicator-cmp{
+  padding: 30px;
+
+  path{
+    stroke: $bootstrap-color-primary !important;
+  }
+
+  .info-text{
+    margin: 15px;
+    color: #4c4c4c;
+    font-size: 0.8em;
+  }
+}

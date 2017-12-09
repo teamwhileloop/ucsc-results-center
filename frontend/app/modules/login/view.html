@@ -19,7 +19,22 @@
             <div class="alert alert-warning" role="alert">
                 If you are having issues logging in please make sure that your web browser is not blocking the Facebook login popup window. We will collect and store these data upon your login.
             </div>
-            <a href ng-click="ctrlLogin.ss()" class="btn btn-primary">Go somewhere</a>
+            <!--ng-show="ctrlLogin.authStatus === 'not_authorized' || ctrlLogin.authStatus === 'unknown'"-->
+            <div class="fb-login-button"
+                 id="facebookLoginButton"
+                 data-max-rows="3"
+                 data-size="large"
+                 data-button-type="continue_with"
+                 data-auto-logout-link="false"
+                 data-scope="email"
+                 data-use-continue-as="true">
+
+            </div>
+            <loading-indicator loader-id="login.statuschecker"
+                               ng-if="ctrlLogin.authStatus === 'loading'"
+                               loader-text="'Communicating with Facebook'">
+            </loading-indicator>
+            <div class="fb-like" data-href="http://www.facebook.com/whileLOOP" data-layout="standard" data-action="like" data-size="large" data-show-faces="true" data-share="true"></div>
         </div>
     </div>
 </div>

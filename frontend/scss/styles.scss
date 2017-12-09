@@ -7,8 +7,10 @@
 @import "modules/login";
 @import "modules/main-page";
 @import "modules/notification-system";
-
 @import "modules/page-header";
 @import "modules/sidebar";
 @import "modules/main-search";
 @import "modules/navigation-indicator";
+
+//Components
+@import "components/loading-indicator";

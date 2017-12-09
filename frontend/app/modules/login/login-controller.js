@@ -1,16 +1,19 @@
-app.controller('LoginController',function ($scope,LoadingMaskService,ApplicationService,$timeout) {
+app.controller('LoginController',function ($scope,$rootScope,LoadingMaskService,ApplicationService,$timeout,FacebookService) {
+    this.authStatus = 'loading';
 
     $timeout(function () {
         LoadingMaskService.deactivate();
-    }, 1000);
+    }, 10);
+
+    FacebookService.parseXFBML();
+
+    FacebookService.getUserDetails().then((data)=>{
+        console.log(data);
+    });
 
     this.ss = ()=>{
-        ApplicationService.displayPageHeader();
-        ApplicationService.showNavigationIndicator({
-            enabled: true,
-            icon: 'fingerprint',
-            text: 'Authenticating using Facebook'
+        FacebookService.getLoginStatus().then((response) => {
+            console.log(response);
         });
-        ApplicationService.pushNotification({title: 'Hey',text:'Whatsuppp?',template: 'warn'})
     }
 });

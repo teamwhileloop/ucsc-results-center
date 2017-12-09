@@ -30,6 +30,7 @@
     <!--AngularJS-->
     <script src="cdn/angular/angular.min.js" type="text/javascript"></script>
     <script src="cdn/angular-route/angular-route.min.js" type="text/javascript"></script>
+    <script src="cdn/ngstorage/ngStorage.min.js" type="text/javascript"></script>
 
     <!--Highcharts-->
     <script src="cdn/highcharts/highcharts.js" type="text/javascript"></script>
@@ -46,10 +47,19 @@
 
 <body ng-app="ucscResultsCenter" ng-cloak>
     <div id="fb-root"></div>
+
+    <!--Notification System-->
+    <ul class='notification-system'
+        ng-controller="NotificationSystemController as CtrlNotificationSystem"
+        id='notificationSystem'></ul>
+
+    <!--Page Header-->
     <div ng-include="'public/html/modules/page-header/view.html'"
          class="page-header-main-root"
          ng-cloak
          ng-controller="PageHeaderController as CtrlPageHeader"></div>
+
+    <!--Route View-->
     <div ng-view id="routeView"></div>
 
     <!--Facebook Support-->
