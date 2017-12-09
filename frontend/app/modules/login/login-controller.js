@@ -5,7 +5,6 @@ app.controller('LoginController',function ($scope,LoadingMaskService,PageHeaderS
     }, 5000);
 
     this.ss = ()=>{
-        PageHeaderService.displayPageHeader();
         PageHeaderService.showNavigationIndicator({
             enabled: true,
             icon: 'fingerprint',

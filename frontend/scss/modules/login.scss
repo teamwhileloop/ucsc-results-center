@@ -11,7 +11,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: start;
-    top: 0;
+    top: -60px;
     left: 10px;
     margin: 10px 10px;
     font-size: 10px;
@@ -37,7 +37,7 @@
 
   @media only screen and (max-width: 500px) {
     div.login-card.card {
-      margin: 20vh 10px !important;
+      margin: 15vh 10px !important;
       width: 18rem !important;
     }
   }

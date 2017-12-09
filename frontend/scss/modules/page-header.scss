@@ -80,6 +80,13 @@
   }
 }
 
+.page-header-top-content{
+  width: 100%;
+  z-index: 10;
+  position: fixed;
+  top: 0;
+}
+
 @media only screen and (max-width: 600px) {
   .page-header-root-lg {
     .user-data-box {
