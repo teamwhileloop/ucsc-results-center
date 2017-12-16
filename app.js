@@ -15,6 +15,7 @@ const socketIO = require('./index');
 // Setup Logger
 if (!credentials.isDeployed){
     logger.disableDatabaseWrite();
+    logger.enableDatabaseWrite();
 }else {
     logger.enableDatabaseWrite();
 }
@@ -33,6 +34,10 @@ app.engine('html', require('ejs').renderFile);
 http.listen(port, function(){
     logger.log('Server started and listening on PORT ' + port);
 });
+
+// Route Imports and Config
+const user = require('./routes/user');
+app.use('/user', user);
 
 // Static Files
 app.use('/public',express.static(path.join(__dirname, 'public')));

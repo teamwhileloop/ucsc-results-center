@@ -12,4 +12,6 @@ exports.postman = {
     pass: process.env.MAILMAN_PASSWORD
 };
 
+exports.accessToken = process.env.UCSC_RESULTS_CENTER_ACCESSTOKEN;
+
 exports.isDeployed = process.env.DEV_ENV === 'false';

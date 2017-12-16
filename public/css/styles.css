@@ -23,22 +23,6 @@ i.material-icons {
   outline: 0;
   user-select: none; }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    max-height: 0 !important; }
-  to {
-    opacity: 1;
-    max-height: 100em !important; } }
-
-@keyframes fadeOut {
-  from {
-    opacity: 1;
-    max-height: 100em !important; }
-  to {
-    opacity: 0;
-    max-height: 0 !important; } }
-
 .facebook-support-chat {
   visibility: hidden;
   position: fixed;
@@ -155,7 +139,7 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: start;
-    top: 0;
+    top: -60px;
     left: 10px;
     margin: 10px 10px;
     font-size: 10px;
@@ -172,7 +156,7 @@ body {
     width: 600px !important; }
   @media only screen and (max-width: 500px) {
     .login-page div.login-card.card {
-      margin: 20vh 10px !important;
+      margin: 15vh 10px !important;
       width: 18rem !important; } }
   .login-page .card-body .alert.alert-warning {
     font-size: 12px; }
@@ -182,9 +166,119 @@ body {
   .login-page .card-body p {
     font-size: 12px;
     color: #666; }
+  .login-page .card-body .fb-like {
+    width: 100%;
+    margin-top: 15px; }
+  .login-page .card-body .fb-login-button {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center; }
 
 #routeView {
-  padding-top: 0; }
+  padding-top: 60px; }
+
+.notification-system {
+  z-index: 100;
+  width: auto;
+  max-height: 100vh;
+  position: fixed;
+  right: 0;
+  top: 80px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  align-items: flex-end; }
+
+.notification-item-li {
+  display: flex;
+  list-style-type: none;
+  transition: all 0.5s linear; }
+
+.notification-box {
+  display: flex;
+  flex-direction: row;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  min-height: 80px;
+  width: 350px;
+  margin: 0 10px 15px 0;
+  border-radius: 5px;
+  box-shadow: 0 0 15px 0 rgba(168, 168, 168, 0.5);
+  transition: all 0.2s linear; }
+
+.notification-box:hover {
+  box-shadow: 0 0 15px 0 rgba(100, 100, 100, 0.8); }
+
+.notification-box-panel-a {
+  flex: 1;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #ffd700;
+  padding-top: 16px;
+  color: #000; }
+
+.notification-box-panel-b {
+  border-radius: 5px;
+  flex: 10;
+  display: flex;
+  flex-direction: column; }
+
+.notification-box-header {
+  position: relative;
+  padding: 10px 15px 5px 15px;
+  font-weight: bold;
+  display: inline-flex; }
+
+.notification-box-body {
+  color: #333;
+  font-size: 12px;
+  display: inline-flex;
+  padding: 0 15px 0  15px; }
+
+.notification-close {
+  color: #ccc;
+  transition: all 0.2s linear;
+  cursor: pointer;
+  position: absolute;
+  right: 10px;
+  top: 10px; }
+
+.notification-close:hover {
+  color: #f00;
+  text-shadow: 0 0 5px rgba(168, 0, 0, 0.5); }
+
+.dissmisser {
+  animation: notificationOut 0.5s 1;
+  animation-fill-mode: forwards; }
+
+.notification-joiner {
+  animation: notificationIn 0.5s 1;
+  animation-fill-mode: forwards; }
+
+@keyframes notificationOut {
+  0% {
+    opacity: 1; }
+  50% {
+    opacity: 0;
+    max-height: 500px; }
+  100% {
+    opacity: 0;
+    max-height: 0; } }
+
+@keyframes notificationIn {
+  0% {
+    opacity: 0;
+    margin-top: 50px; }
+  100% {
+    opacity: 1;
+    margin-top: 0; } }
+
+.hiddenElements {
+  display: none; }
 
 .page-header-main-root {
   z-index: 999999; }
@@ -239,6 +333,12 @@ body {
           font-size: 12px;
           color: #eee;
           margin-top: -4px; }
+
+.page-header-top-content {
+  width: 100%;
+  z-index: 10;
+  position: fixed;
+  top: 0; }
 
 @media only screen and (max-width: 600px) {
   .page-header-root-lg .user-data-box {
@@ -343,3 +443,28 @@ body {
     box-shadow: 0 0 25px 0 rgba(168, 168, 168, 0.9); }
     .navigation-indicator .navigation-text i {
       margin: 0 5px 0 0; }
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    max-height: 0 !important; }
+  to {
+    opacity: 1;
+    max-height: 100em !important; } }
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    max-height: 100em !important; }
+  to {
+    opacity: 0;
+    max-height: 0 !important; } }
+
+.loading-indicator-cmp {
+  padding: 30px; }
+  .loading-indicator-cmp path {
+    stroke: #007bff !important; }
+  .loading-indicator-cmp .info-text {
+    margin: 15px;
+    color: #4c4c4c;
+    font-size: 0.8em; }

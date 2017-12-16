@@ -43,7 +43,7 @@ app.service('FacebookService',function ($rootScope,$q,$localStorage,$location,$t
             })
         },
         reAuthenticate : function (forceLogin = false) {
-            console.warn('Reauthenticating', forceLogin ? 'with force flag' : '');
+            console.warn('Reauthorizing', forceLogin ? 'with force flag' : '');
             return $q((resolve, _reject) => {
                 FB.getLoginStatus(function(response) {
                     if((response.status !== 'connected' || forceLogin) && response.status !== 'unknown'){

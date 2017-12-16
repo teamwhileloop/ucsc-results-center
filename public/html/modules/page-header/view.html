@@ -1,33 +1,35 @@
-<md-toolbar class="page-header-root-lg" ng-show="pageHeaderVisibility">
-    <div class="page-header-box-left">
-        <div class="logo-banner">UCSC Results Center</div>
-        <div class="powered-by">powered by team
-            <brand-whileloop></brand-whileloop>
+<div class="page-header-top-content">
+    <md-toolbar class="page-header-root-lg" ng-show="pageHeaderVisibility">
+        <div class="page-header-box-left">
+            <div class="logo-banner">UCSC Results Center</div>
+            <div class="powered-by">powered by team
+                <brand-whileloop></brand-whileloop>
+            </div>
         </div>
-    </div>
-    <div class="page-header-box-middle"></div>
-    <div class="page-header-user-root">
-        <img src="https://scontent.xx.fbcdn.net/v/t1.0-1/p50x50/14641968_10211442076876003_4631682448072434066_n.jpg?oh=9a2a378959205ecfddec38ccfc5621cc&oe=5ACF5B06">
-        <div class="user-data-box" id="userdatabox">
-            <div class="user-data-name">Sulochana Kodituwakku</div>
-            <div class="user-data-role">Super Administrator</div>
+        <div class="page-header-box-middle"></div>
+        <div class="page-header-user-root">
+            <img src="https://scontent.xx.fbcdn.net/v/t1.0-1/p50x50/14641968_10211442076876003_4631682448072434066_n.jpg?oh=9a2a378959205ecfddec38ccfc5621cc&oe=5ACF5B06">
+            <div class="user-data-box" id="userdatabox">
+                <div class="user-data-name">Sulochana Kodituwakku</div>
+                <div class="user-data-role">Super Administrator</div>
+            </div>
         </div>
-    </div>
 
-    <div class="page-header-box-right">
-        <div class="md-toolbar-tools">
-            <md-button class="md-icon-button more-button" aria-label="More" ng-click="toggleSideBar()">
-                <md-icon class="material-icons md-light md-48">menu</md-icon>
-            </md-button>
+        <div class="page-header-box-right">
+            <div class="md-toolbar-tools">
+                <md-button class="md-icon-button more-button" aria-label="More" ng-click="toggleSideBar()">
+                    <md-icon class="material-icons md-light md-48">menu</md-icon>
+                </md-button>
+            </div>
         </div>
-    </div>
 
-    <div class='mainsearch' ng-include="'public/html/modules/page-header/partials/main-search.html'"></div>
+        <div class='mainsearch' ng-include="'public/html/modules/page-header/partials/main-search.html'"></div>
 
-</md-toolbar>
-<div class="navigation-indicator"
-     ng-include="'public/html/modules/page-header/partials/navigation-indicator.html'"
-     ng-class="navigationIndicatorVisibility ? 'animation-fade-in' : 'animation-fade-out'"></div>
+    </md-toolbar>
+    <div class="navigation-indicator"
+         ng-include="'public/html/modules/page-header/partials/navigation-indicator.html'"
+         ng-class="navigationIndicatorVisibility ? 'animation-fade-in' : 'animation-fade-out'"></div>
+</div>
 
 <md-sidenav class="md-whiteframe-4dp md-sidenav-right sidebar"
             ng-include="'public/html/modules/page-header/partials/sidebar.html'"
