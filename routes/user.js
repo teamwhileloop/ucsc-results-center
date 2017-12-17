@@ -9,6 +9,7 @@ const postman = require('../modules/postman');
 const mysql = require('../modules/database.js');
 const facebook = require('../modules/facebook');
 let credentials = require('../modules/credentials');
+let permission = require('../modules/permissions');
 
 // Authentication and Verification Middleware
 router.use('/', function (req,res,next) {
@@ -46,17 +47,35 @@ router.use('/', function (req,res,next) {
                     uid: fbUid
                 })),'crit',true);
                 res.status(500).send({
-                    error: error
+                    systemError: {
+                        type: 'database',
+                        message: 'Internal server error while executing database query',
+                        error: error
+                    }
                 });
             }else {
                 req.facebookVerification = _.assignIn(validationReport,payload[0]);
-                next()
+                let permissionDetails = permission(req.originalUrl,payload[0].power);
+                console.log(permissionDetails);
+                if (!permissionDetails.status){
+                    res.status(401).send({
+                        error: {
+                            systemError: {
+                                type: 'permission',
+                                message: 'Required permissions unmet',
+                                error: permissionDetails
+                            }
+                        }
+                    });
+                }else{
+                    next()
+                }
             }
         });
     })
     .catch(errorReport=>{
         res.status(401).send({
-            error: errorReport
+            facebookError: errorReport
         });
 
     });
