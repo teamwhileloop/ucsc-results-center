@@ -25,7 +25,7 @@ exports.setStatusCodeLength = function (codeLength) {
     statusCodeLength = codeLength;
 };
 
-exports.log = function (message,statusCode = defaultStatusCodeKey,writeToDatabase = false) {
+exports.log = function (message,statusCode = defaultStatusCodeKey,writeToDatabase = false, databaseEntry = null) {
     // TIME DATA PREPARATIONS
     let now = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Colombo' }));
     let date = now.getFullYear() + '/' + ('0' + now.getMonth()).substr(-2,2) + '/' + ('0' + now.getDate()).substr(-2,2);
@@ -44,7 +44,7 @@ exports.log = function (message,statusCode = defaultStatusCodeKey,writeToDatabas
     // WRITE TO DATABASE
     if(databaseWrite && writeToDatabase){
         database.query('INSERT INTO `log` VALUES(?,?,?,?)',
-            [date,time,statusCode,message],
+            [date,time,statusCode,databaseEntry || message],
             function (err,payload) {
                 if(err){
                     exports.log('Unable insert log entry to the database : ' + message,'crit',false);
