@@ -20,8 +20,7 @@ app.controller('LoginController',function (
         }else if(data.name){
             ProfileService.validateUser()
                 .then((data)=>{
-                    ApplicationService.setLoadingIndicatorStatus('login.statuschecker',`Logging you in as ${data.name}`);
-                    $location.path('/sample');
+                    this.redirectUpOnLogin(data.data);
                 })
                 .catch((error)=>{
                     this.authStatus = 'unknown';
@@ -35,18 +34,36 @@ app.controller('LoginController',function (
         FacebookService.reAuthenticate(false).then(() => {
             ProfileService.validateUser()
                 .then((data)=>{
-                    ApplicationService.setLoadingIndicatorStatus('login.statuschecker',`Logging you in as ${data.name}`);
-                    $location.path('/sample');
+                    this.redirectUpOnLogin(data.data);
                 })
                 .catch((error)=>{
                     this.authStatus = 'unknown';
+                    console.error(error);
                     ApplicationService.pushNotification({
                         title: 'Unable to log you in',
-                        text : 'For some reasons we could not log you in. Please contact administrator for further assistance.',
+                        text : 'For some reasons we could not log you in. Please contact administrator for further assistance. Perform a Hard Refresh and try again.',
                         template : 'error',
                         autoDismiss : false
                     })
                 })
         });
+    };
+
+    this.redirectUpOnLogin = (data)=>{
+        ApplicationService.setLoadingIndicatorStatus('login.statuschecker',`Logging you in as ${data.name}`);
+        $location.path('/sample');
+        switch (data.state){
+            case 'verified':
+                break;
+            case 'guest':
+                break;
+            case 'pending':
+                break;
+            case 'blocked':
+                break;
+            default:
+                break;
+        }
+
     }
 });

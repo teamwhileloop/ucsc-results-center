@@ -1,5 +1,6 @@
 app.service('FacebookService',function ($rootScope,$q,$localStorage,$location,$timeout,$interval) {
     let serviceReady = undefined;
+    let serviceInitialized = false;
 
     function getAccessTokenFromLocalStroage() {
         if ($localStorage.facebookAuth && $localStorage.facebookAuth.authResponse && $localStorage.facebookAuth.authResponse !== null){
@@ -77,7 +78,8 @@ app.service('FacebookService',function ($rootScope,$q,$localStorage,$location,$t
                         access_token : getAccessTokenFromLocalStroage()
                     }, (response)=> {
                         serviceReady = !response.error;
-                        resolve(222);
+                        resolve(true);
+                        serviceInitialized = true;
                     });
                 }else{
                     console.log('No previous login data found');
@@ -88,6 +90,7 @@ app.service('FacebookService',function ($rootScope,$q,$localStorage,$location,$t
                         }else{
                             serviceReady = false;
                         }
+                        serviceInitialized = true;
                         resolve(true);
                     });
                 }
@@ -108,6 +111,9 @@ app.service('FacebookService',function ($rootScope,$q,$localStorage,$location,$t
         },
         serviceReady : function () {
             return serviceReady;
+        },
+        isServiceInitialized : function () {
+            return serviceInitialized;
         }
     }
 });
