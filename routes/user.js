@@ -54,6 +54,13 @@ router.use('/', function (req,res,next) {
                     }
                 });
             }else {
+                if (payload.length === 0 ){
+                    payload.push({
+                        power: 0,
+                        indexNumber : null,
+                        state : 'guest'
+                    });
+                }
                 req.facebookVerification = _.assignIn(validationReport,payload[0]);
                 let permissionDetails = permission(req.originalUrl,payload[0].power);
                 if (!permissionDetails.status){
@@ -81,9 +88,41 @@ router.use('/', function (req,res,next) {
 });
 
 router.get('/validate', function (req, res) {
-    res.send({
-        _faceboook:req.facebookVerification
+    let query = 'INSERT INTO `results`.`facebook` (`id`, `name`, `fname`, `lname`, `gender`, `link`, `short_name`, `picture`, `cover`, `index_number`,`state`,`lastvisit`,`email`)' +
+        ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ' +
+        'ON DUPLICATE KEY UPDATE ' +
+        '`lastvisit` = VALUES(lastvisit),' +
+        '`name` = VALUES(name),' +
+        '`fname` = VALUES(fname),' +
+        '`lname` = VALUES(lname),' +
+        '`link` = VALUES(link),' +
+        '`short_name` = VALUES(short_name),' +
+        '`picture` = VALUES(picture),' +
+        '`cover` = VALUES(cover),' +
+        '`email` = VALUES(email);';
+    mysql.query(query,[
+        req.facebookVerification.id,
+        req.facebookVerification.name,
+        req.facebookVerification.first_name,
+        req.facebookVerification.last_name,
+        req.facebookVerification.gender,
+        req.facebookVerification.link,
+        req.facebookVerification.short_name,
+        req.facebookVerification.picture.data.url,
+        req.facebookVerification.cover ? req.facebookVerification.cover.source : '',
+        req.facebookVerification.indexNumber,
+        req.facebookVerification.state,
+        new Date().toLocaleString('en-US', { timeZone: 'Asia/Colombo' }),
+        req.facebookVerification.email
+    ],function (error, _payload) {
+        if (error){
+            logger.log(error.sqlMessage,'crit',true, JSON.stringify(_.assignIn(error,{
+                meta: req.facebookVerification,
+                env: req.headers.host
+            })));
+        }
     });
+    res.send(req.facebookVerification);
 });
 
 module.exports = router;
