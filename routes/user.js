@@ -56,7 +56,6 @@ router.use('/', function (req,res,next) {
             }else {
                 req.facebookVerification = _.assignIn(validationReport,payload[0]);
                 let permissionDetails = permission(req.originalUrl,payload[0].power);
-                console.log(permissionDetails);
                 if (!permissionDetails.status){
                     res.status(401).send({
                         error: {
