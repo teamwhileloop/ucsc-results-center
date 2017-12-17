@@ -71,16 +71,16 @@ app.service('FacebookService',function ($rootScope,$q,$localStorage,$location,$t
         initializeService : function () {
             return $q((resolve,_reject)=>{
                 if ($localStorage.facebookAuth){
-                    console.log('lc');
+                    console.log('Using previous login data');
                     FB.api('/me', {
                         fields: 'email,first_name,last_name,gender,link,short_name,picture{url},cover,name',
                         access_token : getAccessTokenFromLocalStroage()
                     }, (response)=> {
                         serviceReady = !response.error;
-                        resolve(true);
+                        resolve(222);
                     });
                 }else{
-                    console.log('no lc');
+                    console.log('No previous login data found');
                     FB.getLoginStatus((response)=>{
                         if (response.status === 'connected'){
                             $localStorage.facebookAuth = response;
@@ -93,6 +93,21 @@ app.service('FacebookService',function ($rootScope,$q,$localStorage,$location,$t
                 }
             })
         },
-        serviceReady : serviceReady
+        getHttpRequestHeaders: function () {
+            if (this.serviceReady){
+                return {
+                    fbUid: $localStorage.facebookAuth.authResponse.userID,
+                    fbToken: $localStorage.facebookAuth.authResponse.accessToken,
+                }
+            }else{
+                return {
+                    fbUid: '',
+                    fbToken: ''
+                }
+            }
+        },
+        serviceReady : function () {
+            return serviceReady;
+        }
     }
 });

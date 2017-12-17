@@ -12,20 +12,19 @@ app.config(function($routeProvider) {
             }
         })
         .when("/sample",{
-            controller: function (LoadingMaskService) {
-              console.log('sddddddd');
-              LoadingMaskService.deactivate();
-            },
-            templateUrl:'public/html/components/view.html',
+            controller: 'SampleController',
+            templateUrl:'public/html/modules/sample/view.html',
             resolve : {
-                init : function (FacebookService,$location) {
-                    if(!FacebookService.serviceReady){
-                        $location.path('/');
-                    }else{
-                        FacebookService.getUserDetails().then((data)=>{
-                            console.log(data);
-                        });
-                    }
+                init : function (FacebookService,$location,ProfileService) {
+                    FacebookService.initializeService().then(()=>{
+                        if(!FacebookService.serviceReady()){
+                            $location.path('/');
+                        }else{
+                            ProfileService.validateUser().then((data)=>{
+                                console.log(data);
+                            })
+                        }
+                    });
                 }
             }
         })

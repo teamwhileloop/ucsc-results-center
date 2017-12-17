@@ -1,12 +1,11 @@
 let applicationID = window.location.host === 'localhost:3000' ? '1917234511877082' : '324582471336592';
-window.fbAsyncInit = function() {
-    FB.init({
-        appId      : applicationID,
-        cookie     : true,
-        xfbml      : false,
-        version    : 'v2.8'
-    });
-};
+FB.init({
+    appId      : applicationID,
+    cookie     : true,
+    xfbml      : false,
+    version    : 'v2.8'
+});
+
 // Load the SDK asynchronously
 (function(d, s, id) {
     let js, fjs = d.getElementsByTagName(s)[0];

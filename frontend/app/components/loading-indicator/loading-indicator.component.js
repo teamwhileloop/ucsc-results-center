@@ -1,5 +1,5 @@
 app.component('loadingIndicator', {
-    templateUrl: 'public/html/components/view.html',
+    templateUrl: 'public/html/components/loading-indicator/view.html',
     bindings: {
         loaderId: '@',
         loaderText: '<',

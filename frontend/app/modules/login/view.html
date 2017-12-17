@@ -16,17 +16,18 @@
             <h4 class="card-title">UCSC Results Center</h4>
             <h6 class="card-subtitle mb-2 text-muted">Powered by Team <brand-whileloop></h6>
             <p class="card-text justify-text">Welcome to UCSC Results Center powered by team whileLOOP. Please note that this system is neither affiliated with the Examination Branch of University of Colombo School of Computing nor the University of Colombo School of Computing itself.</p>
-            <div class="alert alert-warning" role="alert">
+            <div class="alert alert-warning" role="alert" ng-if="ctrlLogin.authStatus !== 'loading'">
                 If you are having issues logging in please make sure that your web browser is not blocking the Facebook login popup window. We will collect and store these data upon your login.
             </div>
-            <!--ng-show="ctrlLogin.authStatus === 'not_authorized' || ctrlLogin.authStatus === 'unknown'"-->
             <div class="fb-login-button"
+                 ng-show="ctrlLogin.authStatus === 'not_authorized' || ctrlLogin.authStatus === 'unknown'"
                  id="facebookLoginButton"
                  data-max-rows="3"
                  data-size="large"
                  data-button-type="continue_with"
                  data-auto-logout-link="false"
                  data-scope="email"
+                 onlogin="angular.element(document.getElementById('routeView')).scope().ctrlLogin.userLoggedIn();"
                  data-use-continue-as="true">
 
             </div>

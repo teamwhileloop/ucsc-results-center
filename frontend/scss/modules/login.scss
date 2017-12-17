@@ -30,14 +30,13 @@
   }
 
   div.login-card.card {
-    margin: 20vh 10px !important;
     width: 600px !important;
   }
 
 
   @media only screen and (max-width: 500px) {
     div.login-card.card {
-      margin: 15vh 10px !important;
+      margin: 15vh 10px 0 10px !important;
       width: 18rem !important;
     }
   }

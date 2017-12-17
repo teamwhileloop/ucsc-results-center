@@ -1,19 +1,52 @@
-app.controller('LoginController',function ($scope,$rootScope,LoadingMaskService,ApplicationService,$timeout,FacebookService) {
+app.controller('LoginController',function (
+    $scope,
+    $rootScope,
+    LoadingMaskService,
+    ApplicationService,
+    $timeout,
+    FacebookService,
+    ProfileService,
+    $location
+) {
     this.authStatus = 'loading';
 
-    $timeout(function () {
-        LoadingMaskService.deactivate();
-    }, 10);
+    LoadingMaskService.deactivate();
 
     FacebookService.parseXFBML();
 
     FacebookService.getUserDetails().then((data)=>{
-        console.log(data);
+        if(data.error){
+            this.authStatus = 'unknown';
+        }else if(data.name){
+            ProfileService.validateUser()
+                .then((data)=>{
+                    ApplicationService.setLoadingIndicatorStatus('login.statuschecker',`Logging you in as ${data.name}`);
+                    $location.path('/sample');
+                })
+                .catch((error)=>{
+                    this.authStatus = 'unknown';
+                })
+        }else{
+            this.authStatus = 'unknown';
+        }
     });
 
-    this.ss = ()=>{
-        FacebookService.getLoginStatus().then((response) => {
-            console.log(response);
+    this.userLoggedIn = ()=>{
+        FacebookService.reAuthenticate(false).then(() => {
+            ProfileService.validateUser()
+                .then((data)=>{
+                    ApplicationService.setLoadingIndicatorStatus('login.statuschecker',`Logging you in as ${data.name}`);
+                    $location.path('/sample');
+                })
+                .catch((error)=>{
+                    this.authStatus = 'unknown';
+                    ApplicationService.pushNotification({
+                        title: 'Unable to log you in',
+                        text : 'For some reasons we could not log you in. Please contact administrator for further assistance.',
+                        template : 'error',
+                        autoDismiss : false
+                    })
+                })
         });
     }
 });
