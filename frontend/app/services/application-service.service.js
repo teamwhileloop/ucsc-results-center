@@ -6,8 +6,8 @@ app.service('ApplicationService',function ($rootScope) {
         closeSideBar: function () {
             $rootScope.$broadcast('sidebar.close');
         },
-        displayPageHeader: function () {
-            $rootScope.$broadcast('pageHeader.show');
+        displayPageHeader: function (options = {}) {
+            $rootScope.$broadcast('pageHeader.show',options);
         },
         hidePageHeader: function () {
             $rootScope.$broadcast('pageHeader.hide');

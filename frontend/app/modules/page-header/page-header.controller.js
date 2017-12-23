@@ -3,6 +3,7 @@ app.controller('PageHeaderController',function ($scope, $timeout, $mdSidenav) {
     $scope.pageHeaderVisibility = false;
     $scope.navigationIndicatorVisibility = false;
     $scope.navigationInfoBox = {};
+    $scope.mainSearchEnabled = false;
 
     $scope.toggleSideBar = function() {
         $mdSidenav("sidebar")
@@ -26,8 +27,9 @@ app.controller('PageHeaderController',function ($scope, $timeout, $mdSidenav) {
         $scope.pageHeaderVisibility = false;
     });
 
-    $scope.$on('pageHeader.show', (_event, _args)=> {
+    $scope.$on('pageHeader.show', (_event, args)=> {
         $scope.pageHeaderVisibility = true;
+        $scope.mainSearchEnabled = !!args['search'];
     });
 
     $scope.$on('navigationIndicator.show', (_event, args)=> {
