@@ -48,6 +48,23 @@ app.controller('RegistrationController',function (
         $scope.step = step;
     };
 
+    this.ranker = (number) => {
+        switch (number){
+            case 1:
+                return number + "st";
+            case 2:
+                return number + "nd";
+            case 3:
+                return number + "rd";
+            default:
+                return number + "th";
+        }
+    };
+
+    this.getBatchLabel = function (indexNumber = 0) {
+        return `${this.ranker(parseInt($scope.loggedInUser.indexNumber.toString().substring(0,2)) - 2)} Batch`
+    };
+
     this.checkIndexNumberValidity = function (indexNumber = 0) {
         this.requestedIndexNumber = indexNumber;
         if (/^[0-9]{2}0[02]{1}[0-9]{4}$/.test(indexNumber)){
@@ -94,6 +111,8 @@ app.controller('RegistrationController',function (
         .then((_response)=>{
             $scope.step = 4;
             $scope.loggedInUser.state = 'pending';
+            $scope.loggedInUser.indexNumber = request['indexNumber'];
+            $scope.loggedInUser.alternate_email = request['email'];
         })
         .catch((error)=>{
             ApplicationService.pushNotification({

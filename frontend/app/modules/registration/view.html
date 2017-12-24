@@ -11,18 +11,10 @@
                  ng-include="'public/html/modules/registration/partials/step-3.html'"></div>
             <div ng-class="{'active' : step === 3}"
                  ng-include="'public/html/modules/registration/partials/step-4.html'"></div>
-            <div ng-class="{'active' : step === 4}">
-                <div class="title">Request Submitted</div>
-                <p class="text">
-                    Your request has being submitted for review. You will recieve an email to sulochana.456@live.com once the request is reviewed by an administrator.
-                </p>
-            </div>
-            <div ng-class="{'active' : step === 5}">
-                <div class="title">Request Rejected</div>
-                <p class="text">
-                    Your request has being rejected by an administrator. Contact team whileLOOP for more information on this.
-                </p>
-            </div>
+            <div ng-class="{'active' : step === 4}"
+                 ng-include="'public/html/modules/registration/partials/state-pending.html'"></div>
+            <div ng-class="{'active' : step === 5}"
+                 ng-include="'public/html/modules/registration/partials/state-blocked.html'"></div>
         </div>
     </div>
 </div>

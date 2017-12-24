@@ -1,0 +1,35 @@
+<div class="title">Request Rejected</div>
+<p class="text">
+    Your request has being rejected by an administrator. Contact team whileLOOP for more information on this.
+</p>
+<table>
+    <tr>
+        <td>Name</td>
+        <td>{{ loggedInUser.name }}</td>
+    </tr>
+    <tr>
+        <td>Email {{ alternateEmailInput }}</td>
+        <td>{{ loggedInUser.alternate_email || loggedInUser.email || 'No email entered' }}</td>
+    </tr>
+    <tr>
+        <td>Index Number</td>
+        <td>{{ loggedInUser.indexNumber }}</td>
+    </tr>
+    <tr>
+        <td>Batch</td>
+        <td>{{ ctrlReg.getBatchLabel(loggedInUser.indexNumber) }}</td>
+    </tr>
+    <tr>
+        <td>Course</td>
+        <td>{{ loggedInUser.indexNumber.substring(2,4) === '02' ? 'Information Systems' : 'Computer Science' }}</td>
+    </tr>
+    <tr ng-hide="1">
+        <td>Batch Rep Admins</td>
+        <td>
+            <a href>Sulochana Kodituwakku</a>
+            <a href>Sulochana Kodituwakku</a>
+            <a href>Sulochana Kodituwakku</a>
+            <a href>Sulochana Kodituwakku</a>
+        </td>
+    </tr>
+</table>
