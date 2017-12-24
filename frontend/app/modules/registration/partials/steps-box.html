@@ -1,0 +1,20 @@
+<div class="step-box" ng-class="{'completed' : step > 0, 'active' : step === 0}">
+    <div class="step-name">Welcome</div>
+    <div class="step-desc">Introduction to the system</div>
+</div>
+<div class="step-box" ng-class="{'completed' : step > 1, 'active' : step === 1}">
+    <div class="step-name">Index Number</div>
+    <div class="step-desc">Claiming and accoount</div>
+</div>
+<div class="step-box" ng-class="{'completed' : step > 2, 'active' : step === 2}">
+    <div class="step-name">Email Address</div>
+    <div class="step-desc">Get notifications and announcements</div>
+</div>
+<div class="step-box" ng-class="{'completed' : step > 3, 'active' : step === 3}">
+    <div class="step-name">Submission</div>
+    <div class="step-desc">Submit claim request</div>
+</div>
+<div class="step-box" ng-class="{'blocked' : step === 5,'pending' : step === 4}">
+    <div class="step-name">Review</div>
+    <div class="step-desc">Claim request review status</div>
+</div>

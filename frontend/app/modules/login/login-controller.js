@@ -8,6 +8,7 @@ app.controller('LoginController',function (
     ProfileService,
     $location
 ) {
+    console.log('Login controller loaded');
     this.authStatus = 'loading';
 
     LoadingMaskService.deactivate();
@@ -51,17 +52,20 @@ app.controller('LoginController',function (
 
     this.redirectUpOnLogin = (data)=>{
         ApplicationService.setLoadingIndicatorStatus('login.statuschecker',`Logging you in as ${data.name}`);
-        $location.path('/sample');
         switch (data.state){
             case 'verified':
                 break;
             case 'guest':
+                $location.path('/registration');
                 break;
             case 'pending':
+                $location.path('/registration');
                 break;
             case 'blocked':
+                $location.path('/registration');
                 break;
             default:
+                console.error('Unknown user state');
                 break;
         }
 

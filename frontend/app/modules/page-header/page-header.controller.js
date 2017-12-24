@@ -4,11 +4,22 @@ app.controller('PageHeaderController',function ($scope, $timeout, $mdSidenav) {
     $scope.navigationIndicatorVisibility = false;
     $scope.navigationInfoBox = {};
     $scope.mainSearchEnabled = false;
+    $scope.userDetails = false;
 
     $scope.toggleSideBar = function() {
         $mdSidenav("sidebar")
             .toggle()
             .then(function() {});
+    };
+
+    $scope.getRankName = function (power = 0) {
+        if (power === 0){
+            return 'Guest User';
+        }if (power === 10){
+            return 'Verified Member';
+        }if (power === 100){
+            return 'System Administrator';
+        }
     };
 
     $scope.closeSideBar = function () {
@@ -17,6 +28,10 @@ app.controller('PageHeaderController',function ($scope, $timeout, $mdSidenav) {
 
     $scope.$on('sidebar.open', (_event, _args)=> {
         $mdSidenav('sidebar').open();
+    });
+
+    $scope.$on('pageHeader.user.update', (_event, args)=> {
+        $scope.userDetails = args;
     });
 
     $scope.$on('sidebar.close', (_event, _args)=> {

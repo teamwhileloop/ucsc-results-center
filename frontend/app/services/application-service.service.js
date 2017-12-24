@@ -9,6 +9,9 @@ app.service('ApplicationService',function ($rootScope) {
         displayPageHeader: function (options = {}) {
             $rootScope.$broadcast('pageHeader.show',options);
         },
+        updatePageHeader: function (options = {}) {
+            $rootScope.$broadcast('pageHeader.user.update',options);
+        },
         hidePageHeader: function () {
             $rootScope.$broadcast('pageHeader.hide');
         },

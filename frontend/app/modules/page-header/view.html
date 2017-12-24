@@ -8,10 +8,10 @@
         </div>
         <div class="page-header-box-middle"></div>
         <div class="page-header-user-root">
-            <img src="https://scontent.xx.fbcdn.net/v/t1.0-1/p50x50/14641968_10211442076876003_4631682448072434066_n.jpg?oh=9a2a378959205ecfddec38ccfc5621cc&oe=5ACF5B06">
+            <img src="{{ userDetails.picture.data.url }}">
             <div class="user-data-box" id="userdatabox">
-                <div class="user-data-name">Sulochana Kodituwakku</div>
-                <div class="user-data-role">Super Administrator</div>
+                <div class="user-data-name">{{ userDetails.name || 'Unknown User' }}</div>
+                <div class="user-data-role">{{ getRankName(userDetails.power) }}</div>
             </div>
         </div>
 

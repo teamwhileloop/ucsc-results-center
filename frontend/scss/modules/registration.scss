@@ -1,0 +1,203 @@
+.registration-container{
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .registration-box{
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
+    width: 650px;
+    margin: 25px;
+    background-color: $white;
+
+    .steps-root{
+      display: flex;
+      flex-direction: row;
+      padding: 10px 10px;
+
+      .step-box{
+        margin: 5px;
+        padding: 4px 8px;
+        border: 1px solid $white-ccc;
+        border-radius: 2px;
+        background-color: #e2e2e2;
+        transition: all 0.2s linear;
+        max-width: 120px;
+
+        &.blocked{
+          background-color: $bootstrap-color-danger;
+          border-color: $bootstrap-color-danger;
+
+          .step-name{
+            color: $white;
+          }
+
+          .step-desc{
+            color: $white-eee;
+          }
+        }
+
+        &.pending{
+          background-color: $bootstrap-color-warning;
+          border-color: $bootstrap-color-warning;
+
+          .step-name{
+            color: $black;
+          }
+
+          .step-desc{
+            color: #666;
+          }
+        }
+
+        &.completed{
+          background-color: $bootstrap-color-success;
+          border-color: $bootstrap-color-success;
+
+          .step-name{
+            color: $white;
+          }
+
+          .step-desc{
+            color: $white-eee;
+          }
+        }
+
+        &.active{
+          background-color: $bootstrap-color-primary;
+          border-color: $bootstrap-color-primary;
+
+          .step-name{
+            color: $white;
+          }
+
+          .step-desc{
+            color: $white-eee;
+          }
+        }
+
+        .step-name{
+          font-weight: bold;
+          font-size: 0.8em;
+          color: #333;
+        }
+
+        .step-desc{
+          color: #7c7c7c;
+          font-size: 0.6em;
+          line-height: 1.2em;
+        }
+      }
+    }
+
+    .content{
+      margin: 5px 20px 20px 20px;
+
+      & > div{
+        display: none;
+      }
+
+      & > div.active{
+        display: block;
+      }
+
+      .title{
+        font-size: 1.4em;
+      }
+
+      .text{
+        font-size: 0.8em;
+        margin: 5px 0;
+        text-align: justify;
+      }
+
+      .action-buttons{
+        margin: 20px 0;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+
+        button{
+          margin: 0 0 0 5px;
+        }
+      }
+
+      .input-group.index-number{
+        margin: 20px 0;
+
+        input{
+          padding: 15px;
+          height: 60px;
+
+          &:valid{
+            font-size: 2em;
+          }
+        }
+
+        span{
+          width: 220px;
+          margin: 18px 0 0 -220px;
+          padding: 0 20px;
+          font-weight: bold;
+          font-size: 16px;
+          justify-content: flex-end;
+          z-index: 100;
+          display: flex;
+          flex-direction: row;
+
+          i{
+            margin: 0 5px;
+          }
+
+          &.available{
+            color: $bootstrap-color-success;
+          }
+
+          &.not-found{
+            color: $bootstrap-color-danger;
+          }
+
+          &.conflict{
+            color: $bootstrap-color-warning;
+          }
+
+          &.checking{
+            color: $bootstrap-color-info;
+          }
+        }
+      }
+
+      .input-group{
+        span{
+          input{
+            margin: 0 12px 0 0;
+          }
+        }
+      }
+
+      .alert{
+        margin: 20px 0;
+      }
+
+      table{
+        margin: 0 20px;
+        font-size: 0.8em;
+        tr{
+          td:nth-child(1){
+            font-weight: bold;
+            color: #999;
+            width: 160px;
+          }
+
+          td{
+            vertical-align: top;
+            a{
+              display: block;
+            }
+          }
+        }
+      }
+
+    }
+  }
+}

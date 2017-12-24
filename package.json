@@ -27,6 +27,7 @@
     "angular-aria": "^1.6.7",
     "angular-material": "^1.1.5",
     "angular-route": "^1.6.7",
+    "body-parser": "^1.18.2",
     "bootstrap": "^4.0.0-beta.2",
     "ejs": "^2.5.7",
     "express": "^4.16.2",

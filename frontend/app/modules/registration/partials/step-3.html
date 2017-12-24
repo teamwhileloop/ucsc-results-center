@@ -1,0 +1,26 @@
+<div class="title">Email Address</div>
+<p class="text" ng-if="!loggedInUser.email">
+    We were unable to retrieve your email address through Facebook. If you wish to recieve an email when an administrator reviewed your request please provide an email address.
+</p>
+<p class="text" ng-if="loggedInUser.email">
+    Once an administrator reviewed your request you will recieve an email with the review response to <b>{{ loggedInUser.email }}</b> address. If you no longer have access to this email you can use an alternative email.
+</p>
+<br>
+<div class="input-group">
+    <span class="input-group-addon">
+      <input type="checkbox" ng-model="useAlternateEmail"> Use this Email
+    </span>
+    <input type="text"
+           class="form-control"
+           ng-model="alternateEmailInput"
+           ng-change="ctrlReg.checkEmailValidity(alternateEmailInput)">
+</div>
+<div class="alert alert-danger"
+     role="alert"
+     ng-if="useAlternateEmail && invalidUserEmail">
+    Email address seems to be invalid
+</div>
+<div class="action-buttons">
+    <button ng-click="goBack()" type="button" class="btn btn-light btn-sm">Back</button>
+    <button ng-click="goToStep(3)" type="button" class="btn btn-primary btn-sm">Continue</button>
+</div>

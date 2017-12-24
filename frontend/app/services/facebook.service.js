@@ -70,6 +70,7 @@ app.service('FacebookService',function ($rootScope,$q,$localStorage,$location,$t
             })
         },
         initializeService : function () {
+            console.log('Initializing Facebook Service');
             return $q((resolve,_reject)=>{
                 if ($localStorage.facebookAuth){
                     console.log('Using previous login data');
