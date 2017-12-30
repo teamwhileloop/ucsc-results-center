@@ -1,12 +1,26 @@
-/**
- * Base power will be used if endpoint power was not found
- *
- * Example :    /user          <- Base power
- *              /user/info     <- Endpoint power
- * */
+const _ = require('lodash');
 
-module.exports = {
-    '/v1.0' : 10,
-    '/user' : 0,
-    '/user/validate' : 0
+let permissionModules = {
+    'admin': {
+        base: 50,
+        routes: {
+            '/console/clear' : 100
+        }
+    },
+
+    'user': {
+        base: 0,
+        routes: {
+            '/validate' : 0
+        }
+    },
+
+    'v1.0': {
+        base: 10,
+        routes: {
+
+        }
+    }
 };
+
+module.exports = permissionModules;
