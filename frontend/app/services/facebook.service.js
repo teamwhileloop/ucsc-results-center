@@ -20,7 +20,7 @@ app.service('FacebookService',function ($rootScope,$q,$localStorage,$location,$t
                 });
             })
         },
-        getUserDetails: function () {
+        getUserDetails: function (useForceAuthenticationOnFailure = true) {
             return $q((resolve, _reject) => {
                 FB.api('/me', {
                     fields: 'email,first_name,last_name,gender,link,short_name,picture{url},cover,name',
@@ -29,7 +29,7 @@ app.service('FacebookService',function ($rootScope,$q,$localStorage,$location,$t
                     if (!response.error){
                         resolve(response);
                     }else{
-                        this.reAuthenticate(true).then((success)=>{
+                        this.reAuthenticate(useForceAuthenticationOnFailure).then((success)=>{
                             if (success){
                                 this.getUserDetails().then((data)=>{
                                     resolve(data);

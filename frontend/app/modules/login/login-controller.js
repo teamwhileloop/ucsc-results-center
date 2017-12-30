@@ -10,24 +10,25 @@ app.controller('LoginController',function (
 ) {
     console.log('Login controller loaded');
     this.authStatus = 'loading';
+    ApplicationService.hideNavigationIndicator();
 
     LoadingMaskService.deactivate();
 
     FacebookService.parseXFBML();
 
-    FacebookService.getUserDetails().then((data)=>{
-        if(data.error){
-            this.authStatus = 'unknown';
-        }else if(data.name){
+    FacebookService.getLoginStatus().then((data)=>{
+        if (data.status === 'connected'){
             ProfileService.validateUser()
                 .then((data)=>{
                     this.redirectUpOnLogin(data.data);
                 })
                 .catch((error)=>{
                     this.authStatus = 'unknown';
+                    ApplicationService.hideNavigationIndicator();
                 })
         }else{
             this.authStatus = 'unknown';
+            ApplicationService.hideNavigationIndicator();
         }
     });
 

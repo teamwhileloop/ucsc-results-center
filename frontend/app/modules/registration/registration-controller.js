@@ -15,6 +15,7 @@ app.controller('RegistrationController',function (
     $scope.loggedInUser = loggedInUser;
     $scope.invalidUserEmail = false;
     $scope.useAlternateEmail = false;
+    $scope.submitting = false;
 
     this.preferedEmail = '';
     this.requestedIndexNumber = '';
@@ -40,6 +41,9 @@ app.controller('RegistrationController',function (
             $location.path('/error');
             break;
     }
+
+    ApplicationService.hideNavigationIndicator();
+
     $scope.goBack = function(){
         $scope.step -= 1;
     };
@@ -108,6 +112,12 @@ app.controller('RegistrationController',function (
     };
 
     this.submit = function () {
+        $scope.submitting = true;
+        ApplicationService.showNavigationIndicator({
+            icon: 'swap_horiz',
+            enabled: true,
+            text: 'Submitting your request'
+        });
         let request = {};
         $scope.useAlternateEmail ? request['email'] = this.preferedEmail : null;
         request['indexNumber'] = this.requestedIndexNumber;
@@ -117,8 +127,12 @@ app.controller('RegistrationController',function (
             $scope.loggedInUser.state = 'pending';
             $scope.loggedInUser.indexNumber = request['indexNumber'];
             $scope.loggedInUser.alternate_email = request['email'];
+            $scope.submitting = false;
+            ApplicationService.hideNavigationIndicator();
         })
         .catch((error)=>{
+            $scope.submitting = false;
+            ApplicationService.hideNavigationIndicator();
             ApplicationService.pushNotification({
                 title: 'Unable submit claim request',
                 text : 'For some reasons we could not submit your request. Please contact administrator for further assistance.',

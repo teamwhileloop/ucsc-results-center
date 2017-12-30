@@ -48,7 +48,12 @@ app.config(function($routeProvider) {
             templateUrl:'public/html/modules/registration/view.html',
             controllerAs : 'ctrlReg',
             resolve : {
-                loggedInUser : function (FacebookService,$location,ProfileService) {
+                loggedInUser : function (FacebookService,$location,ProfileService,ApplicationService) {
+                    ApplicationService.showNavigationIndicator({
+                        icon: 'swap_horiz',
+                        enabled: true,
+                        text: 'Redirecting tp Registration page'
+                    });
                     if (FacebookService.isServiceInitialized()){
                         return new Promise(function (resolve, reject) {
                             ProfileService.validateUser()
