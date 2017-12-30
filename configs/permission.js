@@ -4,7 +4,8 @@ let permissionModules = {
     'admin': {
         base: 50,
         routes: {
-            '/console/clear' : 100
+            '/console/clear' : 100,
+            '/calculate/pattern/[0-9]{1,}' : 100
         }
     },
 
