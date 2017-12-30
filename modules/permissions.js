@@ -9,29 +9,36 @@ const permissionJSON = require('../configs/permission');
 
 let permissionCollection = {};
 _.forEach(Object.keys(permissionJSON),function (mainRoute) {
-    permissionCollection[`/${mainRoute}`] = permissionJSON[mainRoute]['base'];
     _.forEach(Object.keys(permissionJSON[mainRoute]['routes']),function (subRoute) {
-        permissionCollection[`/${mainRoute}${subRoute}`] = permissionJSON[mainRoute]['routes'][subRoute];
+        permissionCollection[`^/${mainRoute}${subRoute}$`] = permissionJSON[mainRoute]['routes'][subRoute];
     });
+    permissionCollection[`base:^/${mainRoute}*`] = permissionJSON[mainRoute]['base'];
 });
 
 function checkPermission(url='',userPower = 0) {
     let permissionStatus = false;
-    let powerRequired = null;
-    let method = null;
+    let powerRequired = 0;
+    let method = 'unset';
 
-    if (permissionCollection[url] !== undefined){
-        permissionStatus = permissionCollection[url] <= userPower;
-        powerRequired = permissionCollection[url];
-        method = 'url';
-    }else if(permissionCollection[`/${url.split('/')[1]}`] !== undefined){
-        permissionStatus =  permissionCollection[`/${url.split('/')[1]}`] <= userPower;
-        powerRequired = permissionCollection[`/${url.split('/')[1]}`];
-        method = 'base';
-    }else {
-        permissionStatus = true;
-        method = 'unset';
-    }
+    _.some(Object.keys(permissionCollection),function (endpointUrlRegExp) {
+        if (endpointUrlRegExp.startsWith('base:')){
+            console.log(endpointUrlRegExp);
+            if (new RegExp(endpointUrlRegExp.substr(5),'gm').test(url)){
+                method = 'base';
+                permissionStatus = permissionCollection[endpointUrlRegExp] <= userPower;
+                powerRequired = permissionCollection[endpointUrlRegExp];
+                return true;
+            }
+        }else{
+            if (new RegExp(endpointUrlRegExp,'gm').test(url)){
+                method = 'url';
+                permissionStatus = permissionCollection[endpointUrlRegExp] <= userPower;
+                powerRequired = permissionCollection[endpointUrlRegExp];
+                return true;
+            }
+        }
+    });
+    
     return {
         status: permissionStatus,
         powerRequired:  powerRequired,

@@ -38,7 +38,7 @@ http.listen(port, function(){
 // Route Imports and Config
 app.use(bodyParser.json());
 const user = require('./routes/user');
-const admin = require('./routes/admin');
+const admin = require('./routes/admin/admin');
 const apiV1 = require('./routes/api-v1');
 app.use('/user', user);
 app.use('/admin', admin);
