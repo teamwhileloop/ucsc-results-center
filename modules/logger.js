@@ -4,6 +4,7 @@ let databaseWrite = true;
 let statusCodes = { event : 'EVENT' };
 let defaultStatusCodeKey = {};
 let statusCodeLength = 5;
+let virtualConsoleLog = '';
 
 exports.disableDatabaseWrite = function () {
     databaseWrite = false;
@@ -25,6 +26,17 @@ exports.setStatusCodeLength = function (codeLength) {
     statusCodeLength = codeLength;
 };
 
+exports.getVirtualConsoleLog = function () {
+    return virtualConsoleLog;
+};
+
+exports.clearVirtualConsoleLog = function () {
+    virtualConsoleLog = '';
+    return{
+        success: true
+    }
+};
+
 exports.log = function (message,statusCode = defaultStatusCodeKey,writeToDatabase = false, databaseEntry = null) {
     // TIME DATA PREPARATIONS
     let now = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Colombo' }));
@@ -40,6 +52,8 @@ exports.log = function (message,statusCode = defaultStatusCodeKey,writeToDatabas
 
     // LOG TO CONSOLE
     console.log(date,"|",time,"|",statusCode,"|",message);
+
+    virtualConsoleLog+=`${date} | ${time} | ${statusCode} | ${message}\n`;
 
     // WRITE TO DATABASE
     if(databaseWrite && writeToDatabase){
