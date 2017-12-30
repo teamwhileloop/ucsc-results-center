@@ -32,6 +32,44 @@ app.config(function($routeProvider) {
         });
     }
 
+    function applicationInitializerRoot(FacebookService,$location,ProfileService,ApplicationService) {
+        if (FacebookService.isServiceInitialized()) {
+            ApplicationService.showNavigationIndicator({
+                icon: 'swap_horiz',
+                enabled: true,
+                text: 'Redirecting tp Registration page'
+            });
+            return new Promise(function (resolve, reject) {
+                ProfileService.validateUser()
+                    .then((response) => {
+                        resolve(response.data);
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                        $location.path('/error');
+                    });
+            });
+        }
+        return new Promise(function (resolve, reject) {
+            initializer(
+                FacebookService,
+                ProfileService,
+                $location
+            ).then((data) => {
+                if (data.status === 200) {
+                    resolve(data.data);
+                } else {
+                    console.error(data);
+                    $location.path('/error');
+                }
+            })
+                .catch((error) => {
+                    console.error(error);
+                    $location.path('/error');
+                });
+        });
+    }
+
     $routeProvider
         .when("/",{
             controller:'LoginController',
@@ -48,43 +86,7 @@ app.config(function($routeProvider) {
             templateUrl:'public/html/modules/registration/view.html',
             controllerAs : 'ctrlReg',
             resolve : {
-                loggedInUser : function (FacebookService,$location,ProfileService,ApplicationService) {
-                    ApplicationService.showNavigationIndicator({
-                        icon: 'swap_horiz',
-                        enabled: true,
-                        text: 'Redirecting tp Registration page'
-                    });
-                    if (FacebookService.isServiceInitialized()){
-                        return new Promise(function (resolve, reject) {
-                            ProfileService.validateUser()
-                            .then((response)=>{
-                                resolve(response.data);
-                            })
-                            .catch((error)=>{
-                                console.error(error);
-                                $location.path('/error');
-                            });
-                        });
-                    }
-                    return new Promise(function (resolve, reject) {
-                        initializer(
-                            FacebookService,
-                            ProfileService,
-                            $location
-                        ).then((data)=>{
-                            if (data.status === 200){
-                                resolve(data.data);
-                            }else{
-                                console.error(data);
-                                $location.path('/error');
-                            }
-                        })
-                        .catch((error)=>{
-                            console.error(error);
-                            $location.path('/error');
-                        });
-                    });
-                }
+                loggedInUser : applicationInitializerRoot
             }
         })
         .when("/sample",{
