@@ -39,24 +39,17 @@ http.listen(port, function(){
 // Route Imports and Config
 app.use(bodyParser.json());
 const user = require('./routes/user');
+const apiV1 = require('./routes/api-v1');
 app.use('/user', user);
+app.use('/v1.0', apiV1);
 
 // Static Files
 app.use('/public',express.static(path.join(__dirname, 'public')));
 app.use('/cdn',express.static(path.join(__dirname, 'node_modules')));
 
-// Middlewares
-app.use('/api',function (req,res,next) {
-    next();
-})
-
 // Routing
 app.get('/', function(req, res) {
     res.render('index.html');
-});
-
-app.get('/api/v1/', function(req, res) {
-    res.send({});
 });
 
 module.exports = http;
