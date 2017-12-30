@@ -62,7 +62,11 @@ app.controller('RegistrationController',function (
     };
 
     this.getBatchLabel = function (indexNumber = 0) {
-        return `${this.ranker(parseInt($scope.loggedInUser.indexNumber.toString().substring(0,2)) - 2)} Batch`
+        if (!!$scope.loggedInUser.indexNumber){
+            return `${this.ranker(parseInt($scope.loggedInUser.indexNumber.toString().substring(0,2)) - 2)} Batch`;
+        }else{
+            return 'Unknown';
+        }
     };
 
     this.checkIndexNumberValidity = function (indexNumber = 0) {
