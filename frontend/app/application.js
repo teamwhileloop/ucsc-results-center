@@ -1,4 +1,11 @@
-let applicationID = window.location.host === 'localhost:3000' ? '1917234511877082' : '324582471336592';
+applicationIdJSON = {
+  'localhost:3000':'1917234511877082',  // Dev Testing
+  'ucscresults.herokuapp.com':'324582471336592',  // Production
+  '13.250.2.9':'139123596786957',  // Staging
+};
+
+let applicationID = applicationIdJSON[window.location.host];
+
 FB.init({
     appId      : applicationID,
     cookie     : true,

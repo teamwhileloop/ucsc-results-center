@@ -5,10 +5,10 @@
     </div>
 
     <div class="page-header-user-root">
-        <img src="https://scontent.fcmb1-1.fna.fbcdn.net/v/t1.0-9/12239876_10208413415161353_5001466773037652998_n.jpg?oh=5682c27ae0f72a78027240462cce3aed&oe=5AD19C1D">
+        <img src="{{ userDetails.picture.data.url }}">
         <div class="user-data-box">
-            <div class="user-data-name">Sulochana Kodituwakku</div>
-            <div class="user-data-role">Super Administrator</div>
+            <div class="user-data-name">{{ userDetails.name || 'Unknown User' }}</div>
+            <div class="user-data-role">{{ getRankName(userDetails.power) }}</div>
         </div>
     </div>
     <div class="sidebar-button-collection">

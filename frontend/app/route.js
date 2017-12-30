@@ -50,10 +50,10 @@ app.config(function($routeProvider) {
             resolve : {
                 loggedInUser : function (FacebookService,$location,ProfileService) {
                     if (FacebookService.isServiceInitialized()){
-                        new Promise(function (resolve, reject) {
+                        return new Promise(function (resolve, reject) {
                             ProfileService.validateUser()
                             .then((response)=>{
-                                resolve(response);
+                                resolve(response.data);
                             })
                             .catch((error)=>{
                                 console.error(error);
