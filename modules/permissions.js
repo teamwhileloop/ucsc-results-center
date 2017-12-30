@@ -22,7 +22,6 @@ function checkPermission(url='',userPower = 0) {
 
     _.some(Object.keys(permissionCollection),function (endpointUrlRegExp) {
         if (endpointUrlRegExp.startsWith('base:')){
-            console.log(endpointUrlRegExp);
             if (new RegExp(endpointUrlRegExp.substr(5),'gm').test(url)){
                 method = 'base';
                 permissionStatus = permissionCollection[endpointUrlRegExp] <= userPower;
@@ -38,7 +37,7 @@ function checkPermission(url='',userPower = 0) {
             }
         }
     });
-    
+
     return {
         status: permissionStatus,
         powerRequired:  powerRequired,
