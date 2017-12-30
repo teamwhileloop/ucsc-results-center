@@ -61,7 +61,8 @@ module.exports = function() {
                     fbUid: fbUid,
                     accessToken: accessToken
                 }
-            })
+            });
+            return;
         }
 
         //Grant access when using FacebookAPI
