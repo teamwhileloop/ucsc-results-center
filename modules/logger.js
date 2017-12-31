@@ -52,7 +52,9 @@ exports.setLiveText = function (text) {
         statusCode: ('LIVE '.repeat(statusCodeLength)).substring(0,statusCodeLength),
         message: text
     };
-    process.stdout.write(`${date} | ${time} | ${liveText.statusCode} | ${text}\r`);
+    if (text){
+        process.stdout.write(`${date} | ${time} | ${liveText.statusCode} | ${text}\r`);
+    }
 };
 
 exports.log = function (message,statusCode = defaultStatusCodeKey,writeToDatabase = false, databaseEntry = null) {
