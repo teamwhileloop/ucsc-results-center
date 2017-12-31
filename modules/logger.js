@@ -5,6 +5,7 @@ let statusCodes = { event : 'EVENT' };
 let defaultStatusCodeKey = {};
 let statusCodeLength = 5;
 let virtualConsoleLog = [];
+let liveText = {};
 
 exports.disableDatabaseWrite = function () {
     databaseWrite = false;
@@ -27,7 +28,11 @@ exports.setStatusCodeLength = function (codeLength) {
 };
 
 exports.getVirtualConsoleLog = function () {
-    return virtualConsoleLog;
+    if (liveText.message === ''){
+        return virtualConsoleLog;
+    }else{
+        return virtualConsoleLog.concat(liveText);
+    }
 };
 
 exports.clearVirtualConsoleLog = function () {
@@ -35,6 +40,19 @@ exports.clearVirtualConsoleLog = function () {
     return{
         success: true
     }
+};
+
+exports.setLiveText = function (text) {
+    let now = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Colombo' }));
+    let date = now.getFullYear() + '/' + ('0' + now.getMonth()).substr(-2,2) + '/' + ('0' + now.getDate()).substr(-2,2);
+    let time = ('0' + now.getHours()).substr(-2,2) + ':' + ('0' + now.getMinutes()).substr(-2,2) + ':' + ('0' + now.getSeconds()).substr(-2,2);
+    liveText = {
+        date: date,
+        time: time,
+        statusCode: ('LIVE '.repeat(statusCodeLength)).substring(0,statusCodeLength),
+        message: text
+    };
+    process.stdout.write(`${date} | ${time} | ${liveText.statusCode} | ${text}\r`);
 };
 
 exports.log = function (message,statusCode = defaultStatusCodeKey,writeToDatabase = false, databaseEntry = null) {
