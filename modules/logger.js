@@ -28,7 +28,7 @@ exports.setStatusCodeLength = function (codeLength) {
 };
 
 exports.getVirtualConsoleLog = function () {
-    if (liveText.message === ''){
+    if (!liveText.message){
         return virtualConsoleLog;
     }else{
         return virtualConsoleLog.concat(liveText);
