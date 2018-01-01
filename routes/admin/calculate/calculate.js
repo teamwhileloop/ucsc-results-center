@@ -99,6 +99,51 @@ function getSemesterResultsByIndex(indexNumber, year, semester) {
     });
 }
 
+function setRankings(pattern, column, updateColumn){
+    return new Promise(function(resolve, reject){
+        let prevGPA = -1;
+        let cur = 0;
+        let buffer = 0;
+        let valuesQuery = '';
+        mysql.query(`SELECT indexNumber, ${column} as gpa FROM undergraduate WHERE indexNumber LIKE '${pattern}%' ORDER BY ${column} DESC;`,
+        function (error, payload) {
+            if (!error){
+                logger.log(`Updating ${updateColumn} with pattern ${pattern} started`);
+                _.forEach(payload,function (data) {
+                    if (data.gpa === prevGPA){
+                        buffer++;
+                    }else{
+                        cur+= buffer + 1;
+                        buffer = 0;
+                    }
+                    valuesQuery += `(${data.indexNumber}, ${cur}),`;
+                    prevGPA = data.gpa;
+                    if ((cur+buffer) === payload.length){
+                        valuesQuery = valuesQuery.substring(0,valuesQuery.length -1);
+                        mysql.query(`INSERT INTO \`results\`.\`undergraduate\`
+                                        (  \`indexNumber\`,\`${updateColumn}\`) 
+                                    VALUES ${valuesQuery} 
+                                    ON DUPLICATE KEY UPDATE \`${updateColumn}\` = VALUES(${updateColumn});`,
+                        function (error_update, payload_update) {
+                            if (!error_update){
+                                logger.log(`Updating ${updateColumn} with pattern ${pattern} completed`);
+                                resolve(payload_update);
+                            }else{
+                                logger.log(`Updating ${updateColumn} with pattern ${pattern} failed`);
+                                reject(error_update);
+                            }
+                        });
+                    }
+                })
+            }else{
+                reject(error);
+            }
+        })
+    });
+
+
+}
+
 function calculateUndergraduateSemesterGPA(indexNumber, semesterInfo) {
     return new Promise(function (resolve, reject) {
         getSemesterResultsByIndex(indexNumber, semesterInfo.year, semesterInfo.semester)
@@ -138,7 +183,6 @@ function calculateUndergraduateSemesterGPA(indexNumber, semesterInfo) {
                 })
             })
             .catch((error)=>{
-                console.log('ererer');
                 reject(error);
             })
     })
@@ -148,6 +192,7 @@ router.post('/pattern/:pattern',function (req,res) {
     let academicYear = parseInt(req.body.year);
     let academicSemester = parseInt(req.body.semester);
     let pattern = parseInt(req.params['pattern']);
+    let runOverallGpaUpdate = !!req.body.overallUpdate;
     let taskReport = {
         success: true,
         body: req.body,
@@ -241,24 +286,44 @@ router.post('/pattern/:pattern',function (req,res) {
                                             if (!error){
                                                 logger.log(`Calculation completed for Y${semester.year}S${semester.semester} after ${logger.timeSpent(startTime)}`);
                                                 successCount += 1;
-                                                if (successCount === completedSemesters.length){
-                                                    logger.log(`Calculation successfully completed for pattern ${pattern} after ${logger.timeSpent(startTime)}`);
-                                                    logger.setLiveText('');
-                                                    taskLock = false;
-                                                    if (taskReport.success){
-                                                        res.send({
-                                                            success: true,
-                                                            timeSpent: logger.timeSpent(startTime)
-                                                        })
-                                                    }else{
-                                                        logger.log(`Calculation completed with failures for pattern ${pattern} after ${logger.timeSpent(startTime)}`,'crit',true,taskReport);
-                                                        res.status(500).send({
-                                                            success: false,
-                                                            errors: taskReport.errors,
-                                                            timeSpent: logger.timeSpent(startTime)
-                                                        })
+
+                                                let localSuccessCount = successCount;
+                                                setRankings('1400',`y${semester.year}s${semester.semester}_gpa`,`y${semester.year}s${semester.semester}_rank`)
+                                                .then((response)=>{
+                                                    //RANKING CALCULATION
+                                                    if (localSuccessCount === completedSemesters.length){
+                                                        if (runOverallGpaUpdate){
+                                                            // TODO : ADD OVERALL GPA, RANK CALCULATION
+                                                        }else{
+                                                            if (taskReport.success){
+                                                                logger.log(`Calculation successfully completed for pattern ${pattern} after ${logger.timeSpent(startTime)}`);
+                                                                logger.setLiveText('');
+                                                                taskLock = false;
+                                                                res.send({
+                                                                    success: true,
+                                                                    timeSpent: logger.timeSpent(startTime)
+                                                                })
+                                                            }else{
+                                                                console.log(taskReport);
+                                                                logger.log(`Calculation completed with failures for pattern ${pattern} after ${logger.timeSpent(startTime)}`,'crit',true,taskReport);
+                                                                res.status(500).send({
+                                                                    success: false,
+                                                                    errors: taskReport.errors,
+                                                                    timeSpent: logger.timeSpent(startTime)
+                                                                })
+                                                            }
+                                                        }
+
                                                     }
-                                                }
+                                                })
+                                                .catch((error_ranking)=>{
+                                                    logger.log(error_ranking.sqlMessage,'crit',true, JSON.stringify(_.assignIn(error_ranking,{
+                                                        meta: req.facebookVerification,
+                                                        env: req.headers.host
+                                                    })));
+                                                    taskReport.errors.push(error_ranking);
+                                                    taskReport.success = false;
+                                                });
                                             }else{
                                                 logger.log(error.sqlMessage,'crit',true, JSON.stringify(_.assignIn(error,{
                                                     meta: req.facebookVerification,
@@ -300,6 +365,13 @@ router.post('/pattern/:pattern',function (req,res) {
             res.status(500).send({ error: error });
             taskLock = false;
         })
+});
+
+router.get('/test',function (req,res) {
+    setRankings('1400','y1s1_gpa','y1s1_rank')
+    .then((response)=>{
+        res.send(response);
+    })
 });
 
 module.exports = router;

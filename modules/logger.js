@@ -44,8 +44,8 @@ exports.clearVirtualConsoleLog = function () {
 
 exports.setLiveText = function (text) {
     let now = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Colombo' }));
-    let date = now.getFullYear() + '/' + ('0' + now.getMonth()).substr(-2,2) + '/' + ('0' + now.getDate()).substr(-2,2);
-    let time = ('0' + now.getHours()).substr(-2,2) + ':' + ('0' + now.getMinutes()).substr(-2,2) + ':' + ('0' + now.getSeconds()).substr(-2,2);
+    let date = now.getFullYear() + '/' + ('0' + now.getMonth() + 1).substr(-2,2) + '/' + ('0' + now.getDate()).substr(-2,2);
+    let time = ('0' + now.getHours()).substr(-2,2) + ':' + ('0' + now.getMinutes() ).substr(-2,2) + ':' + ('0' + now.getSeconds()).substr(-2,2);
     liveText = {
         date: date,
         time: time,
@@ -60,7 +60,7 @@ exports.setLiveText = function (text) {
 exports.log = function (message,statusCode = defaultStatusCodeKey,writeToDatabase = false, databaseEntry = null) {
     // TIME DATA PREPARATIONS
     let now = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Colombo' }));
-    let date = now.getFullYear() + '/' + ('0' + now.getMonth()).substr(-2,2) + '/' + ('0' + now.getDate()).substr(-2,2);
+    let date = now.getFullYear() + '/' + ('0' + now.getMonth() + 1).substr(-2,2) + '/' + ('0' + now.getDate()).substr(-2,2);
     let time = ('0' + now.getHours()).substr(-2,2) + ':' + ('0' + now.getMinutes()).substr(-2,2) + ':' + ('0' + now.getSeconds()).substr(-2,2);
 
     // GET STATUS CODE
