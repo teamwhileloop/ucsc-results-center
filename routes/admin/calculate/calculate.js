@@ -99,7 +99,7 @@ function getSemesterResultsByIndex(indexNumber, year, semester) {
     });
 }
 
-function setRankings(pattern, column, updateColumn){
+function setSemesterRankings(pattern, column, updateColumn){
     return new Promise(function(resolve, reject){
         let prevGPA = -1;
         let cur = 0;
@@ -202,26 +202,26 @@ router.post('/pattern/:pattern',function (req,res) {
     const startTime = new Date();
 
     // academicYear validation
-    if (!new RegExp('^[1-4]$','gm').test(academicYear)){
-        res.status(400).send({
-            error: {
-                code: 0x001,
-                message: `Invalid academic year ${academicYear}`
-            }
-        });
-        return;
-    }
-
-    // academicSemester validation
-    if (!new RegExp('^[1-2]$','gm').test(academicSemester)){
-        res.status(400).send({
-            error: {
-                code: 0x002,
-                message: `Invalid academic semester ${academicSemester}`
-            }
-        });
-        return;
-    }
+    // if (!new RegExp('^[1-4]$','gm').test(academicYear)){
+    //     res.status(400).send({
+    //         error: {
+    //             code: 0x001,
+    //             message: `Invalid academic year ${academicYear}`
+    //         }
+    //     });
+    //     return;
+    // }
+    //
+    // // academicSemester validation
+    // if (!new RegExp('^[1-2]$','gm').test(academicSemester)){
+    //     res.status(400).send({
+    //         error: {
+    //             code: 0x002,
+    //             message: `Invalid academic semester ${academicSemester}`
+    //         }
+    //     });
+    //     return;
+    // }
 
     // pattern validation
     if (!new RegExp('^[0-9]{2}(00|02)$','gm').test(pattern)){
@@ -288,7 +288,7 @@ router.post('/pattern/:pattern',function (req,res) {
                                                 successCount += 1;
 
                                                 let localSuccessCount = successCount;
-                                                setRankings('1400',`y${semester.year}s${semester.semester}_gpa`,`y${semester.year}s${semester.semester}_rank`)
+                                                setSemesterRankings(pattern,`y${semester.year}s${semester.semester}_gpa`,`y${semester.year}s${semester.semester}_rank`)
                                                 .then((response)=>{
                                                     //RANKING CALCULATION
                                                     if (localSuccessCount === completedSemesters.length){
@@ -368,7 +368,7 @@ router.post('/pattern/:pattern',function (req,res) {
 });
 
 router.get('/test',function (req,res) {
-    setRankings('1400','y1s1_gpa','y1s1_rank')
+    setSemesterRankings('1400','y1s1_gpa','y1s1_rank')
     .then((response)=>{
         res.send(response);
     })
