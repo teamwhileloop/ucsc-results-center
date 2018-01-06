@@ -267,7 +267,7 @@ router.post('/pattern/:pattern',function (req,res) {
                     let successCount = 0;
                     logger.log(`Semester list received for pattern ${pattern} after ${logger.timeSpent(startTime)}`);
 
-                    if (_.filter(completedSemesters, { 'semester': academicSemester, 'year': academicYear }).length === 0){
+                    if (targetSemMode && _.filter(completedSemesters, { 'semester': academicSemester, 'year': academicYear }).length === 0){
                         taskLock = false;
                         res.status(404).send({
                             error: {
@@ -276,8 +276,6 @@ router.post('/pattern/:pattern',function (req,res) {
                             }
                         });
                         return;
-                    }else{
-                        console.log('ss');
                     }
 
                     logger.log(`Starting calculations for patten ${pattern} at ${logger.timeSpent(startTime)}`);
@@ -293,7 +291,7 @@ router.post('/pattern/:pattern',function (req,res) {
                             }else {
                                 runThisTask = false;
                                 successCount += 1;
-                                overallProgress += undergraduateList.length;
+                                // overallProgress += undergraduateList.length;
                             }
                         }
 
@@ -304,7 +302,7 @@ router.post('/pattern/:pattern',function (req,res) {
                                         completedUgs += 1;
                                         overallProgress += 1;
                                         valuesQuery += `(${undergraduate.indexNumber}, ${GpaData.gpa}, NULL, ${GpaData.credits},  ${GpaData.nonGpaCredits}) ,`;
-                                        completedPercentage = parseFloat(overallProgress*100.0/(undergraduateList.length*completedSemesters.length)).toFixed(2);
+                                        completedPercentage = parseFloat(overallProgress*100.0 * (targetSemMode ? completedSemesters.length : 1)/(undergraduateList.length*completedSemesters.length)).toFixed(2);
                                         logger.setLiveText(`Calculation progress for pattern '${pattern}' ${completedPercentage}%`);
                                         if (completedUgs === undergraduateList.length){
                                             valuesQuery = valuesQuery.substring(0,valuesQuery.length -1);
@@ -332,9 +330,30 @@ router.post('/pattern/:pattern',function (req,res) {
                                                             .then((response)=>{
                                                                 //RANKING CALCULATION
                                                                 if (localSuccessCount === completedSemesters.length){
-                                                                    console.log(skipOverallUpdate);
                                                                     if (!skipOverallUpdate){
                                                                         // TODO : ADD OVERALL GPA, RANK CALCULATION
+                                                                        setSemesterRankings(pattern,'gpa','rank')
+                                                                        .then((_overallUpdateResponse)=>{
+                                                                            if (taskReport.success){
+                                                                                logger.log(`Calculation successfully completed for pattern ${pattern} after ${logger.timeSpent(startTime)}`);
+                                                                                logger.setLiveText('');
+                                                                                taskLock = false;
+                                                                                res.send({
+                                                                                    success: true,
+                                                                                    timeSpent: logger.timeSpent(startTime)
+                                                                                })
+                                                                            }else{
+                                                                                logger.log(`Calculation completed with failures for pattern ${pattern} after ${logger.timeSpent(startTime)}`,'crit',true,taskReport);
+                                                                                res.status(500).send({
+                                                                                    success: false,
+                                                                                    errors: taskReport.errors,
+                                                                                    timeSpent: logger.timeSpent(startTime)
+                                                                                })
+                                                                            }
+                                                                        })
+                                                                        .catch((error_overall)=>{
+                                                                            reportError(req,res,error_overall, true);
+                                                                        })
                                                                     }else{
                                                                         if (taskReport.success){
                                                                             logger.log(`Calculation successfully completed for pattern ${pattern} after ${logger.timeSpent(startTime)}`);
