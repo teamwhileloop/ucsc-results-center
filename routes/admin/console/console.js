@@ -9,6 +9,7 @@ router.get('/',function (req,res) {
     let count = parseInt(req.query.count) || 20;
     let filter = req.query.filter;
     let logs = logger.getVirtualConsoleLog();
+    let paginatedResults = [];
 
     let result = _.filter(logs,function (o) {
         if (filter){
@@ -19,9 +20,18 @@ router.get('/',function (req,res) {
     });
 
     if (page){
-        result = result.slice((page -1)*count, ((page -1)*count) + count);
+        paginatedResults = result.slice((page -1)*count, ((page -1)*count) + count);
     }
-    res.send(result);
+    res.send({
+        meta:{
+            page: page,
+            count: count,
+            filter: filter || 'all',
+            total: result.length,
+            totalPages: Math.ceil(result.length / count)
+        },
+        data: paginatedResults
+    });
 });
 
 router.delete('/clear',function (req,res) {
@@ -31,7 +41,7 @@ router.delete('/clear',function (req,res) {
 router.get('/generate/:count',function (req,res) {
     let count = parseInt(req.params['count']) || 0;
     _.forEach(_.range(count),function (n) {
-        logger.log('Sample dummy gen',['info','crit','warn'][Math.floor((Math.random() * 3))]);
+        logger.log(`Dummy log with content ${Math.random().toString(36).substr(2, 6)}`,['info','crit','warn'][Math.floor((Math.random() * 3))]);
     });
     res.send({});
 });

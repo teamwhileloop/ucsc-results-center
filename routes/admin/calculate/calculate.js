@@ -291,7 +291,6 @@ router.post('/pattern/:pattern',function (req,res) {
                             }else {
                                 runThisTask = false;
                                 successCount += 1;
-                                // overallProgress += undergraduateList.length;
                             }
                         }
 
