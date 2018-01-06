@@ -51,6 +51,16 @@ function getGradePoint(grade){
     }
 }
 
+function reportError(req, res, error, sendResponse = false) {
+    logger.log(error.sqlMessage,'crit',true, JSON.stringify(_.assignIn(error,{
+        meta: req.facebookVerification,
+        env: req.headers.host
+    })));
+    if (sendResponse){
+        res.status(500).send({ error: error });
+    }
+}
+
 function getUndergraduates(pattern) {
     return new Promise(function (resolve,reject) {
         mysql.query('SELECT  DISTINCT `result`.`index` as `indexNumber` FROM `result` WHERE `result`.`index` LIKE ? ORDER BY `indexNumber`;',
@@ -192,7 +202,8 @@ router.post('/pattern/:pattern',function (req,res) {
     let academicYear = parseInt(req.body.year);
     let academicSemester = parseInt(req.body.semester);
     let pattern = parseInt(req.params['pattern']);
-    let runOverallGpaUpdate = !!req.body.overallUpdate;
+    let skipOverallUpdate = req.body.skipOverallUpdate || false;
+    let targetSemMode = false;
     let taskReport = {
         success: true,
         body: req.body,
@@ -202,26 +213,28 @@ router.post('/pattern/:pattern',function (req,res) {
     const startTime = new Date();
 
     // academicYear validation
-    // if (!new RegExp('^[1-4]$','gm').test(academicYear)){
-    //     res.status(400).send({
-    //         error: {
-    //             code: 0x001,
-    //             message: `Invalid academic year ${academicYear}`
-    //         }
-    //     });
-    //     return;
-    // }
-    //
-    // // academicSemester validation
-    // if (!new RegExp('^[1-2]$','gm').test(academicSemester)){
-    //     res.status(400).send({
-    //         error: {
-    //             code: 0x002,
-    //             message: `Invalid academic semester ${academicSemester}`
-    //         }
-    //     });
-    //     return;
-    // }
+    if (academicYear && !new RegExp('^[1-4]$','gm').test(academicYear)){
+        res.status(400).send({
+            error: {
+                code: 0x001,
+                message: `Invalid academic year ${academicYear}`
+            }
+        });
+        return;
+    }
+
+    // academicSemester validation
+    if (academicYear && !new RegExp('^[1-2]$','gm').test(academicSemester)){
+        res.status(400).send({
+            error: {
+                code: 0x002,
+                message: `Invalid academic semester ${academicSemester}`
+            }
+        });
+        return;
+    }else if (academicYear){
+        targetSemMode = true;
+    }
 
     // pattern validation
     if (!new RegExp('^[0-9]{2}(00|02)$','gm').test(pattern)){
@@ -253,23 +266,50 @@ router.post('/pattern/:pattern',function (req,res) {
                     let overallProgress = 0;
                     let successCount = 0;
                     logger.log(`Semester list received for pattern ${pattern} after ${logger.timeSpent(startTime)}`);
+
+                    if (_.filter(completedSemesters, { 'semester': academicSemester, 'year': academicYear }).length === 0){
+                        taskLock = false;
+                        res.status(404).send({
+                            error: {
+                                'semester': academicSemester,
+                                'year': academicYear
+                            }
+                        });
+                        return;
+                    }else{
+                        console.log('ss');
+                    }
+
                     logger.log(`Starting calculations for patten ${pattern} at ${logger.timeSpent(startTime)}`);
                     _.forEach(completedSemesters,function (semester) {
                         let valuesQuery = '';
                         let completedUgs = 0;
                         let completedPercentage = 0.0;
-                        _.forEach(undergraduateList,function (undergraduate) {
-                            calculateUndergraduateSemesterGPA(undergraduate.indexNumber, semester)
-                                .then((GpaData)=>{
-                                    completedUgs += 1;
-                                    overallProgress += 1;
-                                    valuesQuery += `(${undergraduate.indexNumber}, ${GpaData.gpa}, NULL, ${GpaData.credits},  ${GpaData.nonGpaCredits}) ,`;
-                                    completedPercentage = parseFloat(overallProgress*100.0/(undergraduateList.length*completedSemesters.length)).toFixed(2);
-                                    logger.setLiveText(`Calculation progress for pattern '${pattern}' ${completedPercentage}%`);
-                                    if (completedUgs === undergraduateList.length){
-                                        valuesQuery = valuesQuery.substring(0,valuesQuery.length -1);
-                                        logger.log(`Submitting Query for Y${semester.year}S${semester.semester} after ${logger.timeSpent(startTime)}`);
-                                        mysql.query(`INSERT INTO \`results\`.\`undergraduate\`
+                        let runThisTask = true;
+
+                        if (targetSemMode){
+                            if (academicYear === semester.year && academicSemester === semester.semester){
+                                runThisTask = true;
+                            }else {
+                                runThisTask = false;
+                                successCount += 1;
+                                overallProgress += undergraduateList.length;
+                            }
+                        }
+
+                        if (runThisTask){
+                            _.forEach(undergraduateList,function (undergraduate) {
+                                calculateUndergraduateSemesterGPA(undergraduate.indexNumber, semester)
+                                    .then((GpaData)=>{
+                                        completedUgs += 1;
+                                        overallProgress += 1;
+                                        valuesQuery += `(${undergraduate.indexNumber}, ${GpaData.gpa}, NULL, ${GpaData.credits},  ${GpaData.nonGpaCredits}) ,`;
+                                        completedPercentage = parseFloat(overallProgress*100.0/(undergraduateList.length*completedSemesters.length)).toFixed(2);
+                                        logger.setLiveText(`Calculation progress for pattern '${pattern}' ${completedPercentage}%`);
+                                        if (completedUgs === undergraduateList.length){
+                                            valuesQuery = valuesQuery.substring(0,valuesQuery.length -1);
+                                            logger.log(`Submitting Query for Y${semester.year}S${semester.semester} after ${logger.timeSpent(startTime)}`);
+                                            mysql.query(`INSERT INTO \`results\`.\`undergraduate\`
                                                         (  \`indexNumber\`, 
                                                             \`y${semester.year}s${semester.semester}_gpa\`, 
                                                             \`y${semester.year}s${semester.semester}_rank\`, 
@@ -282,86 +322,71 @@ router.post('/pattern/:pattern',function (req,res) {
                                                         \`y${semester.year}s${semester.semester}_rank\`            = VALUES(\`y${semester.year}s${semester.semester}_rank\`), 
                                                         \`y${semester.year}s${semester.semester}_credits\`         = VALUES(\`y${semester.year}s${semester.semester}_credits\`), 
                                                         \`y${semester.year}s${semester.semester}_credits_non_gpa\` = VALUES(\`y${semester.year}s${semester.semester}_credits_non_gpa\`);`,
-                                        function (error, payload) {
-                                            if (!error){
-                                                logger.log(`Calculation completed for Y${semester.year}S${semester.semester} after ${logger.timeSpent(startTime)}`);
-                                                successCount += 1;
+                                                function (error, payload) {
+                                                    if (!error){
+                                                        logger.log(`Calculation completed for Y${semester.year}S${semester.semester} after ${logger.timeSpent(startTime)}`);
+                                                        successCount += 1;
 
-                                                let localSuccessCount = successCount;
-                                                setSemesterRankings(pattern,`y${semester.year}s${semester.semester}_gpa`,`y${semester.year}s${semester.semester}_rank`)
-                                                .then((response)=>{
-                                                    //RANKING CALCULATION
-                                                    if (localSuccessCount === completedSemesters.length){
-                                                        if (runOverallGpaUpdate){
-                                                            // TODO : ADD OVERALL GPA, RANK CALCULATION
-                                                        }else{
-                                                            if (taskReport.success){
-                                                                logger.log(`Calculation successfully completed for pattern ${pattern} after ${logger.timeSpent(startTime)}`);
-                                                                logger.setLiveText('');
-                                                                taskLock = false;
-                                                                res.send({
-                                                                    success: true,
-                                                                    timeSpent: logger.timeSpent(startTime)
-                                                                })
-                                                            }else{
-                                                                console.log(taskReport);
-                                                                logger.log(`Calculation completed with failures for pattern ${pattern} after ${logger.timeSpent(startTime)}`,'crit',true,taskReport);
-                                                                res.status(500).send({
-                                                                    success: false,
-                                                                    errors: taskReport.errors,
-                                                                    timeSpent: logger.timeSpent(startTime)
-                                                                })
-                                                            }
-                                                        }
+                                                        let localSuccessCount = successCount;
+                                                        setSemesterRankings(pattern,`y${semester.year}s${semester.semester}_gpa`,`y${semester.year}s${semester.semester}_rank`)
+                                                            .then((response)=>{
+                                                                //RANKING CALCULATION
+                                                                if (localSuccessCount === completedSemesters.length){
+                                                                    console.log(skipOverallUpdate);
+                                                                    if (!skipOverallUpdate){
+                                                                        // TODO : ADD OVERALL GPA, RANK CALCULATION
+                                                                    }else{
+                                                                        if (taskReport.success){
+                                                                            logger.log(`Calculation successfully completed for pattern ${pattern} after ${logger.timeSpent(startTime)}`);
+                                                                            logger.setLiveText('');
+                                                                            taskLock = false;
+                                                                            res.send({
+                                                                                success: true,
+                                                                                timeSpent: logger.timeSpent(startTime)
+                                                                            })
+                                                                        }else{
+                                                                            logger.log(`Calculation completed with failures for pattern ${pattern} after ${logger.timeSpent(startTime)}`,'crit',true,taskReport);
+                                                                            res.status(500).send({
+                                                                                success: false,
+                                                                                errors: taskReport.errors,
+                                                                                timeSpent: logger.timeSpent(startTime)
+                                                                            })
+                                                                        }
+                                                                    }
 
+                                                                }
+                                                            })
+                                                            .catch((error_ranking)=>{
+                                                                reportError(req, res, error_ranking);
+                                                                taskReport.errors.push(error_ranking);
+                                                                taskReport.success = false;
+                                                            });
+                                                    }else{
+                                                        reportError(req, res, error);
+                                                        taskReport.errors.push(error);
+                                                        taskReport.success = false;
                                                     }
                                                 })
-                                                .catch((error_ranking)=>{
-                                                    logger.log(error_ranking.sqlMessage,'crit',true, JSON.stringify(_.assignIn(error_ranking,{
-                                                        meta: req.facebookVerification,
-                                                        env: req.headers.host
-                                                    })));
-                                                    taskReport.errors.push(error_ranking);
-                                                    taskReport.success = false;
-                                                });
-                                            }else{
-                                                logger.log(error.sqlMessage,'crit',true, JSON.stringify(_.assignIn(error,{
-                                                    meta: req.facebookVerification,
-                                                    env: req.headers.host
-                                                })));
-                                                taskReport.errors.push(error);
-                                                taskReport.success = false;
-                                            }
-                                        })
-                                    }
-                                })
-                                .catch((error)=>{
-                                    completedUgs += 1;
-                                    overallProgress += 1;
-                                    logger.log(error.sqlMessage,'crit',true, JSON.stringify(_.assignIn(error,{
-                                        meta: req.facebookVerification,
-                                        env: req.headers.host
-                                    })));
-                                    taskReport.errors.push(error);
-                                    taskReport.success = false;
-                                });
-                        });
+                                        }
+                                    })
+                                    .catch((error)=>{
+                                        completedUgs += 1;
+                                        overallProgress += 1;
+                                        taskReport.errors.push(error);
+                                        taskReport.success = false;
+                                        reportError(req, res, error);
+                                    });
+                            });
+                        }
                     })
                 })
                 .catch((error)=>{
-                    logger.log(error.sqlMessage,'crit',true, JSON.stringify(_.assignIn(error,{
-                        meta: req.facebookVerification,
-                        env: req.headers.host
-                    })));
-                    res.status(500).send({ error: error });
+                    reportError(req, res, error, true);
                     taskLock = false;
                 });
         })
         .catch((error)=>{
-            logger.log(error.sqlMessage,'crit',true, JSON.stringify(_.assignIn(error,{
-                meta: req.facebookVerification,
-                env: req.headers.host
-            })));
+            reportError(req, res, error);
             res.status(500).send({ error: error });
             taskLock = false;
         })
