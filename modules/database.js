@@ -3,7 +3,6 @@ const logger = require('./logger');
 let credentials = require('./credentials');
 let database = require('./database');
 
-const databaseConnectionTime = new Date();
 let connection = mysql.createConnection({
     host: credentials.database.host,
     user: credentials.database.username,
@@ -11,12 +10,25 @@ let connection = mysql.createConnection({
     database: credentials.database.database
 });
 
-connection.connect(function(err) {
-    if (err){
-        logger.log('Unable to connect to the database after ' + logger.timeSpent(databaseConnectionTime),'crit',true);
-    }else{
-        logger.log('Connected to the database in ' + logger.timeSpent(databaseConnectionTime));
+function reconnect() {
+    let databaseConnectionTime = new Date();
+    connection.connect(function(err) {
+        if (err){
+            logger.log('Unable to connect to the database after ' + logger.timeSpent(databaseConnectionTime),'crit',true);
+        }else{
+            logger.log('Connected to the database in ' + logger.timeSpent(databaseConnectionTime));
+        }
+    });
+}
+
+connection.on('error', function(err) {
+    logger.log('Error occurred in the database connection. ' + err.code, 'WARN', true, err);
+    logger.log('Attempting to reconnect to the database', 'INFO', true, err);
+    if(err.code === 'PROTOCOL_CONNECTION_LOST') {
+        reconnect();
     }
 });
+
+reconnect();
 
 module.exports = connection;
