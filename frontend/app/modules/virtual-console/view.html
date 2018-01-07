@@ -1,0 +1,103 @@
+<div class="container" style="margin-top: 40px;" ng-if="accessDenied">
+    <h1>Access Denied</h1>
+</div>
+<div class="container" style="margin-top: 40px;" ng-if="!accessDenied">
+    <h1>Virtual Console Logs</h1>
+    <div class="row event-logger-tools">
+        <span class="spacer"></span>
+        <button type="button" class="btn btn-light clear">Clear Events</button>
+        <div class="btn-group">
+            <button type="button"
+                    class="btn dropdown-toggle"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    ng-class="{
+                        'btn-primary' : paginationCtrl.filter === undefined,
+                        'btn-warning' : paginationCtrl.filter === 'warn',
+                        'btn-danger' : paginationCtrl.filter === 'crit',
+                        'btn-info' : paginationCtrl.filter === 'info',
+                        'btn-secondary' : paginationCtrl.filter === 'log'
+                    }"
+                    aria-expanded="false">
+                {{ ctrlVirtCons.getFilterText(paginationCtrl.filter) }}
+            </button>
+            <div class="dropdown-menu">
+                <a class="dropdown-item"
+                   ng-click="ctrlVirtCons.refreshLogs(1, paginationCtrl.count)"
+                   href>
+                    All Events
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href
+                   ng-click="ctrlVirtCons.refreshLogs(1, paginationCtrl.count, 'info')">
+                    Informative Events
+                </a>
+                <a class="dropdown-item" href
+                   ng-click="ctrlVirtCons.refreshLogs(1, paginationCtrl.count, 'warn')">
+                    Warning Events
+                </a>
+                <a class="dropdown-item" href
+                   ng-click="ctrlVirtCons.refreshLogs(1, paginationCtrl.count, 'crit')">
+                    Critical Events
+                </a>
+                <a class="dropdown-item" href
+                   ng-click="ctrlVirtCons.refreshLogs(1, paginationCtrl.count, 'live')">
+                    Live Events
+                </a>
+                <a class="dropdown-item" href
+                   ng-click="ctrlVirtCons.refreshLogs(1, paginationCtrl.count, 'log')">
+                    Log Events
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="row event-logger">
+        <table>
+            <tr>
+                <th>DATE</th>
+                <th>TIME</th>
+                <th>STATUS CODE</th>
+                <th>DESCRIPTION</th>
+            </tr>
+            <tr class="no-events" ng-if="paginationCtrl.total === 0 && !paginationCtrl.loading">
+                <td>No Events to display</td>
+            </tr>
+            <tr class="no-events" ng-if="paginationCtrl.loading">
+                <td>
+                    <div layout="column" layout-align="center center" class="loading-indicator-cmp">
+                        <md-progress-circular md-mode="indeterminate" md-diameter="40px"></md-progress-circular>
+                        <div class="info-text">Loading Virtual Console Events</div>
+                    </div>
+                </td>
+            </tr>
+            <tr class="{{ logRecord.statusCode.toLowerCase() }}"
+                ng-if="!paginationCtrl.loading"
+                ng-repeat="logRecord in ctrlVirtCons.logs.data">
+                <td>{{ logRecord.date }}</td>
+                <td>{{ logRecord.time }}</td>
+                <td>{{ logRecord.statusCode }}</td>
+                <td>{{ logRecord.message }}</td>
+            </tr>
+        </table>
+    </div>
+    <div class="row event-logger-pagination">
+        <nav aria-label="Page navigation example" ng-if="paginationCtrl.totalPages > 1">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" ng-class="{ 'disabled' : paginationCtrl.current === 1}">
+                    <a class="page-link"
+                       ng-click="ctrlVirtCons.refreshLogs(paginationCtrl.current-1, paginationCtrl.count, paginationCtrl.filter)"
+                       href tabindex="-1">Previous</a>
+                </li>
+                <li class="page-item" ng-repeat="n in paginationCtrl.pages" ng-class="{'active' : paginationCtrl.current == n+1}">
+                    <a class="page-link" href ng-click="ctrlVirtCons.refreshLogs(n+1, paginationCtrl.count, paginationCtrl.filter)">{{ n+1 }}</a>
+                </li>
+                <li class="page-item"
+                    ng-class="{ 'disabled' : paginationCtrl.current === paginationCtrl.totalPages}">
+                    <a class="page-link"
+                       ng-click="ctrlVirtCons.refreshLogs(paginationCtrl.current+1, paginationCtrl.count, paginationCtrl.filter)"
+                       href>Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>

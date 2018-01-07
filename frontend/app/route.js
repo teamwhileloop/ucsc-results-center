@@ -34,11 +34,6 @@ app.config(function($routeProvider) {
 
     function applicationInitializerRoot(FacebookService,$location,ProfileService,ApplicationService) {
         if (FacebookService.isServiceInitialized()) {
-            ApplicationService.showNavigationIndicator({
-                icon: 'swap_horiz',
-                enabled: true,
-                text: 'Redirecting tp Registration page'
-            });
             return new Promise(function (resolve, reject) {
                 ProfileService.validateUser()
                     .then((response) => {
@@ -86,6 +81,28 @@ app.config(function($routeProvider) {
             templateUrl:'public/html/modules/registration/view.html',
             controllerAs : 'ctrlReg',
             resolve : {
+                navText : function (ApplicationService) {
+                    ApplicationService.showNavigationIndicator({
+                        icon: 'swap_horiz',
+                        enabled: true,
+                        text: 'Redirecting to Registration page'
+                    });
+                },
+                loggedInUser : applicationInitializerRoot
+            }
+        })
+        .when("/virtual-console",{
+            controller:'VirtualConsoleController',
+            templateUrl:'public/html/modules/virtual-console/view.html',
+            controllerAs : 'ctrlVirtCons',
+            resolve : {
+                navText : function (ApplicationService) {
+                    ApplicationService.showNavigationIndicator({
+                        icon: 'swap_horiz',
+                        enabled: true,
+                        text: 'Redirecting to Virtual Console'
+                    });
+                },
                 loggedInUser : applicationInitializerRoot
             }
         })

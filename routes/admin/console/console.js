@@ -30,7 +30,7 @@ router.get('/',function (req,res) {
             total: result.length,
             totalPages: Math.ceil(result.length / count)
         },
-        data: paginatedResults
+        data: page ? paginatedResults : result
     });
 });
 

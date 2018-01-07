@@ -1,0 +1,119 @@
+div.row.event-logger{
+  table{
+    background: #f5f5f5;
+    border-collapse: separate;
+    box-shadow: inset 0 1px 0 #fff;
+    font-size: 12px;
+    line-height: 20px;
+    text-align: left;
+    width: 100%;
+
+    tr{
+      display: flex;
+      flex-direction: row;
+
+      &.no-events > td{
+        flex: 1;
+        margin: 20px 0;
+        text-align: center;
+      }
+
+      &.warn > td {
+        background-color: $bootstrap-color-warning;
+      }
+
+      &.crit > td {
+        background-color: $bootstrap-color-danger;
+      }
+
+      &.live > td {
+        background-color: $bootstrap-color-info;
+      }
+
+      th{
+        background: linear-gradient(#777, #444);
+        border-left: 1px solid #555;
+        border-right: 1px solid #777;
+        border-top: 1px solid #555;
+        border-bottom: 1px solid #333;
+        box-shadow: inset 0 1px 0 #999;
+        color: #fff;
+        font-weight: bold;
+        padding: 10px 15px;
+        position: relative;
+        text-shadow: 0 1px 0 #000;
+
+        &:nth-of-type(1){
+          flex: 1;
+        }
+
+        &:nth-of-type(2){
+          flex: 1;
+        }
+
+        &:nth-of-type(3){
+          flex: 1;
+        }
+
+        &:nth-of-type(4){
+          flex: 6;
+        }
+      }
+
+      &:nth-of-type(1){
+        background-color: #f5f6f8;
+        text-align: center;
+        color: #4f5366;
+        height: 40px;
+        border: 1px solid #4f5366;
+      }
+
+      td{
+        padding: 10px 15px;
+
+        &:nth-of-type(1){
+          flex: 1;
+          text-align: center;
+        }
+
+        &:nth-of-type(2){
+          flex: 1;
+          text-align: center;
+        }
+
+        &:nth-of-type(3){
+          text-align: center;
+          flex: 1;
+        }
+
+        &:nth-of-type(4){
+          flex: 6;
+        }
+      }
+
+    }
+  }
+}
+
+div.row.event-logger-tools{
+  margin: 10px -10px;
+  display: flex;
+  flex-direction: row;
+
+  button.clear{
+    margin: 0 10px;
+  }
+
+  span.spacer{
+    flex: 1;
+  }
+
+  button.btn-light{
+  }
+}
+
+div.row.event-logger-pagination{
+  display: flex;
+  padding: 10px 0;
+  justify-content: center;
+}
