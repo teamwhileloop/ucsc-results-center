@@ -5,7 +5,19 @@
     <h1>Virtual Console Logs</h1>
     <div class="row event-logger-tools">
         <span class="spacer"></span>
-        <button type="button" class="btn btn-light clear">Clear Events</button>
+
+        <button type="button"
+                ng-click="ctrlVirtCons.refreshLogs(paginationCtrl.current, paginationCtrl.count, paginationCtrl.filter)"
+                class="btn btn-light clear">
+            <i class="material-icons">refresh</i>
+            Refresh
+        </button>
+
+        <button type="button" class="btn btn-warning clear">
+            <i class="material-icons">delete</i>
+            Clear Events
+        </button>
+
         <div class="btn-group">
             <button type="button"
                     class="btn dropdown-toggle"

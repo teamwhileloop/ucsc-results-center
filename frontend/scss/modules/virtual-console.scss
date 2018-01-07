@@ -101,14 +101,17 @@ div.row.event-logger-tools{
   flex-direction: row;
 
   button.clear{
-    margin: 0 10px;
+    margin: 0 10px 0 0;
+    display: flex;
+    cursor: pointer;
+
+    i{
+      margin: 0 10px 0 0;
+    }
   }
 
   span.spacer{
     flex: 1;
-  }
-
-  button.btn-light{
   }
 }
 

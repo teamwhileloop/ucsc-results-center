@@ -1,4 +1,4 @@
-app.controller('PageHeaderController',function ($scope, $timeout, $mdSidenav) {
+app.controller('PageHeaderController',function ($scope, $timeout, $mdSidenav, $location) {
 
     $scope.pageHeaderVisibility = false;
     $scope.navigationIndicatorVisibility = false;
@@ -20,6 +20,11 @@ app.controller('PageHeaderController',function ($scope, $timeout, $mdSidenav) {
         }if (power === 100){
             return 'System Administrator';
         }
+    };
+
+    $scope.goToPath = function (path) {
+        $location.path(path);
+        $mdSidenav('sidebar').close();
     };
 
     $scope.closeSideBar = function () {
