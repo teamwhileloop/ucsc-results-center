@@ -3,11 +3,11 @@ const router = express.Router();
 
 let permission = require('../modules/permissions');
 
+const profile = require('./profile/profile');
+
 // Authentication and Verification Middleware
 router.use('/', permission());
 
-router.get('/',function (req,res) {
-   res.send({});
-});
+router.use('/profile', profile);
 
 module.exports = router;
