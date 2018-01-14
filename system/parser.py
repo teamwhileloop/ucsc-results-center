@@ -63,7 +63,7 @@ def jsonGenerator(filePath, skipValidation):
         if (not skipValidation):
             print '\tValidation challenge :\n'
             indexList = output['data'].keys()
-            for testcase in range(len(indexList)//10):
+            for testcase in range(max(1,len(indexList)//10)):
                 testIndex = indexList[random.randint(0,len(indexList) - 1)]
                 print '\t\t', testIndex, '\t',output['data'][testIndex]
             if (raw_input('\n\t Valid? [Y\N] ') != 'Y'):
