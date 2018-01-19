@@ -1,7 +1,6 @@
 applicationIdJSON = {
   'localhost:3000':'1917234511877082',  // Dev Testing
-  'ucscresults.herokuapp.com':'324582471336592',  // Production
-  '13.250.2.9':'139123596786957',  // Staging
+  'www.ucscresult.com':'324582471336592'  // Production
 };
 
 let applicationID = applicationIdJSON[window.location.host];
