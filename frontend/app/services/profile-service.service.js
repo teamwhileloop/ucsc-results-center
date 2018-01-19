@@ -14,6 +14,11 @@ app.service('ProfileService',function ($rootScope,FacebookService,$http) {
             return $http.post('/user/request',data,{
                 headers: FacebookService.getHttpRequestHeaders()
             })
+        },
+        getProfileResults: function (indexNumber = 0) {
+            return $http.get(`/v1.0/profile/${indexNumber}`,{
+                headers: FacebookService.getHttpRequestHeaders()
+            })
         }
     };
 });

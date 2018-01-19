@@ -1,0 +1,167 @@
+<div class="container profile-page">
+    <div class="card loader" ng-if="loadingData">
+        <loading-indicator loader-text="loaderText"></loading-indicator>
+    </div>
+    <div ng-if="!loadingData && visibility === 'private'">
+        <h1>Private Profile</h1>
+    </div>
+    <div ng-if="!loadingData && visibility === 'not-found'">
+        <h1>Private Profile</h1>
+    </div>
+    <div ng-if="!loadingData && visibility === 'visible'">
+        <div class="row summary-row">
+            <div class="col-lg-8">
+                <div class="card result-summary-card">
+                    <div class="card-body">
+                        <h4 class="card-title">Overview of {{ indexNumber }}</h4>
+                        <h6 class="card-subtitle mb-2">Last updated : {{ lastUpdate }}</h6>
+                        <div class="row data-card-group">
+                            <div class="col-lg-4 data-card">
+                                <div class="data-card-data">{{ gpa | number:3 }}</div>
+                                <div class="data-card-title">
+                                    Current GPA
+                                </div>
+                                <div class="data-card-diff">
+                                    <i class="material-icons {{ gpaDiffIcon }}">{{ gpaDiffIcon }}</i> {{ gpa_diff | number:3 }} Points
+                                </div>
+                            </div>
+                            <div class="col-lg-4 data-card">
+                                <div class="data-card-data">#{{ rank }}</div>
+                                <div class="data-card-title">
+                                    Current Rank
+                                </div>
+                                <div class="data-card-diff">
+                                    <i class="material-icons {{ rankDiffIcon }}">{{ rankDiffIcon }}</i> {{ rank_diff }} Position(s)
+                                </div>
+                            </div>
+                            <div class="col-lg-4 data-card">
+                                <div class="data-card-data">{{ total_credits }}</div>
+                                <div class="data-card-title">
+                                    Total Credits
+                                </div>
+                            </div>
+                        </div>
+                        <h6 class="description">
+                            A grade point of 4.25 is used to calculate the GPA and the Rank instead of using 4.0 for both the grades A and A+. Total credits includes the Non-GPA Enhancement subjects. If there are multiple attempts on a single subject the highest grade will be obtained. If the obtained grade is above C+ and is not the first legit attempt on the subject, a grade point of 2.25 will be awarded for the subject.
+                        </h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card result-summary-card degree-fc">
+                    <div class="card-body">
+                        <h4 class="card-title">Degree Information</h4>
+                        <div class="col-sm-12 degree-data-box">
+                            <div class="degree-name">
+                                FC
+                            </div>
+                        </div>
+                        <h6 class="description">
+                            Code names for the classes are as follow, FC for First Class degree, SU for Second Upper degree, SL for Second Lower degree, NM for Normal degree and -- indicates that your GPA is insufficient to complete the degree.
+                        </h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row standard-card">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">GPA Distribution</h4>
+                    <h6 class="card-subtitle mb-2">Your GPA will be rounded to the first decimal point.</h6>
+                    <highchart></highchart>
+                </div>
+            </div>
+        </div>
+        <div class="row results-section">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header semseter-header">
+                        <div class="heading">1st Year 3rd Semester</div>
+                        <span></span>
+                        <div class="buttons">
+                            <button type="button">
+                                <i class="material-icons">show_chart</i>
+                                Analytics</button>
+                        </div>
+                    </div>
+                    <div class="row semester-data-row">
+                        <div class="semester-data-box">
+                            <div class="semester-data">2.2322</div>
+                            <div class="semester-data-label">Semester GPA</div>
+                        </div>
+                        <div class="semester-data-box">
+                            <div class="semester-data">#121</div>
+                            <div class="semester-data-label">Semester Rank</div>
+                        </div>
+                        <div class="semester-data-box">
+                            <div class="semester-data">21</div>
+                            <div class="semester-data-label">Total Credits</div>
+                        </div>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item result-item">
+                            <div class="subject-info">
+                                <div class="subject-name">Programming I</div>
+                                <div class="subject-meta">SCS2108 / 3 Credits / Attempt Year : 2016</div>
+                            </div>
+                            <div class="subject-grade">
+                                A+
+                            </div>
+                        </li>
+                        <li class="list-group-item result-item">
+                            <div class="subject-info">
+                                <div class="subject-name">Programming I</div>
+                                <div class="subject-meta">SCS2108 / 3 Credits / Attempt Year : 2016</div>
+                            </div>
+                            <div class="subject-grade">
+                                A
+                            </div>
+                        </li>
+                        <li class="list-group-item result-item">
+                            <div class="subject-info">
+                                <div class="subject-name">Programming I</div>
+                                <div class="subject-meta">SCS2108 / 3 Credits / Attempt Year : 2016</div>
+                            </div>
+                            <div class="subject-grade">
+                                MC
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-6 standard-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Semester GPA Variation</h4>
+                        <div id="containerx" style="height: 300px;"></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Contribution to GPA by Grade</h4>
+                        <h6 class="card-subtitle mb-2">Click on the legends to toggle it's visibility</h6>
+                        <div id="containery"></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Batch Ranking</h4>
+                        <h6 class="card-subtitle mb-2">Last updated : {{ lastUpdate }}</h6>
+                        <div>
+                            <ul class="list-group">
+                                <li ng-repeat="person in rankList"
+                                    ng-click="goToProfile(person.indexNumber)"
+                                    class="list-group-item ranking-item {{ myIndexNumber.toString() === person.indexNumber.toString() ? 'active' : 'nope' }}">
+                                    <div ng-if="person.gpa !== undefined" class="rank">#{{ person.rank }}</div>
+                                    <div ng-if="person.gpa !== undefined" class="name">{{ person.indexNumber }}</div>
+                                    <div ng-if="person.gpa !== undefined" class="gpa">{{ person.gpa | number:4 }}</div>
+                                    <div ng-if="person.gpa === undefined" class="private">Private Account</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

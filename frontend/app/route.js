@@ -106,6 +106,20 @@ app.config(function($routeProvider) {
                 loggedInUser : applicationInitializerRoot
             }
         })
+        .when("/profile/:indexNumber",{
+            controller: 'ProfilePageController',
+            templateUrl:'public/html/modules/profile-page/view.html',
+            resolve : {
+                navText : function (ApplicationService, $routeParams) {
+                    ApplicationService.showNavigationIndicator({
+                        icon: 'swap_horiz',
+                        enabled: true,
+                        text: `Navigating to profile ${$routeParams.indexNumber || 'page'}`
+                    });
+                },
+                loggedInUser : applicationInitializerRoot
+            }
+        })
         .when("/sample",{
             controller: 'SampleController',
             templateUrl:'public/html/modules/sample/view.html',

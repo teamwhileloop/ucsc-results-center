@@ -1,0 +1,258 @@
+div.profile-page.container{
+  padding-top: 20px;
+
+  div.card.loader{
+    padding: 40px;
+  }
+
+  .summary-row {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+
+    & > div {
+      padding: 5px;
+    }
+
+    .result-summary-card {
+      background-color: #fff;
+      color: #333;
+      height: 100%;
+
+      &.degree-fc {
+        background-color: #28a745;
+
+        h4.card-title {
+          color: #fff;
+          margin-bottom: 10px;
+        }
+
+        .degree-data-box {
+          color: #fff;
+          text-align: center;
+          font-size: 5.5em;
+        }
+      }
+
+      .card-subtitle {
+        color: #aaa;
+        font-size: 10px;
+        font-weight: 100;
+      }
+
+      h6.description {
+        color: #ccc;
+        font-size: 10px;
+        font-weight: 100;
+      }
+
+      h4.card-title {
+        color: #5c5c5c;
+        margin-bottom: 10px;
+      }
+
+      div.data-card-group {
+        padding: 5px 0 20px 0;
+        .data-card {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+
+          .data-card-data {
+            color: #333;
+            font-size: 3.5em;
+          }
+
+          .data-card-title {
+            color: #999;
+          }
+
+          .data-card-diff{
+            display: flex;
+            flex-direction: row;
+            font-size: 10px;
+            i{
+              font-size: 12px;
+              font-weight: bold;
+              padding: 0 4px;
+
+              &.arrow_upward{
+                color: green;
+              }
+
+              &.arrow_downward{
+                color: red;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .standard-card {
+    padding: 5px;
+    .card {
+      width: 100%;
+    }
+
+    .card-subtitle {
+      color: #aaa;
+      font-size: 10px;
+      font-weight: 100;
+    }
+
+    h6.description {
+      color: #ccc;
+      font-size: 10px;
+      font-weight: 100;
+    }
+
+    h4.card-title {
+      color: #5c5c5c;
+      margin-bottom: 10px;
+    }
+  }
+
+  .results-section{
+    & > div{
+      padding : 5px;
+    }
+
+    .card{
+      margin-bottom: 20px;
+    }
+
+    .semseter-header{
+      background-color: #2B3A48;
+      height: 60px;
+      display: flex;
+      flex-direction: row;
+
+      span{
+        flex: 1;
+      }
+
+      .heading{
+        display : flex;
+        flex-direction: column;
+        justify-content: center;
+        align-content: center;
+        color: #fff;
+        font-size: 18px;
+      }
+
+      .buttons{
+        display : flex;
+        flex-direction: column;
+        justify-content: center;
+        align-content: center;
+
+        button{
+          background-color: #2B3A48;
+          padding: 5px 10px 5px 5px;
+          display: flex;
+          flex-direction: row;
+          border: 1px solid #2B3A48;
+          border-radius: 5px;
+          color: #fff;
+          cursor: pointer;
+          transition: all 0.2s linear;
+
+          &:hover{
+            border: 1px solid #a8d2ff;
+          }
+
+          i{
+            margin: 0 5px;
+          }
+        }
+      }
+    }
+
+    .result-item{
+      display: flex;
+      padding: 5px 20px;
+      flex-direction: row;
+
+      .subject-info{
+        flex: 1;
+
+        .subject-name{
+          color: #333;
+          font-size: 1em;
+          padding: 5px 0 0 0;
+        }
+
+        .subject-meta{
+          color: #999;
+          font-size: 10px;
+        }
+      }
+
+      .subject-grade{
+        display: flex;
+        flex-firection: column;
+        align-content: center;
+        justify-content: start;
+        width: 60px;
+        font-size: 2em;
+        font-weight: bold;
+        color: #333;
+      }
+    }
+
+  }
+
+  text.highcharts-credits{
+    display:none;
+  }
+
+  .ranking-item{
+    cursor: pointer;
+    display : flex;
+    flex-direction: row;
+
+    .name{
+      flex: 1;
+    }
+
+    .rank{
+      width: 40px;
+      text-align: right;
+      margin: 0 25px 0 0;
+    }
+
+    .private{
+      width: 100%;
+      text-align: center;
+      color: #ccc;
+    }
+  }
+
+  .semester-data-row{
+    display: flex;
+    flex-direction: row;
+    margin: 10px 0px;
+
+    .semester-data-box{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      flex: 1;
+
+      .semester-data{
+        font-size: 2em;
+        font-weight: 600;
+        color: #333;
+      }
+
+      .semester-data-label{
+        color: #999;
+        font-size: 0.8em;
+      }
+    }
+  }
+}
+

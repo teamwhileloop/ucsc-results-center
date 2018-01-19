@@ -100,6 +100,7 @@ function getBatchRankings(indexNumber, req) {
                 if (!error){
                     _.forEach(payload, function (value, key) {
                         if (!privacyPermission(req.facebookVerification.indexNumber || 0, value.indexNumber, value.privacy)){
+                            console.log(req.facebookVerification.indexNumber || 0, value.indexNumber, value.privacy);
                             payload[key]['privacy'] = 'private';
                             delete payload[key]['indexNumber'];
                             delete payload[key]['gpa'];

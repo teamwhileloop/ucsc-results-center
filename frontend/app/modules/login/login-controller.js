@@ -55,6 +55,7 @@ app.controller('LoginController',function (
         ApplicationService.setLoadingIndicatorStatus('login.statuschecker',`Logging you in as ${data.name}`);
         switch (data.state){
             case 'verified':
+                $location.path(`/profile/${data.indexNumber}`);
                 break;
             case 'guest':
                 $location.path('/registration');
