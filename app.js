@@ -9,15 +9,22 @@ let postman = require('./modules/postman');
 const express = require('express');
 const path = require('path');
 const app = express();
-const http = require('http').Server(app);
+const fs = require('fs');
 const socketIO = require('./index');
 const bodyParser = require('body-parser');
+
+let privateKey;
+let certificate;
+let httpsCredentials;
 
 // Setup Logger
 if (!credentials.isDeployed){
     logger.disableDatabaseWrite();
 }else {
     logger.enableDatabaseWrite();
+    privateKey  = fs.readFileSync('/etc/letsencrypt/live/ucscresult.com/privkey.pem', 'utf8');
+    certificate = fs.readFileSync('/etc/letsencrypt/live/ucscresult.com/fullchain.pem', 'utf8');
+    httpsCredentials = {key: privateKey, cert: certificate};
 }
 logger.setStatusCodeLength(4);
 logger.setStatusCodes({
@@ -29,11 +36,19 @@ logger.setStatusCodes({
 logger.setDefaultStatusCodeKey('info');
 
 // Setup Express
+const http = require('http').Server(app);
+const https = require('https').Server(httpsCredentials, app);
 app.set('views', __dirname + '/');
 app.engine('html', require('ejs').renderFile);
 http.listen(port, function(){
     logger.log('Server started and listening on PORT ' + port);
 });
+// Setup HTTPS
+if (credentials.isDeployed){
+    https.listen(443, function(){
+        logger.log('Server started and listening on PORT ' + 443);
+    });
+}
 
 // Route Imports and Config
 app.use(bodyParser.json());
@@ -50,7 +65,15 @@ app.use('/cdn',express.static(path.join(__dirname, 'node_modules')));
 
 // Routing
 app.get('/', function(req, res) {
+    // Redirect HTTPS traffic to HTTPS on production environment
+    if (credentials.isDeployed && !req.secure){
+        res.writeHead(302, {
+            'Location': 'https://www.ucscresult.com'
+        });
+        res.end();
+        return;
+    }
     res.render('index.html');
 });
 
-module.exports = http;
+module.exports = credentials.isDeployed ? https : http;
