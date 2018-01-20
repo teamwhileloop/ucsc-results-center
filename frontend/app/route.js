@@ -1,67 +1,72 @@
 app.config(function($routeProvider) {
-    function initializer(FacebookService,ProfileService,$location) {
-        return new Promise(function (resolve, reject) {
-            FacebookService.initializeService().then(()=>{
-                if(!FacebookService.serviceReady()){
+
+    function applicationAuthenticator(FacebookService, ProfileService, $location) {
+        return new Promise((resolve, reject)=>{
+            if (FacebookService.isServiceInitialized()){
+                if (!FacebookService.serviceReady()){
                     console.warn('Facebook Service not ready. Re-Authenticating');
-                    FacebookService.reAuthenticate(false)
-                    .then((response)=>{
-                        if (response){
-                            initializer(FacebookService,ProfileService,$location)
-                            .then((response)=>{
-                                resolve(response);
+                    FacebookService.reAuthenticate()
+                        .then(()=>{
+                            ProfileService.validateUser()
+                            .then((validationResponse)=>{
+                                resolve(validationResponse.data);
                             })
-                            .catch((error)=>{
-                                reject(error);
-                            });
-                        }else{
+                            .catch(()=>{
+                                reject(false);
+                                $location.path('/');
+                            })
+                        })
+                        .catch(()=>{
                             reject(false);
-                        }
-                    });
+                            $location.path('/');
+                        })
                 }else{
                     ProfileService.validateUser()
-                        .then((response)=>{
-                            resolve(response);
-                        })
-                        .catch((error)=>{
-                            console.error(error);
-                            reject(error);
-                        });
-                }
-            });
-        });
-    }
-
-    function applicationInitializerRoot(FacebookService,$location,ProfileService,ApplicationService) {
-        if (FacebookService.isServiceInitialized()) {
-            return new Promise(function (resolve, reject) {
-                ProfileService.validateUser()
-                    .then((response) => {
-                        resolve(response.data);
+                    .then((validationResponse)=>{
+                        resolve(validationResponse.data);
                     })
-                    .catch((error) => {
-                        console.error(error);
-                        $location.path('/error');
-                    });
-            });
-        }
-        return new Promise(function (resolve, reject) {
-            initializer(
-                FacebookService,
-                ProfileService,
-                $location
-            ).then((data) => {
-                if (data.status === 200) {
-                    resolve(data.data);
-                } else {
-                    console.error(data);
-                    $location.path('/error');
+                    .catch(()=>{
+                        reject(false);
+                        $location.path('/');
+                    })
                 }
-            })
-                .catch((error) => {
-                    console.error(error);
-                    $location.path('/error');
-                });
+            }else{
+                FacebookService.initializeService()
+                .then(()=>{
+                    if (!FacebookService.serviceReady()){
+                        console.warn('Facebook Service not ready. Re-Authenticating');
+                        FacebookService.reAuthenticate()
+                        .then(()=>{
+                            ProfileService.validateUser()
+                            .then((validationResponse)=>{
+                                resolve(validationResponse.data);
+                            })
+                            .catch(()=>{
+                                reject(false);
+                                $location.path('/');
+                            })
+                        })
+                        .catch(()=>{
+                            reject(false);
+                            $location.path('/');
+                        })
+                    }else{
+                        ProfileService.validateUser()
+                        .then((validationResponse)=>{
+                            resolve(validationResponse.data);
+                        })
+                        .catch(()=>{
+                            reject(false);
+                            $location.path('/');
+                        })
+                    }
+                })
+                .catch(()=>{
+                    console.warn('FacebookService Ready-up failed!');
+                    reject(false);
+                    $location.path('/');
+                })
+            }
         });
     }
 
@@ -71,9 +76,15 @@ app.config(function($routeProvider) {
             templateUrl:'public/html/modules/login/view.html',
             controllerAs : 'ctrlLogin',
             resolve : {
-                init : function (FacebookService) {
-                    return FacebookService.initializeService();
-                }
+                automaticLogin: ()=> {return true; }
+            }
+        })
+        .when("/login",{
+            controller:'LoginController',
+            templateUrl:'public/html/modules/login/view.html',
+            controllerAs : 'ctrlLogin',
+            resolve : {
+                automaticLogin: ()=>{ return false; }
             }
         })
         .when("/registration",{
@@ -88,7 +99,7 @@ app.config(function($routeProvider) {
                         text: 'Redirecting to Registration page'
                     });
                 },
-                loggedInUser : applicationInitializerRoot
+                loggedInUser : applicationAuthenticator
             }
         })
         .when("/virtual-console",{
@@ -103,7 +114,7 @@ app.config(function($routeProvider) {
                         text: 'Redirecting to Virtual Console'
                     });
                 },
-                loggedInUser : applicationInitializerRoot
+                loggedInUser : applicationAuthenticator
             }
         })
         .when("/profile/:indexNumber",{
@@ -117,27 +128,7 @@ app.config(function($routeProvider) {
                         text: `Navigating to profile ${$routeParams.indexNumber || 'page'}`
                     });
                 },
-                loggedInUser : applicationInitializerRoot
-            }
-        })
-        .when("/sample",{
-            controller: 'SampleController',
-            templateUrl:'public/html/modules/sample/view.html',
-            resolve : {
-                init : function (FacebookService,$location,ProfileService) {
-                    if (FacebookService.isServiceInitialized()){
-                        return true;
-                    }
-                    return new Promise(function (resolve, reject) {
-                        initializer(
-                            FacebookService,
-                            ProfileService,
-                            $location
-                        ).then((data)=>{
-                            resolve(data);
-                        });
-                    });
-                }
+                loggedInUser : applicationAuthenticator
             }
         })
         .when("/error",{

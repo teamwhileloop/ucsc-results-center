@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Team whileLOOP</title>
+    <!--FACEBOOK-->
+    <script src="//connect.facebook.net/en_US/sdk.js"></script>
+</head>
+
+<body ng-app="ucscResultsCenter" ng-cloak>
+    <div id="fb-root"></div>
+
+    <!--Notification System-->
+    <script>
+        applicationIdJSON = {
+            'localhost:3000':'1917234511877082',  // Dev Testing
+            'www.ucscresult.com':'324582471336592'  // Production
+        };
+
+        let applicationID = applicationIdJSON[window.location.host];
+
+        FB.init({
+            appId      : applicationID,
+            cookie     : true,
+            xfbml      : false,
+            version    : 'v2.8'
+        });
+    </script>
+</body>
+</html>

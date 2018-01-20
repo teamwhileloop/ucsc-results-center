@@ -26,6 +26,7 @@ app.controller('RegistrationController',function (
 
     switch (loggedInUser.state){
         case 'verified':
+            $location.path(`/profile/${loggedInUser.indexNumber}`);
             break;
         case 'guest':
             $scope.step = 0;
@@ -79,17 +80,11 @@ app.controller('RegistrationController',function (
             $scope.indexNumberStatus = 'checking';
             ProfileService.getUserState(indexNumber)
             .then((response)=>{
-                if (response.status === 200){
-                    $scope.indexNumberStatus = response.data.state;
-                }else if(response.status === 401){
-                    FacebookService.reAuthenticate()
-                    .then((data)=>{
-                        if (data){
-                            this.checkIndexNumberValidity(indexNumber);
-                        }
-                    });
-                }
-            });
+                $scope.indexNumberStatus = response.data.state;
+            })
+            .catch((error)=>{
+                console.error(error);
+            })
         }else{
             $scope.indexNumberStatus = 'unknown';
         }

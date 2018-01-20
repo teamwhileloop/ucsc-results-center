@@ -1,13 +1,11 @@
-app.service('VirtualConsoleService',function ($rootScope,FacebookService,$http) {
+app.service('VirtualConsoleService',function ($rootScope,FacebookService, apiClient) {
     return {
         getConsoleLog: function (page, count, filter) {
             let query = '';
             page ? query += `page=${page}&` : null;
             count ? query += `count=${count}&` : null;
             filter ? query += `filter=${filter}` : null;
-            return $http.get(`/admin/console?${query}`,{
-                headers: FacebookService.getHttpRequestHeaders()
-            })
+            return apiClient.get(`/admin/console?${query}`);
         }
     };
 });

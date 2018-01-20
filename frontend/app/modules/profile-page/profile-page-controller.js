@@ -11,7 +11,7 @@ app.controller('ProfilePageController',function (
 ) {
     console.log('Profile controller loaded');
     LoadingMaskService.deactivate();
-    ApplicationService.displayPageHeader();
+    ApplicationService.displayPageHeader({ search: true});
     ApplicationService.updatePageHeader(loggedInUser);
 
     let indexNumber = $routeParams.indexNumber;
@@ -220,6 +220,9 @@ app.controller('ProfilePageController',function (
             }
             $scope.loadingData = false;
         }
+    })
+    .catch((error)=>{
+        console.error(error);
     });
 
     $scope.goToProfile = function (indexNumber) {

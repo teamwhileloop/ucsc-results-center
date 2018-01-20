@@ -6,31 +6,42 @@ app.controller('LoginController',function (
     $timeout,
     FacebookService,
     ProfileService,
+    automaticLogin,
     $location
 ) {
     console.log('Login controller loaded');
     this.authStatus = 'loading';
     ApplicationService.hideNavigationIndicator();
+    ApplicationService.hidePageHeader();
 
     LoadingMaskService.deactivate();
 
     FacebookService.parseXFBML();
 
-    FacebookService.getLoginStatus().then((data)=>{
-        if (data.status === 'connected'){
-            ProfileService.validateUser()
-                .then((data)=>{
-                    this.redirectUpOnLogin(data.data);
-                })
-                .catch((error)=>{
-                    this.authStatus = 'unknown';
-                    ApplicationService.hideNavigationIndicator();
-                })
-        }else{
+    if (automaticLogin){
+        FacebookService.getLoginStatus()
+        .then((data)=>{
+            if (data.status === 'connected'){
+                ProfileService.validateUser()
+                    .then((data)=>{
+                        this.redirectUpOnLogin(data.data);
+                    })
+                    .catch((error)=>{
+                        this.authStatus = 'unknown';
+                        ApplicationService.hideNavigationIndicator();
+                    })
+            }else{
+                this.authStatus = 'unknown';
+                ApplicationService.hideNavigationIndicator();
+            }
+        })
+        .catch((error)=>{
             this.authStatus = 'unknown';
-            ApplicationService.hideNavigationIndicator();
-        }
-    });
+            console.error(error);
+        });
+    }else{
+        this.authStatus = 'unknown';
+    }
 
     this.userLoggedIn = ()=>{
         FacebookService.reAuthenticate(false).then(() => {
@@ -48,6 +59,9 @@ app.controller('LoginController',function (
                         autoDismiss : false
                     })
                 })
+        })
+        .catch((error)=>{
+            console.error(error);
         });
     };
 
@@ -71,5 +85,5 @@ app.controller('LoginController',function (
                 break;
         }
 
-    }
+    };
 });
