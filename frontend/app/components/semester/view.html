@@ -1,0 +1,42 @@
+<div class="card">
+    <div class="card-header semseter-header">
+        <div class="heading">{{ getSemesterTitle() }}</div>
+        <span></span>
+        <div class="buttons">
+            <button type="button">
+                <i class="material-icons">show_chart</i>
+                Analytics</button>
+        </div>
+    </div>
+    <div class="row semester-data-row">
+        <div class="semester-data-box">
+            <div class="semester-data">{{ semesterCtrl.summary['y'+ semesterCtrl.semesterData.year +'s'+ semesterCtrl.semesterData.semester +'_gpa'] }}</div>
+            <div class="semester-data-label">Semester GPA</div>
+        </div>
+        <div class="semester-data-box">
+            <div class="semester-data">#{{ semesterCtrl.summary['y'+ semesterCtrl.semesterData.year +'s'+ semesterCtrl.semesterData.semester +'_rank'] }}</div>
+            <div class="semester-data-label">Semester Rank</div>
+        </div>
+        <div class="semester-data-box">
+            <div class="semester-data">
+                {{
+                semesterCtrl.summary['y'+ semesterCtrl.semesterData.year +'s'+ semesterCtrl.semesterData.semester +'_credits']
+                +
+                semesterCtrl.summary['y'+ semesterCtrl.semesterData.year +'s'+ semesterCtrl.semesterData.semester +'_credits_non_gpa']
+                }}
+            </div>
+            <div class="semester-data-label">Total Credits</div>
+        </div>
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item result-item" ng-repeat="subjectResult in semesterCtrl.semesterData.results">
+            <div class="subject-info">
+                <div class="subject-name">{{ subjectResult.name }}</div>
+                <div class="subject-meta">{{ subjectResult.code }} / {{ subjectResult.credits || subjectResult.nonGpaCredits }} {{ subjectResult.nonGpaCredits ? 'Non-GPA ' : '' }}Credits / Attempt Year : {{ subjectResult.examYear }}</div>
+            </div>
+            <div class="subject-grade">
+                {{ subjectResult.grade }}
+            </div>
+        </li>
+    </ul>
+</div>

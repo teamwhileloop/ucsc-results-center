@@ -48,12 +48,12 @@
                 </div>
             </div>
             <div class="col-lg-4">
-                <div class="card result-summary-card degree-fc">
+                <div class="card result-summary-card {{ classColor }}">
                     <div class="card-body">
                         <h4 class="card-title">Degree Information</h4>
                         <div class="col-sm-12 degree-data-box">
                             <div class="degree-name">
-                                FC
+                                {{ degreeCode }}
                             </div>
                         </div>
                         <h6 class="description">
@@ -74,60 +74,7 @@
         </div>
         <div class="row results-section">
             <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-header semseter-header">
-                        <div class="heading">1st Year 3rd Semester</div>
-                        <span></span>
-                        <div class="buttons">
-                            <button type="button">
-                                <i class="material-icons">show_chart</i>
-                                Analytics</button>
-                        </div>
-                    </div>
-                    <div class="row semester-data-row">
-                        <div class="semester-data-box">
-                            <div class="semester-data">2.2322</div>
-                            <div class="semester-data-label">Semester GPA</div>
-                        </div>
-                        <div class="semester-data-box">
-                            <div class="semester-data">#121</div>
-                            <div class="semester-data-label">Semester Rank</div>
-                        </div>
-                        <div class="semester-data-box">
-                            <div class="semester-data">21</div>
-                            <div class="semester-data-label">Total Credits</div>
-                        </div>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item result-item">
-                            <div class="subject-info">
-                                <div class="subject-name">Programming I</div>
-                                <div class="subject-meta">SCS2108 / 3 Credits / Attempt Year : 2016</div>
-                            </div>
-                            <div class="subject-grade">
-                                A+
-                            </div>
-                        </li>
-                        <li class="list-group-item result-item">
-                            <div class="subject-info">
-                                <div class="subject-name">Programming I</div>
-                                <div class="subject-meta">SCS2108 / 3 Credits / Attempt Year : 2016</div>
-                            </div>
-                            <div class="subject-grade">
-                                A
-                            </div>
-                        </li>
-                        <li class="list-group-item result-item">
-                            <div class="subject-info">
-                                <div class="subject-name">Programming I</div>
-                                <div class="subject-meta">SCS2108 / 3 Credits / Attempt Year : 2016</div>
-                            </div>
-                            <div class="subject-grade">
-                                MC
-                            </div>
-                        </li>
-                    </ul>
-                </div>
+                <semester semester-data="resultSemester" summary="summary" ng-repeat="resultSemester in resultSets"></semester>
             </div>
             <div class="col-lg-6 standard-card">
                 <div class="card">

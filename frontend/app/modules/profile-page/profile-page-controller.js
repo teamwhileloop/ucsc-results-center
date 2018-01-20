@@ -23,11 +23,14 @@ app.controller('ProfilePageController',function (
     $scope.loaderText = 'Loading profile data from servers';
     $scope.gpa = 'NA';
     $scope.rank = 'NA';
+    $scope.summary = {};
     $scope.lastUpdate = 'NA';
     $scope.rankList = [];
     $scope.gpa_diff = 'NA';
     $scope.rank_diff = 'NA';
     $scope.total_credits = 'NA';
+    $scope.degreeCode = 'NA';
+    $scope.resultSets = [];
 
     ProfileService.getProfileResults(indexNumber)
     .then((data)=>{
@@ -60,6 +63,26 @@ app.controller('ProfilePageController',function (
                     $scope.rank_diff = data.data.summary.rank_diff;
                     $scope.rankDiffIcon = 'arrow_downward';
                 }
+
+                if (data.data.summary.gpa >= 3.5){
+                    $scope.degreeCode = 'FC';
+                    $scope.classColor = 'degree-fc';
+                }else if (data.data.summary.gpa >= 3.25){
+                    $scope.degreeCode = 'SU';
+                    $scope.classColor = 'degree-su';
+                }else if (data.data.summary.gpa >= 3.0){
+                    $scope.degreeCode = 'SL';
+                    $scope.classColor = 'degree-sl';
+                }else if (data.data.summary.gpa >= 2.0){
+                    $scope.degreeCode = 'NM';
+                    $scope.classColor = 'degree-na';
+                }else{
+                    $scope.degreeCode = '--';
+                    $scope.classColor = 'degree-no';
+                }
+
+                $scope.summary = data.data.summary;
+                $scope.resultSets = data.data.results.reverse();
 
                 $scope.total_credits = data.data.summary.credits;
             }

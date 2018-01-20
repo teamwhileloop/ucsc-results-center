@@ -2,6 +2,7 @@ div.profile-page.container{
   padding-top: 20px;
 
   div.card.loader{
+    margin-top: 50px;
     padding: 40px;
   }
 
@@ -20,7 +21,67 @@ div.profile-page.container{
       height: 100%;
 
       &.degree-fc {
+        background-color: $bootstrap-color-primary;
+
+        h4.card-title {
+          color: #ddd;
+          margin-bottom: 10px;
+        }
+
+        .degree-data-box {
+          color: #fff;
+          text-align: center;
+          font-size: 5.5em;
+        }
+      }
+
+      &.degree-su {
         background-color: #28a745;
+
+        h4.card-title {
+          color: #fff;
+          margin-bottom: 10px;
+        }
+
+        .degree-data-box {
+          color: #fff;
+          text-align: center;
+          font-size: 5.5em;
+        }
+      }
+
+      &.degree-sl {
+        background-color: $bootstrap-color-info;
+
+        h4.card-title {
+          color: #fff;
+          margin-bottom: 10px;
+        }
+
+        .degree-data-box {
+          color: #fff;
+          text-align: center;
+          font-size: 5.5em;
+        }
+      }
+
+      &.degree-na {
+        background-color: $white;
+
+        h4.card-title {
+          color: #333;
+          margin-bottom: 10px;
+        }
+
+        .degree-data-box {
+          color: $black;
+          text-align: center;
+          font-size: 5.5em;
+        }
+      }
+
+      &.degree-no {
+        background-color: $bootstrap-color-danger;
 
         h4.card-title {
           color: #fff;
