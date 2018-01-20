@@ -50,17 +50,20 @@ app.controller('VirtualConsoleController',function (
     this.refreshLogs = function (page, count, filter) {
         $scope.paginationCtrl.loading = true;
         VirtualConsoleService.getConsoleLog(page, count, filter)
-            .then((data)=>{
-                this.logs = [];
-                this.logs = data.data;
-                $scope.paginationCtrl.pages = _.range(data.data.meta.totalPages);
-                $scope.paginationCtrl.current = data.data.meta.page;
-                $scope.paginationCtrl.count = data.data.meta.count;
-                $scope.paginationCtrl.totalPages = data.data.meta.totalPages;
-                $scope.paginationCtrl.total = data.data.meta.total;
-                $scope.paginationCtrl.filter = data.data.meta.filter === 'all' ? undefined: data.data.meta.filter;
-                $scope.paginationCtrl.loading = false;
-            })
+        .then((data)=>{
+            this.logs = [];
+            this.logs = data.data;
+            $scope.paginationCtrl.pages = _.range(data.data.meta.totalPages);
+            $scope.paginationCtrl.current = data.data.meta.page;
+            $scope.paginationCtrl.count = data.data.meta.count;
+            $scope.paginationCtrl.totalPages = data.data.meta.totalPages;
+            $scope.paginationCtrl.total = data.data.meta.total;
+            $scope.paginationCtrl.filter = data.data.meta.filter === 'all' ? undefined: data.data.meta.filter;
+            $scope.paginationCtrl.loading = false;
+        })
+        .catch((error)=>{
+            console.error(error);
+        })
     };
 
     console.log('VirtualConsoleController loaded');

@@ -1,24 +1,16 @@
-app.service('ProfileService',function ($rootScope,FacebookService,$http) {
+app.service('ProfileService',function ($rootScope, FacebookService, $http, apiClient) {
     return {
         validateUser: function () {
-            return $http.get('/user/validate',{
-                headers: FacebookService.getHttpRequestHeaders()
-            })
+            return apiClient.get('/user/validate');
         },
         getUserState: function (indexNumber = 0) {
-            return $http.get(`/user/state/${indexNumber}`,{
-                headers: FacebookService.getHttpRequestHeaders()
-            })
+            return apiClient.get(`/user/state/${indexNumber}`);
         },
         submitClaimRequest: function (data = {}) {
-            return $http.post('/user/request',data,{
-                headers: FacebookService.getHttpRequestHeaders()
-            })
+            return apiClient.post('/user/request', data);
         },
         getProfileResults: function (indexNumber = 0) {
-            return $http.get(`/v1.0/profile/${indexNumber}`,{
-                headers: FacebookService.getHttpRequestHeaders()
-            })
+            return apiClient.get(`/v1.0/profile/${indexNumber}`);
         }
     };
 });
