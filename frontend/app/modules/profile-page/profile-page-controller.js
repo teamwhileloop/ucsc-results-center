@@ -81,6 +81,17 @@ app.controller('ProfilePageController',function (
                     $scope.classColor = 'degree-no';
                 }
 
+                let highlightPos = data.data.graphs.batchDistribution.keys.indexOf(data.data.summary.gpa.toFixed(1));
+                data.data.graphs.batchDistribution.values[highlightPos] = {
+                    marker: {
+                        fillColor: '#ff0000',
+                        radius: 6,
+                        lineWidth: 2,
+                        lineColor: "#ff0000"
+                    },
+                    y:data.data.graphs.batchDistribution.values[highlightPos]
+                };
+
                 $scope.batchDistribution = {
                     title: null,
                     chart: {
@@ -98,13 +109,15 @@ app.controller('ProfilePageController',function (
                     plotOptions: {
                         series: {
                             marker: {
-                                enabled: false
+                                enabled: true,
+                                radius: 1
                             },
                             fillOpacity: 0.35
                         }
                     },
 
                     series: [{
+                        name: 'Number of Undergraduates',
                         data: data.data.graphs.batchDistribution.values,
                         color: '#ffd700'
                     }]
