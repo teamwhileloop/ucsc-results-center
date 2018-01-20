@@ -200,8 +200,24 @@ function getGradeDistribution(indexNumber) {
                 }
             };
             _.forEach(completedSemesters, function (completedSemester) {
-                outputObject[`y${completedSemester.year}s${completedSemester.semester}`] = Object.assign({}, semesterGradeSet);
-                outputObject[`y${completedSemester.year}s${completedSemester.semester}`]['name'] = `${completedSemester.year} Year ${completedSemester.semester} Semester`
+                outputObject[`y${completedSemester.year}s${completedSemester.semester}`] = {
+                    name: `${completedSemester.year} Year ${completedSemester.semester} Semester`,
+                    data: {
+                        'A+': 0,
+                        'A' : 0,
+                        'A-': 0,
+                        'B+': 0,
+                        'B' : 0,
+                        'B-': 0,
+                        'C+': 0,
+                        'C' : 0,
+                        'C-': 0,
+                        'D+': 0,
+                        'D' : 0,
+                        'E' : 0,
+                        'F' : 0
+                    }
+                };
             });
             mysql.query("SELECT " +
                 "`year`, `semester`,`grade`, COUNT(`grade`) as count " +
@@ -243,8 +259,8 @@ function getProfileGraphs(indexNumber) {
         .then((data)=>{
             resolve({
                 batchDistribution : data[1],
-                gpaVariation : data[0],
-                gradeDistribution : data[2]
+                gpaVariation : data[2],
+                gradeDistribution : data[0]
             })
         })
         .catch((error)=>{reject(error)})
@@ -254,6 +270,7 @@ function getProfileGraphs(indexNumber) {
 function privacyPermission(currentUserIndex, targetUserIndex, privacyState) {
     // accessToken ByPass
     if (currentUserIndex === 0){
+        console.log('bypass');
         return true;
     }
 
@@ -280,7 +297,6 @@ function getBatchRankings(indexNumber, req) {
                 if (!error){
                     _.forEach(payload, function (value, key) {
                         if (!privacyPermission(req.facebookVerification.indexNumber || 0, value.indexNumber, value.privacy)){
-                            console.log(req.facebookVerification.indexNumber || 0, value.indexNumber, value.privacy);
                             payload[key]['privacy'] = 'private';
                             delete payload[key]['indexNumber'];
                             delete payload[key]['gpa'];

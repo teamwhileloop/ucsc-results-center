@@ -81,6 +81,125 @@ app.controller('ProfilePageController',function (
                     $scope.classColor = 'degree-no';
                 }
 
+                $scope.batchDistribution = {
+                    title: null,
+                    chart: {
+                        type: 'areaspline'
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    xAxis: {
+                        categories: data.data.graphs.batchDistribution.keys
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    plotOptions: {
+                        series: {
+                            marker: {
+                                enabled: false
+                            },
+                            fillOpacity: 0.35
+                        }
+                    },
+
+                    series: [{
+                        data: data.data.graphs.batchDistribution.values,
+                        color: '#ffd700'
+                    }]
+                };
+
+                $scope.gpaVariation = {
+                    chart: {
+                        type: 'areaspline'
+                    },
+                    title: {
+                        text: null
+                    },
+                    subtitle: {
+                        text: null
+                    },
+                    xAxis: {
+                        labels: {
+                            formatter: function () {
+                                return this.value; // clean, unformatted number for year
+                            }
+                        },
+                        categories: ['Y1S1', 'Y1S2','Y2S1', 'Y2S2','Y3S1', 'Y3S2','Y4S1', 'Y4S2']
+                    },
+                    yAxis: {
+                        title: {
+                            text: null
+                        }
+                    },
+                    tooltip: {
+                        pointFormat: 'Semester GPA <b>{point.y:,.3f}</b>'
+                    },
+                    plotOptions: {
+                        series: {
+                            marker: {
+                                enabled: false,
+                                symbol: 'circle',
+                                radius: 2,
+                                states: {
+                                    hover: {
+                                        enabled: true
+                                    }
+                                }
+                            },
+                            dataLabels: {
+                                enabled: false
+                            },
+                            enableMouseTracking: true
+                        }
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    series: [{
+                        name: 'Your GPA',
+                        data: data.data.graphs.gpaVariation,
+                        color: '#4caf50',
+                        fillOpacity: 0.35
+                    }]
+                };
+
+                $scope.gradeDistribution = {
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: null
+                    },
+                    xAxis: {
+                        categories: ['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'E', 'F']
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: null
+                        }
+                    },
+                    tooltip: {
+                        pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>',
+                        shared: true
+                    },
+                    plotOptions: {
+                        column: {
+                            stacking: 'normal',
+                            dataLabels: {
+                                enabled: true,
+                                color: 'white'
+                            }
+                        }
+                    },
+                    colors: ['#F1453D', '#3f51b5', '#4caf4f', '#fe9702', '#e91f62',
+                        '#2296f2', '#fec009', '#9b28b0'
+                    ],
+                    series: data.data.graphs.gradeDistribution
+                };
+
                 $scope.summary = data.data.summary;
                 $scope.resultSets = data.data.results.reverse();
 

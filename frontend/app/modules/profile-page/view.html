@@ -68,7 +68,7 @@
                 <div class="card-body">
                     <h4 class="card-title">GPA Distribution</h4>
                     <h6 class="card-subtitle mb-2">Your GPA will be rounded to the first decimal point.</h6>
-                    <highchart></highchart>
+                    <highchart hc-options="batchDistribution"></highchart>
                 </div>
             </div>
         </div>
@@ -80,14 +80,14 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Semester GPA Variation</h4>
-                        <div id="containerx" style="height: 300px;"></div>
+                        <highchart style="height: 300px;" hc-options="gpaVariation"></highchart>
                     </div>
                 </div>
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Contribution to GPA by Grade</h4>
                         <h6 class="card-subtitle mb-2">Click on the legends to toggle it's visibility</h6>
-                        <div id="containery"></div>
+                        <highchart hc-options="gradeDistribution"></highchart>
                     </div>
                 </div>
                 <div class="card">
