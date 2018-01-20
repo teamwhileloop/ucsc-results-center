@@ -7,6 +7,19 @@ let mysql = require('../../modules/database');
 
 let cacheRankings = {};
 
+function ranker(number){
+    switch (number){
+        case 1:
+            return number + "st";
+        case 2:
+            return number + "nd";
+        case 3:
+            return number + "rd";
+        default:
+            return number + "th";
+    }
+}
+
 function reportError(req, res, error, sendResponse = false) {
     logger.log(error.sqlMessage || error,'crit',true, JSON.stringify(_.assignIn(error,{
         meta: req.facebookVerification,
@@ -70,10 +83,177 @@ function getSemesterResultsByIndex(indexNumber, year, semester) {
     });
 }
 
+function getBatchDistribution(indexNumber) {
+    return new Promise((resolve, reject)=>{
+        mysql.query('SELECT ROUND(`gpa`,1) as gpaRange, COUNT(`gpa`) as count FROM `undergraduate` WHERE `indexNumber` LIKE ? GROUP BY ROUND(`gpa`,1)',
+        [indexNumber.toString().substring(0,4) + '%'],
+        function (err, payload) {
+            if (!err){
+                let outputObject = {
+                    '0.0': 0,
+                    '0.1': 0,
+                    '0.2': 0,
+                    '0.3': 0,
+                    '0.4': 0,
+                    '0.5': 0,
+                    '0.6': 0,
+                    '0.7': 0,
+                    '0.8': 0,
+                    '0.9': 0,
+                    '1.0': 0,
+                    '1.1': 0,
+                    '1.2': 0,
+                    '1.3': 0,
+                    '1.4': 0,
+                    '1.5': 0,
+                    '1.6': 0,
+                    '1.7': 0,
+                    '1.8': 0,
+                    '1.9': 0,
+                    '2.0': 0,
+                    '2.1': 0,
+                    '2.2': 0,
+                    '2.3': 0,
+                    '2.4': 0,
+                    '2.5': 0,
+                    '2.6': 0,
+                    '2.7': 0,
+                    '2.8': 0,
+                    '2.9': 0,
+                    '3.0': 0,
+                    '3.1': 0,
+                    '3.2': 0,
+                    '3.3': 0,
+                    '3.4': 0,
+                    '3.5': 0,
+                    '3.6': 0,
+                    '3.7': 0,
+                    '3.8': 0,
+                    '3.9': 0,
+                    '4.0': 0,
+                    '4.1': 0,
+                    '4.2': 0,
+                    '4.3': 0
+                };
+                let progress = 0;
+                if (payload.length){
+                    _.forEach(payload, function (o) {
+                        outputObject[o.gpaRange.toFixed(1).toString()] = o.count;
+                        progress += 1;
+                        if (progress === payload.length){
+                            resolve({
+                                keys: Object.keys(outputObject),
+                                values: Object.values(outputObject)
+                            });
+                        }
+                    })
+                }else{
+                    resolve({
+                        keys: Object.keys(outputObject),
+                        values: Object.values(outputObject)
+                    });
+                }
+            }else {
+                reject(err);
+            }
+        });
+
+    });
+}
+
+function getGpaVariation(indexNumber) {
+    return new Promise((resolve, reject)=>{
+        mysql.query('SELECT `y1s1_gpa`, `y1s2_gpa`, `y2s1_gpa`, `y2s2_gpa`, `y3s1_gpa`, `y3s2_gpa`, `y4s1_gpa`, `y4s2_gpa` FROM `undergraduate` WHERE `indexNumber` = ?',
+        [indexNumber],
+        function (err, payload) {
+            if (!err){
+                resolve(Object.values(payload[0]));
+            }else {
+                reject(err);
+            }
+        });
+
+    });
+}
+
+function getGradeDistribution(indexNumber) {
+    return new Promise((resolve, reject)=>{
+        getCompletedSemesters(indexNumber.toString().substring(0,4))
+        .then((completedSemesters)=>{
+            let outputObject = {};
+            let semesterGradeSet = {
+                name: '',
+                data: {
+                    'A+': 0,
+                    'A' : 0,
+                    'A-': 0,
+                    'B+': 0,
+                    'B' : 0,
+                    'B-': 0,
+                    'C+': 0,
+                    'C' : 0,
+                    'C-': 0,
+                    'D+': 0,
+                    'D' : 0,
+                    'E' : 0,
+                    'F' : 0
+                }
+            };
+            _.forEach(completedSemesters, function (completedSemester) {
+                outputObject[`y${completedSemester.year}s${completedSemester.semester}`] = Object.assign({}, semesterGradeSet);
+                outputObject[`y${completedSemester.year}s${completedSemester.semester}`]['name'] = `${completedSemester.year} Year ${completedSemester.semester} Semester`
+            });
+            mysql.query("SELECT " +
+                "`year`, `semester`,`grade`, COUNT(`grade`) as count " +
+                "FROM `result` JOIN `subject` ON " +
+                "`result`.`index`=? AND " +
+                "    `result`.`subject` = `subject`.`code` AND " +
+                "    isBest(`result`.`id`) = 1 AND " +
+                "    `result`.`grade` IN ('A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'E', 'F' ) " +
+                "GROUP BY `year`, `semester`, `grade` " +
+                "ORDER BY `year`, `semester`,`grade`",
+                [indexNumber],
+                function (err, payload) {
+                    if (!err){
+                        _.forEach(payload,(o)=>{
+                            outputObject[`y${o.year}s${o.semester}`]['data'][o.grade] = o.count;
+                        });
+                        _.forEach(outputObject,(o)=>{
+                            o.data = Object.values(o.data);
+                        });
+                        resolve(Object.values(outputObject));
+                    }else{
+                        reject(err);
+                    }
+                })
+
+        })
+        .catch((error)=>{reject(error);})
+
+    });
+}
+
+function getProfileGraphs(indexNumber) {
+    return  new Promise((resolve, reject)=>{
+        Promise.all(
+            [getGradeDistribution(indexNumber),
+             getBatchDistribution(indexNumber),
+             getGpaVariation(indexNumber)]
+        )
+        .then((data)=>{
+            resolve({
+                batchDistribution : data[1],
+                gpaVariation : data[0],
+                gradeDistribution : data[2]
+            })
+        })
+        .catch((error)=>{reject(error)})
+    });
+}
+
 function privacyPermission(currentUserIndex, targetUserIndex, privacyState) {
     // accessToken ByPass
     if (currentUserIndex === 0){
-        logger.log(`AccessToken Bypass for ${targetUserIndex}`);
         return true;
     }
 
@@ -142,7 +322,12 @@ router.get('/:indexNumber',function (req,res) {
                     getBatchRankings(indexNumber, req)
                     .then((rankingData)=>{
                         profileSummary.rankingData = rankingData;
-                        res.send(profileSummary);
+                        getProfileGraphs(indexNumber)
+                        .then((graphData)=>{
+                            profileSummary.graphs = graphData;
+                            res.send(profileSummary);
+                        })
+                        .catch((error)=>{reportError(req, res, error, true)});
                     })
                     .catch((error)=>{
                         reportError(req, res, error, true)
@@ -168,6 +353,50 @@ router.get('/:indexNumber',function (req,res) {
 router.delete('/cache',function (req,res) {
     cacheRankings = {};
     res.send({ success: true });
+});
+
+router.get('/graph/distribution/:indexNumber', function (req, res) {
+    let indexNumber = parseInt(req.params['indexNumber']);
+    getBatchDistribution(indexNumber)
+    .then((data)=>{
+        res.send(data);
+    })
+    .catch((error)=>{
+        res.send(error);
+    });
+});
+
+router.get('/graph/gpa/:indexNumber', function (req, res) {
+    let indexNumber = parseInt(req.params['indexNumber']);
+    getGpaVariation(indexNumber)
+    .then((data)=>{
+        res.send(data);
+    })
+    .catch((error)=>{
+        res.send(error);
+    });
+});
+
+router.get('/graph/grade/:indexNumber', function (req, res) {
+    let indexNumber = parseInt(req.params['indexNumber']);
+    getGradeDistribution(indexNumber)
+    .then((data)=>{
+        res.send(data);
+    })
+    .catch((error)=>{
+        res.send(error);
+    });
+});
+
+router.get('/graph/all/:indexNumber', function (req, res) {
+    let indexNumber = parseInt(req.params['indexNumber']);
+    getProfileGraphs(indexNumber)
+    .then((data)=>{
+        res.send(data);
+    })
+    .catch((error)=>{
+        res.send(error);
+    });
 });
 
 module.exports = router;
