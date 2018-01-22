@@ -26,6 +26,9 @@ if (!credentials.isDeployed){
     certificate = fs.readFileSync('/etc/letsencrypt/live/ucscresult.com/fullchain.pem', 'utf8');
     httpsCredentials = {key: privateKey, cert: certificate};
 }
+
+privacyPolicy  = fs.readFileSync('privacy.txt', 'utf8');
+
 logger.setStatusCodeLength(4);
 logger.setStatusCodes({
     info : 'INFO',
@@ -78,6 +81,10 @@ app.get('/', function(req, res) {
 
 app.get('/test', function(req, res) {
     res.render('test.html');
+});
+
+app.get('/privacy', function(req, res) {
+    res.send(privacyPolicy);
 });
 
 module.exports = credentials.isDeployed ? https : http;
