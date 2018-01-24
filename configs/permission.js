@@ -5,6 +5,7 @@ let permissionModules = {
         base: 50,
         routes: {
             '/console/clear' : 100,
+            '/system/maintenance' : 100,
             '/result/dataset' : 100,
             '/console/generate/[0-9]{1,}' : 100,
             '/calculate/pattern/[0-9]{1,}' : 100

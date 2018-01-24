@@ -17,6 +17,12 @@ let privateKey;
 let certificate;
 let httpsCredentials;
 
+// Global Variables
+global.maintananceMode = {
+    status: true,
+    message: 'System under maintenance'
+}
+
 // Setup Logger
 if (!credentials.isDeployed){
     logger.disableDatabaseWrite();
@@ -76,7 +82,11 @@ app.get('/', function(req, res) {
         res.end();
         return;
     }
-    res.render('index.html');
+    if (!global.maintananceMode.status){
+        res.render('index.html');
+    }else {
+        res.render('maintenance.html');
+    }
 });
 
 app.get('/test', function(req, res) {
