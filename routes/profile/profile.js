@@ -288,7 +288,8 @@ function privacyPermission(currentUserIndex, targetUserIndex, privacyState) {
 
 function getBatchRankings(indexNumber, req) {
     let pattern = indexNumber.toString().substring(0,4);
-    if (cacheRankings[pattern]){
+    // Temp disabled cache
+    if (false && cacheRankings[pattern]){
         return Promise.resolve(cacheRankings[pattern]);
     }else{
         return new Promise(function (resolve, reject) {
@@ -314,7 +315,7 @@ function getBatchRankings(indexNumber, req) {
 }
 
 router.get('/:indexNumber',function (req,res) {
-    let indexNumber = parseInt(req.params['indexNumber']);
+    let indexNumber = parseInt(req.params['indexNumber']) || 0;
     checkProfileStatus(indexNumber)
     .then((profileSummary)=>{
         let permissionStatus = privacyPermission(req.facebookVerification.indexNumber || 0, indexNumber, profileSummary.status);
