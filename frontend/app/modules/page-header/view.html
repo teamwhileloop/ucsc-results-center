@@ -7,7 +7,7 @@
             </div>
         </div>
         <div class="page-header-box-middle"></div>
-        <div class="page-header-user-root">
+        <div class="page-header-user-root" ng-click="goToProfile(userDetails.indexNumber)">
             <img src="{{ userDetails.picture.data.url }}">
             <div class="user-data-box" id="userdatabox">
                 <div class="user-data-name">{{ userDetails.name || 'Unknown User' }}</div>

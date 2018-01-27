@@ -270,7 +270,6 @@ function getProfileGraphs(indexNumber) {
 function privacyPermission(currentUserIndex, targetUserIndex, privacyState) {
     // accessToken ByPass
     if (currentUserIndex === 0){
-        console.log('bypass');
         return true;
     }
 

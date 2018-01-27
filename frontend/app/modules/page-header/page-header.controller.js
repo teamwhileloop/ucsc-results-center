@@ -15,6 +15,12 @@ app.controller('PageHeaderController',function ($scope, $timeout, $mdSidenav, $l
             .then(function() {});
     };
 
+    $scope.goToProfile = function (indexNumber) {
+        if (indexNumber){
+            $location.path(`/profile/${indexNumber}`)
+        }
+    };
+
     $scope.getRankName = function (power = 0) {
         if (power === 0){
             return 'Guest User';

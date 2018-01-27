@@ -121,11 +121,11 @@ app.config(function($routeProvider) {
             controller: 'ProfilePageController',
             templateUrl:'public/html/modules/profile-page/view.html',
             resolve : {
-                navText : function (ApplicationService, $routeParams) {
+                navText : function (ApplicationService, $routeParams, $location) {
                     ApplicationService.showNavigationIndicator({
                         icon: 'swap_horiz',
                         enabled: true,
-                        text: `Navigating to profile ${$routeParams.indexNumber || 'page'}`
+                        text: `Navigating to profile ${$location.$$path.split('/')[2] || 'page'}`
                     });
                 },
                 loggedInUser : applicationAuthenticator
