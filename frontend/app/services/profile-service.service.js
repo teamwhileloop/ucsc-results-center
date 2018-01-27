@@ -1,4 +1,4 @@
-app.service('ProfileService',function ($rootScope, FacebookService, $http, apiClient) {
+app.service('ProfileService',function ($rootScope, FacebookService, $http, apiClient, $q) {
     return {
         validateUser: function () {
             return apiClient.get('/user/validate');
@@ -11,6 +11,13 @@ app.service('ProfileService',function ($rootScope, FacebookService, $http, apiCl
         },
         getProfileResults: function (indexNumber = 0) {
             return apiClient.get(`/v1.0/profile/${indexNumber}`);
+        },
+        searchUndergraduate: function (query = 0) {
+            let deferred = $q.defer();
+            apiClient.get(`/v1.0/search/undergraduate/${query}`).then((response)=>{
+                deferred.resolve(response.data);
+            });
+            return deferred.promise;
         }
     };
 });

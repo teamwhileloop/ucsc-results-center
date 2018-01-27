@@ -1,10 +1,13 @@
-app.controller('PageHeaderController',function ($scope, $timeout, $mdSidenav, $location) {
+app.controller('PageHeaderController',function ($scope, $timeout, $mdSidenav, $location, ProfileService) {
 
     $scope.pageHeaderVisibility = false;
     $scope.navigationIndicatorVisibility = false;
     $scope.navigationInfoBox = {};
     $scope.mainSearchEnabled = false;
     $scope.userDetails = false;
+
+    this.selectedItem = {};
+    this.searchText = '';
 
     $scope.toggleSideBar = function() {
         $mdSidenav("sidebar")
@@ -19,6 +22,21 @@ app.controller('PageHeaderController',function ($scope, $timeout, $mdSidenav, $l
             return 'Verified Member';
         }if (power === 100){
             return 'System Administrator';
+        }
+    };
+
+    $scope.searchConfirm = (item)=> {
+        if (item !== undefined){
+            this.searchText = '';
+            $location.path("/profile/"+item.indexNumber);
+        }
+    };
+
+    $scope.cacheSearch = function (query) {
+        if (query !== ''){
+            return ProfileService.searchUndergraduate(query);
+        }else{
+            return ProfileService.searchUndergraduate($scope.userDetails.indexNumber.toString().substring(0,4) || '1');
         }
     };
 
