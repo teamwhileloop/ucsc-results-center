@@ -10,7 +10,7 @@ router.post('/maintenance',function (req,res) {
         status: true,
         message: 'System under maintenance'
     }, req.body);
-    let adminName = 'API Token';
+    let adminName = 'Administrator';
     if (req.facebookVerification.name){
         adminName = req.facebookVerification.name;
     }

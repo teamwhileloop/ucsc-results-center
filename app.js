@@ -19,7 +19,8 @@ let httpsCredentials;
 
 // Global Variables
 global.maintananceMode = {
-    status: false,
+    event: 'Server maintenance mode',
+    status: true,
     message: 'System under maintenance'
 }
 
