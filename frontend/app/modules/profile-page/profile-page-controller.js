@@ -43,7 +43,7 @@ app.controller('ProfilePageController',function (
     .then((data)=>{
         ApplicationService.hideNavigationIndicator();
         if (data.status === 200){
-            if (data.status === 'not-found'){
+            if (data.data.status === 'not-found'){
                 $scope.visibility = 'not-found';
             }else if(!data.data.summary){
                 $scope.visibility = 'private';

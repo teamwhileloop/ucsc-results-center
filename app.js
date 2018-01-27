@@ -20,8 +20,9 @@ let httpsCredentials;
 // Global Variables
 global.maintananceMode = {
     event: 'Server maintenance mode',
-    status: true,
-    message: 'System under maintenance'
+    status: false,
+    message: 'System under maintenance',
+    adminName: 'Administrator'
 }
 
 // Setup Logger

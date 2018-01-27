@@ -3,10 +3,18 @@
         <loading-indicator loader-text="loaderText"></loading-indicator>
     </div>
     <div ng-if="!loadingData && visibility === 'private'">
-        <h1>Private Profile</h1>
+        <div class="card privacy-info-box">
+            <img src="../../../../public/img/lock.png">
+            <div class="title">This profile is private</div>
+            <div class="description">Privacy settings of this profile owner is restricting you from viewing it. Learn more about profile privacy from the <a href="/#!/privacy">Profile Privacy Settings Page</a></div>
+        </div>
     </div>
     <div ng-if="!loadingData && visibility === 'not-found'">
-        <h1>Profile Not Found</h1>
+        <div class="card privacy-info-box">
+            <img src="../../../../public/img/not_found.png">
+            <div class="title">The index number '{{ indexNumber }}' does not exits</div>
+            <div class="description">We don't have any records associated with the index number ({{ indexNumber }}) you are looking for. Please use the search to navigate through profiles.</div>
+        </div>
     </div>
     <div ng-if="!loadingData && visibility === 'visible'">
         <div class="row summary-row">
