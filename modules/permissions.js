@@ -6,6 +6,7 @@ const mysql = require('../modules/database.js');
 const facebook = require('../modules/facebook');
 let credentials = require('../modules/credentials');
 const permissionJSON = require('../configs/permission');
+const apiHitCounter = require('./modules/api-hit-counter');
 
 let permissionCollection = {};
 _.forEach(Object.keys(permissionJSON),function (mainRoute) {
@@ -59,6 +60,9 @@ module.exports = function() {
             next();
             return;
         }
+
+        // Increment API hit counter
+        global.APIhits += 1;
 
         if (!fbToken || !fbUid){
             res.status(401).send({

@@ -39,6 +39,8 @@ function reconnect(recon = false) {
             exponentialBackOff();
         }else{
             resetExponentialBackOff();
+            const apiHitCounter = require('./api-hit-counter');
+            apiHitCounter.updateApiHits();
             logger.log('Connected to the database in ' + logger.timeSpent(databaseConnectionTime), 'info', true);
         }
     });
