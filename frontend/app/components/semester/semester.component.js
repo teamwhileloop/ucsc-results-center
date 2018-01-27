@@ -4,7 +4,7 @@ app.component('semester', {
         semesterData: '=',
         summary: '='
     },
-    controller: function semsterController($scope){
+    controller: function semsterController($scope, $localStorage, $rootScope){
         this.ranker = (number) => {
             switch (number){
                 case 1:
@@ -18,9 +18,17 @@ app.component('semester', {
             }
         };
 
+        this.check = $rootScope.onlyBest;
+
         $scope.getSemesterTitle = () =>{
             return this.ranker(this.semesterData.year) + ' Year ' + this.ranker(this.semesterData.semester) + ' Semester'
-        }
+        };
+
+        $scope.updateOnlyBestSetting = ()=> {
+            $rootScope.onlyBest = !$rootScope.onlyBest;
+            this.check = $rootScope.onlyBest;
+            $localStorage.onlyBest = $rootScope.onlyBest;
+        };
 
     },
     controllerAs : 'semesterCtrl'

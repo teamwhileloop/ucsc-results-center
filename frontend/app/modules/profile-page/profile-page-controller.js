@@ -8,6 +8,7 @@ app.controller('ProfilePageController',function (
     ProfileService,
     $routeParams,
     $location,
+    $localStorage
 ) {
     console.log('Profile controller loaded');
     LoadingMaskService.deactivate();
@@ -31,6 +32,12 @@ app.controller('ProfilePageController',function (
     $scope.total_credits = 'NA';
     $scope.degreeCode = 'NA';
     $scope.resultSets = [];
+
+    if ($localStorage.onlyBest === undefined){
+        $localStorage.onlyBest = true;
+    }
+
+    $rootScope.onlyBest = $localStorage.onlyBest;
 
     ProfileService.getProfileResults(indexNumber)
     .then((data)=>{

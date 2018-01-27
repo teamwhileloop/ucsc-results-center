@@ -185,6 +185,7 @@ div.profile-page.container{
     }
 
     .semseter-header{
+      padding-right: 10px;
       background-color: #2B3A48;
       height: 60px;
       display: flex;
@@ -235,6 +236,10 @@ div.profile-page.container{
       display: flex;
       padding: 5px 20px;
       flex-direction: row;
+
+      &.not-best{
+        background-color: #edd;
+      }
 
       .subject-info{
         flex: 1;

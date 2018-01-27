@@ -7,6 +7,17 @@
                 <i class="material-icons">show_chart</i>
                 Analytics</button>
         </div>
+        <md-menu md-position-mode="target-right target" >
+            <md-button aria-label="Options" class="md-icon-button" ng-click="$mdMenu.open($event)">
+                <i class="material-icons" style="color: #fff">more_vert</i>
+            </md-button>
+            <md-menu-content width="4" >
+                <md-list-item>
+                    <md-checkbox aria-label="Hide previous attempts" ng-click="$mdMenu.close($event); updateOnlyBestSetting()" ng-model="semesterCtrl.check"></md-checkbox>
+                    Hide previous attempts
+                </md-list-item>
+            </md-menu-content>
+        </md-menu>
     </div>
     <div class="row semester-data-row">
         <div class="semester-data-box">
@@ -29,7 +40,25 @@
         </div>
     </div>
     <ul class="list-group list-group-flush">
-        <li class="list-group-item result-item" ng-repeat="subjectResult in semesterCtrl.semesterData.results">
+        <!--Best Only-->
+        <li ng-if="$root.onlyBest"
+            class="list-group-item result-item"
+            ng-class="{'not-best' : subjectResult.isBest === 0}"
+            ng-repeat="subjectResult in semesterCtrl.semesterData.results | filter: {isBest: 1}">
+            <div class="subject-info">
+                <div class="subject-name">{{ subjectResult.name }}</div>
+                <div class="subject-meta">{{ subjectResult.code }} / {{ subjectResult.credits || subjectResult.nonGpaCredits }} {{ subjectResult.nonGpaCredits ? 'Non-GPA ' : '' }}Credits / Attempt Year : {{ subjectResult.examYear }}</div>
+            </div>
+            <div class="subject-grade">
+                {{ subjectResult.grade }}
+            </div>
+        </li>
+
+        <!--All Results-->
+        <li ng-if="!$root.onlyBest"
+            class="list-group-item result-item"
+            ng-class="{'not-best' : subjectResult.isBest === 0}"
+            ng-repeat="subjectResult in semesterCtrl.semesterData.results">
             <div class="subject-info">
                 <div class="subject-name">{{ subjectResult.name }}</div>
                 <div class="subject-meta">{{ subjectResult.code }} / {{ subjectResult.credits || subjectResult.nonGpaCredits }} {{ subjectResult.nonGpaCredits ? 'Non-GPA ' : '' }}Credits / Attempt Year : {{ subjectResult.examYear }}</div>
