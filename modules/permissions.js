@@ -6,7 +6,6 @@ const mysql = require('../modules/database.js');
 const facebook = require('../modules/facebook');
 let credentials = require('../modules/credentials');
 const permissionJSON = require('../configs/permission');
-const apiHitCounter = require('./modules/api-hit-counter');
 
 let permissionCollection = {};
 _.forEach(Object.keys(permissionJSON),function (mainRoute) {
