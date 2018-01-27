@@ -1,5 +1,6 @@
 const mysql = require('./database');
 const logger = require('./logger');
+const credentials = require('./credentials');
 
 global.APIhits = 0;
 global.users = 0;
@@ -20,11 +21,13 @@ exports.updateApiHits = function updateApiHits() {
 setInterval(function () {
     mysql.ping(function (err) {
         if (!err){
-            mysql.query('UPDATE statistic SET `value`=? WHERE `key`="apiHits"',[global.APIhits],function (err,payload) {
-                if (err){
-                    logger.log("API hit update failed." + JSON.decode(err),'warn');
-                }
-            });
+            if (credentials.isDeployed){
+                mysql.query('UPDATE statistic SET `value`=? WHERE `key`="apiHits"',[global.APIhits],function (err,payload) {
+                    if (err){
+                        logger.log("API hit update failed." + JSON.decode(err),'warn');
+                    }
+                });
+            }
             mysql.query('SELECT (SELECT COUNT(*) FROM `facebook`) as users, (SELECT COUNT(*) FROM `result`) as records;',function (err,payload) {
                 if (!err){
                     global.users = payload[0].users;
