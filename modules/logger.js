@@ -57,6 +57,14 @@ exports.setLiveText = function (text) {
     }
 };
 
+/**
+ * Represents a book.
+ * @constructor
+ * @param {string} message - Log message.
+ * @param {string} statusCode - Log status code.
+ * @param {boolean} writeToDatabase - Write to database.
+ * @param {object} databaseEntry - What should go to the db record.
+ */
 exports.log = function (message,statusCode = defaultStatusCodeKey,writeToDatabase = false, databaseEntry = null) {
     // TIME DATA PREPARATIONS
     let now = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Colombo' }));

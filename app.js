@@ -85,14 +85,14 @@ app.get('/', function(req, res) {
         return;
     }
     if (!global.maintananceMode.status){
-        res.render('index.html');
+        res.render('templates/web/index.html');
     }else {
-        res.render('maintenance.html');
+        res.render('templates/web/maintenance.ejs', global.maintananceMode);
     }
 });
 
 app.get('/test', function(req, res) {
-    res.render('test.html');
+    res.render('templates/web/test.html');
 });
 
 app.get('/privacy', function(req, res) {
