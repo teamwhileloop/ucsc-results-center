@@ -4,7 +4,7 @@ const logger = require('../modules/logger');
 const postman = require('../modules/postman');
 const mysql = require('../modules/database.js');
 const facebook = require('../modules/facebook');
-let credentials = require('../modules/credentials');
+const credentials = require('../modules/credentials');
 const permissionJSON = require('../configs/permission');
 
 let permissionCollection = {};
