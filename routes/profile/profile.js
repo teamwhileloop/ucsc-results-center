@@ -278,7 +278,7 @@ function privacyPermission(currentUserIndex, targetUserIndex, privacyState) {
             return true;
         case 'private':
             return currentUserIndex === targetUserIndex;
-        case 'batch':
+        case 'shared':
             return parseInt(currentUserIndex.toString().substring(0,2)) === parseInt(targetUserIndex.toString().substring(0,2));
         case 'not-found':
             return true;

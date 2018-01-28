@@ -47,7 +47,7 @@
             ng-repeat="subjectResult in semesterCtrl.semesterData.results | filter: {isBest: 1}">
             <div class="subject-info">
                 <div class="subject-name">{{ subjectResult.name }}</div>
-                <div class="subject-meta">{{ subjectResult.code }} / {{ subjectResult.credits || subjectResult.nonGpaCredits }} {{ subjectResult.nonGpaCredits ? 'Non-GPA ' : '' }}Credits / Attempt Year : {{ subjectResult.examYear }}</div>
+                <div class="subject-meta">{{ subjectResult.code }} / {{ subjectResult.credits || subjectResult.nonGpaCredits }} {{ subjectResult.nonGpaCredits ? 'Non-GPA ' : '' }}Credits / Examination Year : {{ subjectResult.examYear }}</div>
             </div>
             <div class="subject-grade">
                 {{ subjectResult.grade }}
@@ -61,7 +61,7 @@
             ng-repeat="subjectResult in semesterCtrl.semesterData.results">
             <div class="subject-info">
                 <div class="subject-name">{{ subjectResult.name }}</div>
-                <div class="subject-meta">{{ subjectResult.code }} / {{ subjectResult.credits || subjectResult.nonGpaCredits }} {{ subjectResult.nonGpaCredits ? 'Non-GPA ' : '' }}Credits / Attempt Year : {{ subjectResult.examYear }}</div>
+                <div class="subject-meta">{{ subjectResult.code }} / {{ subjectResult.credits || subjectResult.nonGpaCredits }} {{ subjectResult.nonGpaCredits ? 'Non-GPA ' : '' }}Credits / Examination Year : {{ subjectResult.examYear }}</div>
             </div>
             <div class="subject-grade">
                 {{ subjectResult.grade }}

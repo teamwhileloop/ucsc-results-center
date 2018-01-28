@@ -12,21 +12,16 @@
         </div>
     </div>
     <div class="sidebar-button-collection">
-        <div class="sidebar-button-header">Header</div>
-        <div class="sidebar-button">
-            <i class="material-icons">adb</i> Sample Button
+        <div class="sidebar-button-header">Go to</div>
+        <div class="sidebar-button"
+             ng-if="userDetails.state === 'verified'"
+             ng-click="goToProfile(userDetails.indexNumber)">
+            <i class="material-icons">person</i> My Profile
         </div>
-        <div class="sidebar-button">
-            <i class="material-icons">adb</i> Sample Button
-        </div>
-        <div class="sidebar-button">
-            <i class="material-icons">adb</i> Sample Button
-        </div>
-        <div class="sidebar-button">
-            <i class="material-icons">adb</i> Sample Button
-        </div>
-        <div class="sidebar-button">
-            <i class="material-icons">adb</i> Sample Button
+        <div class="sidebar-button"
+             ng-if="userDetails.state === 'verified'"
+             ng-click="goToPath('/privacy')">
+            <i class="material-icons">fingerprint</i> Privacy Settings
         </div>
     </div>
 

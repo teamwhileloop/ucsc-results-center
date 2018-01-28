@@ -10,10 +10,14 @@ app.controller('ProfilePageController',function (
     $location,
     $localStorage
 ) {
-    console.log('Profile controller loaded');
-    LoadingMaskService.deactivate();
-    ApplicationService.displayPageHeader({ search: true});
-    ApplicationService.updatePageHeader(loggedInUser);
+    if (loggedInUser.state !== 'verified'){
+        $location.path('access-denied');
+    }else{
+        LoadingMaskService.deactivate();
+        ApplicationService.hideNavigationIndicator();
+        ApplicationService.displayPageHeader({ search: true});
+        ApplicationService.updatePageHeader(loggedInUser);
+    }
 
     let indexNumber = $routeParams.indexNumber;
 

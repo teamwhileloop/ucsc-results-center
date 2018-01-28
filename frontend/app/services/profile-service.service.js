@@ -18,6 +18,13 @@ app.service('ProfileService',function ($rootScope, FacebookService, $http, apiCl
                 deferred.resolve(response.data);
             });
             return deferred.promise;
+        },
+        getPrivacy: function () {
+            return apiClient.get('/user/privacy');
+        },
+        setPrivacy: function (privacy = 'public') {
+            console.log(privacy);
+            return apiClient.post('/user/privacy', { privacy: privacy });
         }
     };
 });

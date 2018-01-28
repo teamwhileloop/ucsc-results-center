@@ -157,4 +157,77 @@ router.post('/request',function (req,res) {
 
 });
 
+router.post('/privacy',function (req, res) {
+    if (['shared', 'public', 'private'].indexOf(req.body.privacy) === -1){
+        res.status(400).send({
+            error: `Privacy state should be 'shared', 'public' or 'private'`
+        });
+        return;
+    }
+    mysql.query(
+        'SELECT `undergraduate`.`privacy` ' +
+        'FROM ' +
+        '`facebook` ' +
+        'JOIN `undergraduate` ' +
+        'ON `facebook`.`index_number` = `undergraduate`.`indexNumber` ' +
+        'AND `facebook`.`id` = ? ' +
+        'AND `facebook`.`state` = \'verified\'',
+        [req.facebookVerification.id],
+        function (error, payload) {
+            if (!error){
+                if (payload.length === 1){
+                    mysql.query(
+                        'UPDATE `undergraduate` SET `privacy` = ? WHERE `undergraduate`.`indexNumber` = ?',
+                        [req.body.privacy, req.facebookVerification.indexNumber],
+                        function (error_write, payload_write) {
+                            if (!error_write){
+                                res.send(payload_write);
+                            }else{
+                                logger.log(error_write.sqlMessage,'crit',true, JSON.stringify(_.assignIn(error_write,{
+                                    meta: req.facebookVerification,
+                                    env: req.headers.host
+                                })));
+                                res.status(500).send({ error: error_write });
+                            }
+                        })
+                }else{
+                    res.status(400).send({ error: 'User must be verified state' });
+                }
+            }else{
+                logger.log(error.sqlMessage,'crit',true, JSON.stringify(_.assignIn(error,{
+                    meta: req.facebookVerification,
+                    env: req.headers.host
+                })));
+                res.status(500).send({ error: error });
+            }
+        })
+});
+
+router.get('/privacy',function (req, res) {
+    mysql.query(
+        'SELECT `undergraduate`.`privacy` ' +
+        'FROM ' +
+        '`facebook` ' +
+        'JOIN `undergraduate` ' +
+        'ON `facebook`.`index_number` = `undergraduate`.`indexNumber` ' +
+        'AND `facebook`.`id` = ? ' +
+        'AND `facebook`.`state` = \'verified\'',
+        [req.facebookVerification.id],
+        function (error, payload) {
+            if (!error){
+                if (payload.length === 1){
+                    res.send(payload[0]);
+                }else{
+                    res.status(400).send({ error: 'User must be verified state' });
+                }
+            }else{
+                logger.log(error.sqlMessage,'crit',true, JSON.stringify(_.assignIn(error,{
+                    meta: req.facebookVerification,
+                    env: req.headers.host
+                })));
+                res.status(500).send({ error: error });
+            }
+        })
+});
+
 module.exports = router;

@@ -131,7 +131,25 @@ app.config(function($routeProvider) {
                 loggedInUser : applicationAuthenticator
             }
         })
+        .when("/privacy",{
+            templateUrl:'public/html/modules/privacy/view.html',
+            controller: 'PrivacyController',
+            controllerAs: 'ctrlPrivacy',
+            resolve : {
+                navText : function (ApplicationService, $routeParams, $location) {
+                    ApplicationService.showNavigationIndicator({
+                        icon: 'swap_horiz',
+                        enabled: true,
+                        text: 'Navigating to Privacy Settings'
+                    });
+                },
+                loggedInUser : applicationAuthenticator
+            }
+        })
         .when("/error",{
             template:'<p>Error occured</p>'
+        })
+        .when("/access-denied",{
+            template:'<p>Access Desnied</p>'
         })
 });

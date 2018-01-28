@@ -16,10 +16,15 @@ app.controller('VirtualConsoleController',function (
         loading: true,
         filter: undefined
     };
-    LoadingMaskService.deactivate();
-    ApplicationService.hideNavigationIndicator();
-    ApplicationService.displayPageHeader();
-    ApplicationService.updatePageHeader(loggedInUser);
+
+    if (loggedInUser.state !== 'verified'){
+        $location.path('access-denied');
+    }else{
+        LoadingMaskService.deactivate();
+        ApplicationService.hideNavigationIndicator();
+        ApplicationService.displayPageHeader({ search: true});
+        ApplicationService.updatePageHeader(loggedInUser);
+    }
 
     this.getFilterText = function (text) {
         switch (text){

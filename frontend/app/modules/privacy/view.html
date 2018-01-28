@@ -1,0 +1,27 @@
+<div class="container privacy-page">
+
+    <div class="card loader" ng-if="loadingData">
+        <loading-indicator loader-text="loaderText"></loading-indicator>
+    </div>
+
+    <div class="card" ng-if="!loadingData">
+        <h2>Select your privacy method {{ privacyValue }}</h2>
+        <br>
+        <div class="alert alert-success" role="alert" ng-if="saved">
+            Your privacy setting has being <b>updated!</b>.
+        </div>
+        <md-radio-group ng-model="data.privacyValue">
+            <md-radio-button value="public" class="md-primary">Public - Anyone registered in the system can view your profile.</md-radio-button>
+            <md-radio-button value="shared" class="md-primary"> Shared - Only your batch mates can view your profile</md-radio-button>
+            <md-radio-button value="private" class="md-primary">Private - Only you can view your profile</md-radio-button>
+        </md-radio-group>
+        <md-card-actions layout="row" layout-align="end center">
+            <md-button
+                    ng-click="save()"
+                    class="md-raised md-primary"
+                    ng-disabled="savingData">
+                {{ savingData ? 'Saving' : 'Save' }}
+            </md-button>
+        </md-card-actions>
+    </div>
+</div>
