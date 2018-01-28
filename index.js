@@ -9,6 +9,7 @@ setInterval(function () {
     io.emit('statistics',{
         hits: global.APIhits,
         users: global.users,
-        records: global.records
+        records: global.records,
+        online: io.engine.clientsCount
     });
 }, 1000);
