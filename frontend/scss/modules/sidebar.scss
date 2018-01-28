@@ -5,6 +5,29 @@
   md-content {
     background-color: $sidebar-background;
 
+    .stat-corner {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: start;
+      top: -60px;
+      left: 10px;
+      margin: 10px 10px;
+      font-size: 10px;
+      color: #ccc;
+
+      div.row {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+
+        i {
+          margin: 0 10px;
+        }
+      }
+    }
+
     .sidebar-header {
       display: flex;
       flex-direction: row;

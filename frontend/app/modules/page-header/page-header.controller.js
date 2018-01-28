@@ -56,6 +56,11 @@ app.controller('PageHeaderController',function ($scope, $timeout, $mdSidenav, $l
         $mdSidenav('sidebar').close();
     };
 
+    socket.on('statistics', function(response){
+        $scope.statistics = response;
+        $scope.$apply();
+    });
+
     $scope.$on('sidebar.open', (_event, _args)=> {
         $mdSidenav('sidebar').open();
     });
