@@ -19,6 +19,7 @@ app.controller('PageHeaderController',function ($scope, $timeout, $mdSidenav, $l
         if (indexNumber){
             $location.path(`/profile/${indexNumber}`)
         }
+        $mdSidenav('sidebar').close();
     };
 
     $scope.getRankName = function (power = 0) {
