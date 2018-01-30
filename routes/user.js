@@ -8,6 +8,7 @@ const logger = require('../modules/logger');
 const postman = require('../modules/postman');
 const mysql = require('../modules/database.js');
 let permission = require('../modules/permissions');
+let appCache = require('../modules/cache');
 
 //Common Queries
 let queryValidateIndexNumber = "SELECT `base`.`index` as `indexNumber`, " +
@@ -181,6 +182,7 @@ router.post('/privacy',function (req, res) {
                         [req.body.privacy, req.facebookVerification.indexNumber],
                         function (error_write, payload_write) {
                             if (!error_write){
+                                appCache.clear(['rank'], req.facebookVerification.indexNumber.toString().substring(0,4));
                                 res.send(payload_write);
                             }else{
                                 logger.log(error_write.sqlMessage,'crit',true, JSON.stringify(_.assignIn(error_write,{

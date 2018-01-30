@@ -4,8 +4,7 @@ const router = express.Router();
 
 let logger = require('../../modules/logger');
 let mysql = require('../../modules/database');
-
-let cacheRankings = {};
+let appCache = require('../../modules/cache');
 
 function ranker(number){
     switch (number){
@@ -287,9 +286,8 @@ function privacyPermission(currentUserIndex, targetUserIndex, privacyState) {
 
 function getBatchRankings(indexNumber, req) {
     let pattern = indexNumber.toString().substring(0,4);
-    // Temp disabled cache
-    if (false && cacheRankings[pattern]){
-        return Promise.resolve(cacheRankings[pattern]);
+    if (global.cache.rank[pattern]){
+        return Promise.resolve(global.cache.rank[pattern]);
     }else{
         return new Promise(function (resolve, reject) {
             let query = `SELECT \`indexNumber\`,\`gpa\`,\`rank\`,\`privacy\` FROM \`undergraduate\` WHERE \`indexNumber\` LIKE '${pattern}%' ORDER BY \`rank\` ASC`;
@@ -303,7 +301,7 @@ function getBatchRankings(indexNumber, req) {
                             delete payload[key]['rank'];
                         }
                     });
-                    cacheRankings[pattern] = payload;
+                    global.cache.rank[pattern] = payload;
                     resolve(payload);
                 }else {
                     reject(error);
@@ -364,11 +362,6 @@ router.get('/:indexNumber',function (req,res) {
     .catch((error)=>{
         reportError(req, res, error, true)
     })
-});
-
-router.delete('/cache',function (req,res) {
-    cacheRankings = {};
-    res.send({ success: true });
 });
 
 router.get('/graph/distribution/:indexNumber', function (req, res) {

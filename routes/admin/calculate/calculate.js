@@ -3,6 +3,7 @@ const router = express.Router();
 const _ = require('lodash');
 
 const logger = require('../../../modules/logger');
+const appCache = require('../../../modules/cache');
 const mysql = require('../../../modules/database.js');
 
 let taskLock = false;
@@ -337,6 +338,7 @@ router.post('/pattern/:pattern',function (req,res) {
                                                                                 logger.log(`Calculation successfully completed for pattern ${pattern} after ${logger.timeSpent(startTime)}`);
                                                                                 logger.setLiveText('');
                                                                                 taskLock = false;
+                                                                                appCache.clear(['rank', 'dist'], pattern);
                                                                                 res.send({
                                                                                     success: true,
                                                                                     timeSpent: logger.timeSpent(startTime)
@@ -358,6 +360,7 @@ router.post('/pattern/:pattern',function (req,res) {
                                                                             logger.log(`Calculation successfully completed for pattern ${pattern} after ${logger.timeSpent(startTime)}`);
                                                                             logger.setLiveText('');
                                                                             taskLock = false;
+                                                                            appCache.clear(['rank', 'dist'], pattern);
                                                                             res.send({
                                                                                 success: true,
                                                                                 timeSpent: logger.timeSpent(startTime)
