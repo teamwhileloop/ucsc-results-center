@@ -11,43 +11,30 @@ function getGradePoint(grade){
     switch (grade){
         case "A+":
             return 4.25;
-            break;
         case "A":
             return 4.0;
-            break;
         case "A-":
             return 3.75;
-            break;
         case "B+":
             return 3.25;
-            break;
         case "B":
             return 3.0;
-            break;
         case "B-":
             return 2.75;
-            break;
         case "C+":
             return 2.25;
-            break;
         case "C":
             return 2.0;
-            break;
         case "C-":
             return 1.75;
-            break;
         case "D+":
             return 1.25;
-            break;
         case "D":
             return 1.0;
-            break;
         case "D-":
             return 0.75;
-            break;
         default:
             return 0;
-            break;
     }
 }
 
