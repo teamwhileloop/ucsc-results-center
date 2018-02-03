@@ -129,7 +129,8 @@ router.post('/approve/:fbId', function (req, res) {
     let fbId = parseInt(req.params['fbId']) || 0;
     mysql.query(
         'UPDATE ' +
-            '`facebook` SET `state` = ?, ' +
+            '`facebook` ' +
+        'SET `state` = ?, ' +
             '`power` = IF(`power` > 10, `power`, 10), ' +
             '`handle` = ? ' +
         'WHERE `id` = ? AND `state` = \'pending\';',
@@ -167,11 +168,51 @@ router.post('/reject/:fbId', function (req, res) {
     let fbId = parseInt(req.params['fbId']) || 0;
     mysql.query(
         'UPDATE ' +
-            '`facebook` SET `state` = ?, ' +
-            '`power` = IF(`power` > 10, `power`, 10), ' +
+            '`facebook` ' +
+        'SET `state` = ?, ' +
+            '`power` = IF(`power` > 10, `power`, 0), ' +
             '`handle` = ? ' +
         'WHERE `id` = ? AND `state` = \'pending\';',
         ['blocked', req.facebookVerification.id || -1, fbId],
+        function (err, payload) {
+            if (!err){
+                if (payload.affectedRows === 0){
+                    res.send({
+                        success: false,
+                        code: 0x001,
+                        message: `User with fbId ${fbId} in 'pending' state was not found`
+                    })
+                }else{
+                    res.send({
+                        success: true
+                    });
+                    getUserDetails(fbId).then((response)=>{
+                        postman.sendTemplateMail(
+                            'sulochana.456@live.com',
+                            'Request Rejected',
+                            'templates/emails/request-rejected.ejs',
+                            {
+                                firstName: response[0].short_name
+                            }
+                        );
+                    });
+                }
+            }else{
+                reportError(req, res, err, true);
+            }
+        });
+});
+
+router.post('/reset/:fbId', function (req, res) {
+    let fbId = parseInt(req.params['fbId']) || 0;
+    mysql.query(
+        'UPDATE ' +
+            '`facebook` SET `state` = ?, ' +
+            '`power` = IF(`power` > 10, `power`, 0), ' +
+            '`index_number` = NULL, ' +
+            '`handle` = ? ' +
+        'WHERE `id` = ?;',
+        ['guest', req.facebookVerification.id || -1, fbId],
         function (err, payload) {
             if (!err){
                 if (payload.affectedRows === 0){
