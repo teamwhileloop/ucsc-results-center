@@ -11,7 +11,7 @@ let permission = require('../modules/permissions');
 
 //Common Queries
 let queryValidateIndexNumber = "SELECT `base`.`index` as `indexNumber`, " +
-    "IF (`facebook`.`state` IN ('verified','blocked','pending'), 'conflict', IFNULL(`facebook`.`state`, 'available')) as state " +
+    "IF (`facebook`.`state` IN ('verified', 'pending'), 'conflict', 'available') as state " +
     "FROM (SELECT * FROM `result` WHERE `result`.`index` = ? LIMIT 1) AS `base` " +
     "LEFT OUTER JOIN `facebook` " +
     "ON `facebook`.`index_number` = `base`.`index`;";
