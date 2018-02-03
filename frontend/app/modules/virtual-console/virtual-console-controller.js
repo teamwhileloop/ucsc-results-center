@@ -4,6 +4,7 @@ app.controller('VirtualConsoleController',function (
     LoadingMaskService,
     ProfileService,
     loggedInUser,
+    $location,
     ApplicationService,
     VirtualConsoleService)
 {
@@ -30,25 +31,18 @@ app.controller('VirtualConsoleController',function (
         switch (text){
             case 'crit':
                 return 'Critical Events';
-                break;
             case 'info':
                 return 'Informative Events';
-                break;
             case 'warn':
                 return 'Warning Events';
-                break;
             case 'log':
                 return 'Log Events';
-                break;
             case 'live':
                 return 'Live Events';
-                break;
             case undefined:
                 return 'All Events';
-                break;
             default:
                 return `${text} Events`;
-                break;
         }
     };
 
