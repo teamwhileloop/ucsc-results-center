@@ -3,6 +3,7 @@ const router = express.Router();
 
 const logger = require('../../../modules/logger');
 const mysql = require('../../../modules/database');
+const postman = require('../../../modules/postman');
 const _ = require('lodash');
 
 function reportError(req, res, error, sendResponse = false) {
@@ -13,6 +14,18 @@ function reportError(req, res, error, sendResponse = false) {
     if (sendResponse){
         res.status(500).send({ error: error });
     }
+}
+
+function getUserDetails(fbId = 0) {
+    return new Promise((resolve, _reject)=>{
+        mysql.query('SELECT * FROM `facebook` WHERE `facebook`.`id` = ?', [fbId], function (error, payload) {
+            if (!error){
+                resolve(payload)
+            }else{
+                logger.log(error.sqlMessage,'crit',true, JSON.stringify(error));
+            }
+        })
+    })
 }
 
 router.get('/',function (req,res) {
@@ -110,6 +123,44 @@ router.patch('/:fbId', function (req, res) {
             reportError(req, res, err_check, true);
         }
     })
+});
+
+router.post('/approve/:fbId', function (req, res) {
+    let fbId = parseInt(req.params['fbId']) || 0;
+    mysql.query(
+        'UPDATE ' +
+            '`facebook` SET `state` = ?, ' +
+            '`power` = IF(`power` > 10, `power`, 10), ' +
+            '`handle` = ? ' +
+        'WHERE `id` = ? AND `state` = \'pending\';',
+        ['verified', req.facebookVerification.id || -1, fbId],
+        function (err, payload) {
+            if (!err){
+                if (payload.affectedRows === 0){
+                    res.send({
+                        success: false,
+                        code: 0x001,
+                        message: `User with fbId ${fbId} in 'pending' state was not found`
+                    })
+                }else{
+                    res.send({
+                        success: true
+                    });
+                    getUserDetails(fbId).then((response)=>{
+                        postman.sendTemplateMail(
+                            'sulochana.456@live.com',
+                            'Request Accepted',
+                            'templates/emails/request-approved.ejs',
+                            {
+                                firstName: response[0].short_name
+                            }
+                        );
+                    });
+                }
+            }else{
+                reportError(req, res, err, true);
+            }
+        });
 });
 
 module.exports = router;
