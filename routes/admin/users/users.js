@@ -149,7 +149,7 @@ router.post('/approve/:fbId', function (req, res) {
                     });
                     getUserDetails(fbId).then((response)=>{
                         postman.sendTemplateMail(
-                            'sulochana.456@live.com',
+                            response[0].alternate_email || response[0].email,
                             'Request Accepted',
                             'templates/emails/request-approved.ejs',
                             {
@@ -188,7 +188,7 @@ router.post('/reject/:fbId', function (req, res) {
                     });
                     getUserDetails(fbId).then((response)=>{
                         postman.sendTemplateMail(
-                            'sulochana.456@live.com',
+                            response[0].alternate_email || response[0].email,
                             'Request Rejected',
                             'templates/emails/request-rejected.ejs',
                             {
@@ -227,7 +227,7 @@ router.post('/reset/:fbId', function (req, res) {
                     });
                     getUserDetails(fbId).then((response)=>{
                         postman.sendTemplateMail(
-                            'sulochana.456@live.com',
+                            response[0].alternate_email || response[0].email,
                             'Request Rejected',
                             'templates/emails/request-rejected.ejs',
                             {
