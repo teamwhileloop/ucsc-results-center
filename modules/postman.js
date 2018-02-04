@@ -13,6 +13,10 @@ let transporter = nodeMailer.createTransport({
 });
 
 exports.sendTemplateMail = function (toAddress, subject, templateUrl, options) {
+    if (!toAddress){
+        logger.log(`'${subject}' mail was not sent as the receiver was not valid`);
+        return;
+    }
     fs.readFile(templateUrl, 'utf8', function (err,data) {
         if (err) {
             logger.log('Failed to read the email template from :' + templateUrl,'crit',true);
