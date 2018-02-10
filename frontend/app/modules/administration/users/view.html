@@ -1,13 +1,164 @@
-<div class="container" style="margin-top: 50px">
+<div class="container admin-members" style="margin-top: 50px">
     <!--<button type="button" click-confirm='ctrlAdminUsers.acceptConfirmation' ng-click="ctrlAdminUsers.acceptRequest(232)">Hello</button>-->
-    <md-list>
-        <md-subheader class="md-no-sticky">Avatar with Secondary Action Icon</md-subheader>
-        <md-list-item class="noright" ng-click="null">
-            <img alt="{{ person.name }}" ng-src="{{ person.img }}" class="md-avatar" />
-            <p>Sulochana Kodituwakku</p>
-            <md-checkbox class="md-secondary" ng-model="person.selected"></md-checkbox>
-            <md-icon click-confirm='ctrlAdminUsers.acceptConfirmation' md-svg-icon="communication:email"  ng-click="doSecondaryAction($event)" aria-label="Send Email" class="md-secondary md-hue-3" ></md-icon>
-            <md-icon class="md-secondary" ng-click="doSecondaryAction($event)" aria-label="Chat" md-svg-icon="communication:message"></md-icon>
-        </md-list-item>
-    </md-list>
+    <md-card>
+        <md-card-title>
+            <md-card-title-text>
+                <span class="md-headline">Account Preferences</span>
+                <span class="md-subhead">Tell us a little about you.</span>
+            </md-card-title-text>
+        </md-card-title>
+
+        <md-card-content>
+            <div>
+                <button type="button" class="btn btn-primary">Select All</button>
+                <button type="button" class="btn btn-secondary">Deselect All</button>
+                <button type="button" class="btn btn-success">Accept Selected</button>
+                <button type="button" class="btn btn-danger">Reject Selected</button>
+
+                <div class="btn-group">
+                    <button type="button"
+                            class="btn dropdown-toggle"
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false">
+                        {{ paginationCtrl.count }} Items
+                    </button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item"
+                           ng-click="ctrlAdminUsers.setPageCount(10)"
+                           href>
+                            10 Items per Page
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href
+                           ng-click="ctrlAdminUsers.setPageCount(25)">
+                            25 Items per Page
+                        </a>
+                        <a class="dropdown-item" href
+                           ng-click="ctrlAdminUsers.setPageCount(50)">
+                            50 Items per Page
+                        </a>
+                        <a class="dropdown-item" href
+                           ng-click="ctrlAdminUsers.setPageCount(100)">
+                            100 Items per Page
+                        </a>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button type="button"
+                            class="btn dropdown-toggle"
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false">
+                        {{ getFilterName(paginationCtrl.filter) }} Users
+                    </button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item"
+                           ng-click="ctrlAdminUsers.setFilter('e')"
+                           href>
+                            All Users
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href
+                           ng-click="ctrlAdminUsers.setFilter('pending')">
+                            Pending Requests
+                        </a>
+                        <a class="dropdown-item" href
+                           ng-click="ctrlAdminUsers.setFilter('verified')">
+                            Verfied Users
+                        </a>
+                        <a class="dropdown-item" href
+                           ng-click="ctrlAdminUsers.setFilter('blocked')">
+                            Blocked Users
+                        </a>
+                        <a class="dropdown-item" href
+                           ng-click="ctrlAdminUsers.setFilter('guest')">
+                            Guest Users
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="row event-logger-pagination" ng-if="!paginationCtrl.loading">
+                    <nav aria-label="Page navigation example" ng-if="paginationCtrl.totalPages > 1">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item" ng-class="{ 'disabled' : paginationCtrl.current === 1}">
+                                <a class="page-link"
+                                   ng-click="ctrlAdminUsers.getUsersList(paginationCtrl.current-1)"
+                                   href tabindex="-1">Previous</a>
+                            </li>
+                            <li class="page-item" ng-repeat="n in paginationCtrl.pages" ng-class="{'active' : paginationCtrl.current == n+1}">
+                                <a class="page-link" href ng-click="ctrlAdminUsers.getUsersList(n+1)">{{ n+1 }}</a>
+                            </li>
+                            <li class="page-item"
+                                ng-class="{ 'disabled' : paginationCtrl.current === paginationCtrl.totalPages}">
+                                <a class="page-link"
+                                   ng-click="ctrlAdminUsers.getUsersList(paginationCtrl.current+1)"
+                                   href>Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+                <div class="no-events" ng-if="paginationCtrl.total === 0 && !paginationCtrl.loading">
+                    <td>No Events to display</td>
+                </div>
+                <div class="no-events" ng-if="paginationCtrl.loading">
+                    <td>
+                        <div layout="column" layout-align="center center" class="loading-indicator-cmp">
+                            <md-progress-circular md-mode="indeterminate" md-diameter="40px"></md-progress-circular>
+                            <div class="info-text">Loading Users from Server</div>
+                        </div>
+                    </td>
+                </div>
+                <md-list ng-if="!paginationCtrl.loading">
+                    <md-list-item class="noright"
+                                  ng-repeat="individualUser in userList"
+                                  ng-click="ctrlAdminUsers.goToFacebookProfile(individualUser)">
+                        <md-checkbox class="" ng-model="person.selected"></md-checkbox>
+                        <img alt="{{ individualUser.name }}"
+                             ng-src="{{ individualUser.picture }}"
+                             onerror="this.src='../../../../public/img/default_user.png'"
+                             class="md-avatar" />
+                        <p>{{ individualUser.name }} <span ng-if="individualUser.power > 10" class="badge badge-primary">{{ individualUser.power }}</span></p>
+                        <md-icon class="md-secondary material-icons md-light md-48"
+                                 ng-if="individualUser.state === 'pending'"
+                                 ng-click="ctrlAdminUsers.acceptRequest(232)"
+                                 role="img"
+                                 aria-label="Accept">check</md-icon>
+                        <md-icon class="md-secondary material-icons md-light md-48"
+                                 ng-if="individualUser.state === 'pending'"
+                                 ng-click="doSecondaryAction($event)"
+                                 aria-label="Reject">block</md-icon>
+                        <md-icon class="md-secondary material-icons md-light md-48"
+                                 ng-if="individualUser.state !== 'guest'"
+                                 ng-click="doSecondaryAction($event)"
+                                 aria-label="Reset">delete_forever</md-icon>
+                    </md-list-item>
+                </md-list>
+                <div class="row event-logger-pagination" ng-if="!paginationCtrl.loading">
+                    <nav aria-label="Page navigation example" ng-if="paginationCtrl.totalPages > 1">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item" ng-class="{ 'disabled' : paginationCtrl.current === 1}">
+                                <a class="page-link"
+                                   ng-click="ctrlAdminUsers.getUsersList(paginationCtrl.current-1)"
+                                   href tabindex="-1">Previous</a>
+                            </li>
+                            <li class="page-item" ng-repeat="n in paginationCtrl.pages" ng-class="{'active' : paginationCtrl.current == n+1}">
+                                <a class="page-link" href ng-click="ctrlAdminUsers.getUsersList(n+1)">{{ n+1 }}</a>
+                            </li>
+                            <li class="page-item"
+                                ng-class="{ 'disabled' : paginationCtrl.current === paginationCtrl.totalPages}">
+                                <a class="page-link"
+                                   ng-click="ctrlAdminUsers.getUsersList(paginationCtrl.current+1)"
+                                   href>Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </md-card-content>
+    </md-card>
+
 </div>
