@@ -9,11 +9,13 @@
         </md-card-title>
 
         <md-card-content>
-            <div>
-                <button type="button" class="btn btn-primary">Select All</button>
-                <button type="button" class="btn btn-secondary">Deselect All</button>
-                <button type="button" class="btn btn-success">Accept Selected</button>
-                <button type="button" class="btn btn-danger">Reject Selected</button>
+            <div class="control-buttons">
+                <div class="btn-group" ng-hide="1">
+                    <button type="button" class="btn btn-primary">Select All</button>
+                    <button type="button" class="btn btn-secondary">Deselect All</button>
+                    <button type="button" class="btn btn-success">Accept Selected</button>
+                    <button type="button" class="btn btn-danger">Reject Selected</button>
+                </div>
 
                 <div class="btn-group">
                     <button type="button"
@@ -78,6 +80,13 @@
                         </a>
                     </div>
                 </div>
+
+                <div>
+                    <input ng-model="paginationCtrl.search"
+                           ng-keypress="keyPressed($event)"
+                           placeholder="Search ...">
+                    <button ng-click="ctrlAdminUsers.refreshList()">Search</button>
+                </div>
             </div>
             <div>
                 <div class="row event-logger-pagination" ng-if="!paginationCtrl.loading">
@@ -101,8 +110,9 @@
                     </nav>
                 </div>
             </div>
+            <div>
                 <div class="no-events" ng-if="paginationCtrl.total === 0 && !paginationCtrl.loading">
-                    <td>No Events to display</td>
+                    <td>No users to display</td>
                 </div>
                 <div class="no-events" ng-if="paginationCtrl.loading">
                     <td>
@@ -116,24 +126,29 @@
                     <md-list-item class="noright"
                                   ng-repeat="individualUser in userList"
                                   ng-click="ctrlAdminUsers.goToFacebookProfile(individualUser)">
-                        <md-checkbox class="" ng-model="person.selected"></md-checkbox>
+                        <md-checkbox class="" ng-model="person.selected" ng-hide="1"></md-checkbox>
                         <img alt="{{ individualUser.name }}"
                              ng-src="{{ individualUser.picture }}"
                              onerror="this.src='../../../../public/img/default_user.png'"
                              class="md-avatar" />
-                        <p>{{ individualUser.name }} <span ng-if="individualUser.power > 10" class="badge badge-primary">{{ individualUser.power }}</span></p>
+                        <!--<p>{{ individualUser.name }} <span ng-if="individualUser.power > 10" class="badge badge-primary">{{ individualUser.power }}</span></p>-->
+                        <div class="md-list-item-text" layout="column">
+                            <h5>{{ individualUser.name }}</h5>
+                            <p>Last visit : {{ individualUser.lastvisit }} / {{ individualUser.index_number ? 'Index Number : ' + individualUser.index_number : '' }}</p>
+                            <p>Email : {{ individualUser.alternate_email || individualUser.email || 'No email provided' }} {{ individualUser.handlerName ? '/ Handler Name : ' + individualUser.handlerName : '' }}</p>
+                        </div>
                         <md-icon class="md-secondary material-icons md-light md-48"
                                  ng-if="individualUser.state === 'pending'"
-                                 ng-click="ctrlAdminUsers.acceptRequest(232)"
+                                 ng-click="acceptRequest(individualUser)"
                                  role="img"
                                  aria-label="Accept">check</md-icon>
                         <md-icon class="md-secondary material-icons md-light md-48"
                                  ng-if="individualUser.state === 'pending'"
-                                 ng-click="doSecondaryAction($event)"
+                                 ng-click="rejectRequest(individualUser)"
                                  aria-label="Reject">block</md-icon>
                         <md-icon class="md-secondary material-icons md-light md-48"
                                  ng-if="individualUser.state !== 'guest'"
-                                 ng-click="doSecondaryAction($event)"
+                                 ng-click="resetUser(individualUser)"
                                  aria-label="Reset">delete_forever</md-icon>
                     </md-list-item>
                 </md-list>
