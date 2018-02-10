@@ -1,0 +1,13 @@
+<div class="container" style="margin-top: 50px">
+    <!--<button type="button" click-confirm='ctrlAdminUsers.acceptConfirmation' ng-click="ctrlAdminUsers.acceptRequest(232)">Hello</button>-->
+    <md-list>
+        <md-subheader class="md-no-sticky">Avatar with Secondary Action Icon</md-subheader>
+        <md-list-item class="noright" ng-click="null">
+            <img alt="{{ person.name }}" ng-src="{{ person.img }}" class="md-avatar" />
+            <p>Sulochana Kodituwakku</p>
+            <md-checkbox class="md-secondary" ng-model="person.selected"></md-checkbox>
+            <md-icon click-confirm='ctrlAdminUsers.acceptConfirmation' md-svg-icon="communication:email"  ng-click="doSecondaryAction($event)" aria-label="Send Email" class="md-secondary md-hue-3" ></md-icon>
+            <md-icon class="md-secondary" ng-click="doSecondaryAction($event)" aria-label="Chat" md-svg-icon="communication:message"></md-icon>
+        </md-list-item>
+    </md-list>
+</div>

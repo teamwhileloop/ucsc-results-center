@@ -25,13 +25,17 @@
         </div>
     </div>
 
-
     <div class="sidebar-button-collection" ng-if="userDetails.power > 20">
         <div class="sidebar-button-header">Administration</div>
         <div class="sidebar-button"
              ng-click="goToPath('/virtual-console')"
              ng-if="userDetails.power >= 50">
             <i class="material-icons">dvr</i> Virtual Console
+        </div>
+        <div class="sidebar-button"
+             ng-click="goToPath('/administration/users')"
+             ng-if="userDetails.power >= 50">
+            <i class="material-icons">people</i> Profile Management
         </div>
     </div>
 
