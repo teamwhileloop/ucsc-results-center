@@ -32,13 +32,25 @@ router.get('/',function (req,res) {
     let page = parseInt(req.query.page) || 1;
     let count = parseInt(req.query.count) || 999999;
     let state = req.query.state || 'e';
+    let sort = req.query.sort || 'name';
+    let search = req.query.search || '';
+    if (['name', 'fname', 'lname', 'id' ].indexOf(sort) === -1){
+        res.status(400).send({
+            error: {
+                code: 0x001,
+                message: `Invalid sort command ${sort}`
+            }
+        });
+        return;
+    }
 
-    mysql.query('SELECT * FROM `facebook` WHERE `state` LIKE ? LIMIT ?,?',
-    [`%${state}%`, (page - 1)*count, count],
+    mysql.query(`SELECT \`tblMain\`.*, \`facebook\`.\`name\` as 'handlerName'  FROM (SELECT * FROM \`facebook\` WHERE \`state\` LIKE ? AND (\`name\` LIKE ? OR \`index_number\` LIKE ?) ORDER BY ${sort} LIMIT ?,?) as tblMain LEFT JOIN \`facebook\` ON \`facebook\`.\`id\` = \`tblMain\`.\`handle\`;`,
+    // mysql.query(`SELECT x\`main\`.*, \`facebook\`.\`name\` as handlerName FROM \`facebook\` as main LEFT JOIN \`facebook\` ON \`main\`.\`handle\` = \`facebook\`.\`id\` AND \`main\`.\`state\` LIKE ? AND (\`main\`.\`name\` LIKE ? OR \`main\`.\`index_number\` LIKE ?) ORDER BY \`main\`.\`${sort}\` ASC LIMIT ?,?;`,
+    [`%${state}%`, `%${search}%`, `%${search}%`, (page - 1)*count, count],
     function (err, payload) {
         if (!err){
-            mysql.query('SELECT COUNT(*) as total FROM `facebook` WHERE `state` LIKE ?',
-            [`%${state}%`],
+            mysql.query('SELECT COUNT(*) as total FROM `facebook` WHERE `state` LIKE ? AND (`name` LIKE ? OR `index_number` LIKE ?) ',
+            [`%${state}%`, `%${search}%`, `%${search}%`, ],
             function (err_meta, payload_meta) {
                 if (!err_meta){
                     res.send({
@@ -224,16 +236,6 @@ router.post('/reset/:fbId', function (req, res) {
                 }else{
                     res.send({
                         success: true
-                    });
-                    getUserDetails(fbId).then((response)=>{
-                        postman.sendTemplateMail(
-                            response[0].alternate_email || response[0].email,
-                            'Request Rejected',
-                            'templates/emails/request-rejected.ejs',
-                            {
-                                firstName: response[0].short_name
-                            }
-                        );
                     });
                 }
             }else{

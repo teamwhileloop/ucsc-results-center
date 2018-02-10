@@ -1,10 +1,10 @@
 <div class="title">Request Submitted</div>
-<div class="alert alert-danger" role="alert">
-    Due to some system maintenance request required to be approved manually from the DB level. Please drop an email to <b>sulochana.456@live.com</b> after making a request.
-</div>
-<!--<p class="text">-->
-    <!--Your request has being submitted for review. You will recieve an email to sulochana.456@live.com once the request is reviewed by an administrator.-->
-<!--</p>-->
+<p class="text" ng-if="!(loggedInUser.alternate_email || loggedInUser.email)">
+    Your request has being submitted for review.
+</p>
+<p class="text" ng-if="loggedInUser.alternate_email || loggedInUser.email">
+    Your request has being submitted for review. You will receive an email to {{ loggedInUser.alternate_email || loggedInUser.email }} once the request is reviewed by an administrator.
+</p>
 <table>
     <tr>
         <td>Name</td>
