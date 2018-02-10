@@ -117,6 +117,21 @@ app.config(function($routeProvider) {
                 loggedInUser : applicationAuthenticator
             }
         })
+        .when("/administration/users",{
+            controller:'AdminUsersController',
+            templateUrl:'public/html/modules/administration/users/view.html',
+            controllerAs : 'ctrlAdminUsers',
+            resolve : {
+                navText : function (ApplicationService) {
+                    ApplicationService.showNavigationIndicator({
+                        icon: 'swap_horiz',
+                        enabled: true,
+                        text: 'Redirecting to User Management'
+                    });
+                },
+                loggedInUser : applicationAuthenticator
+            }
+        })
         .when("/profile/:indexNumber",{
             controller: 'ProfilePageController',
             templateUrl:'public/html/modules/profile-page/view.html',
