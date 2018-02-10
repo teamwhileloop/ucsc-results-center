@@ -17,7 +17,7 @@ app.controller('AdminUsersController',function (
         total: -1,
         loading: true,
         search: '',
-        filter: 'e'
+        filter: 'pending'
     };
     $scope.userList = [];
 
