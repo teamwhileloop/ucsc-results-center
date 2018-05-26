@@ -132,8 +132,8 @@
                              class="md-avatar" />
                         <!--<p>{{ individualUser.name }} <span ng-if="individualUser.power > 10" class="badge badge-primary">{{ individualUser.power }}</span></p>-->
                         <div class="md-list-item-text" layout="column">
-                            <h5>{{ individualUser.name }}</h5>
-                            <p>Last visit : {{ individualUser.lastvisit }} / {{ individualUser.index_number ? 'Index Number : ' + individualUser.index_number : '' }}</p>
+                            <h5>{{ individualUser.name }} </h5>
+                            <p>Last visit : {{ individualUser.lastvisit }} / {{ individualUser.index_number ? 'Index Number : ' + individualUser.index_number : '' }} / Power : {{ individualUser.power }}</p>
                             <p>Email : {{ individualUser.alternate_email || individualUser.email || 'No email provided' }} {{ individualUser.handlerName ? '/ Handler Name : ' + individualUser.handlerName : '' }}</p>
                         </div>
                         <md-icon class="md-secondary material-icons md-light md-48"

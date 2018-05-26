@@ -69,7 +69,7 @@ app.controller('AdminUsersController',function (
         switch (code){
             case 'e':
                 return 'All';
-            case 'Verified':
+            case 'verified':
                 return 'Verified';
             case 'pending':
                 return 'Pending';
