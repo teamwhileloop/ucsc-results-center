@@ -54,6 +54,9 @@
             <div class="row">
                 <i class="material-icons">language</i> {{ statistics.online | number }} Online
             </div>
+            <div class="online-user-item" ng-repeat="user in statistics.onlineUsers">
+                <div class="online-dot"></div>{{ user }}
+            </div>
         </div>
     </div>
 </md-content>
