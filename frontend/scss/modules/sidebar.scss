@@ -18,9 +18,13 @@
 
       .online-user-item
       {
+        &:nth-of-type(1)
+        {
+          color: red;
+        }
+
         display: flex;
         align-items: center;
-        margin: 10px;
 
         .online-dot
         {
