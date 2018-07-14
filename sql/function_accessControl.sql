@@ -22,7 +22,7 @@ BEGIN
 					RETURN 0;
                 END IF;
             END;
-		WHEN 'batch' THEN
+		WHEN 'shared' THEN
 			BEGIN
 				IF SUBSTRING(requestorIndex,1,2) = SUBSTRING(requesteeIndex,1,2) THEN
 					RETURN 1; 
