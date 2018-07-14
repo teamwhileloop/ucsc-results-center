@@ -16,6 +16,24 @@
       font-size: 10px;
       color: #ccc;
 
+      .online-user-item
+      {
+        display: flex;
+        align-items: center;
+        margin: 10px;
+
+        .online-dot
+        {
+          border: 1px solid green;
+          background-color: green;
+          border-radius: 20px;
+          padding: 1px 2px;
+          margin-right: 5px;
+          height: 8px;
+          width: 8px;
+        }
+      }
+
       div.row {
         display: flex;
         flex-direction: row;

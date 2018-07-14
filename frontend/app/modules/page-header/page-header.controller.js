@@ -67,6 +67,7 @@ app.controller('PageHeaderController',function ($scope, $timeout, $mdSidenav, $l
 
     $scope.$on('pageHeader.user.update', (_event, args)=> {
         $scope.userDetails = args;
+        userDataUpdate();
     });
 
     $scope.$on('sidebar.close', (_event, _args)=> {
@@ -94,4 +95,9 @@ app.controller('PageHeaderController',function ($scope, $timeout, $mdSidenav, $l
     $scope.$on('navigationIndicator.hide', (_event, _args)=> {
         $scope.navigationIndicatorVisibility = false;
     });
+
+    function userDataUpdate()
+    {
+        socket.emit('usr-auth', { name: $scope.userDetails ? $scope.userDetails.name : "Facebook User"});
+    }
 });
