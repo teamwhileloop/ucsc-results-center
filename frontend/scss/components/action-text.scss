@@ -1,0 +1,7 @@
+action-text{
+  cursor: pointer;
+  text-decoration: underline;
+  &:hover{
+    color: red;
+  }
+}

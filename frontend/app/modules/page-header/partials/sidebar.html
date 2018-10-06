@@ -39,7 +39,7 @@
         </div>
     </div>
 
-    <div class="sidebar-button-collection" ng-if="userDetails.power > 50">
+    <div class="sidebar-button-collection">
         <div class="sidebar-button-header">System Statistics</div>
         <div class="stat-corner">
             <div class="row">
@@ -55,7 +55,7 @@
                 <i class="material-icons">language</i> {{ statistics.online | number }} Online
             </div>
             <div class="row" style="margin: 10px;"></div>
-            <div class="online-user-item" ng-repeat="user in statistics.onlineUsers">
+            <div class="online-user-item" ng-if="userDetails.power > 50" ng-repeat="user in statistics.onlineUsers">
                 <div class="online-dot"></div>{{ user }}
             </div>
         </div>

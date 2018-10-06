@@ -121,15 +121,21 @@ div.profile-page.container{
       }
 
       .card-subtitle {
-        color: #aaa;
+        color: #999;
         font-size: 10px;
         font-weight: 100;
+        font-family: sans-serif;
       }
 
       h6.description {
-        color: #ccc;
+        color: #999;
         font-size: 10px;
         font-weight: 100;
+        font-family: sans-serif;
+
+        &.code-names{
+          color: #fff;
+        }
       }
 
       h4.card-title {
@@ -183,9 +189,10 @@ div.profile-page.container{
     }
 
     .card-subtitle {
-      color: #aaa;
+      color: #999;
       font-size: 10px;
       font-weight: 100;
+      font-family: sans-serif;
     }
 
     h6.description {
