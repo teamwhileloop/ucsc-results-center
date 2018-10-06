@@ -40,7 +40,7 @@ app.controller('PageHeaderController',function ($scope, $timeout, $mdSidenav, $l
     };
 
     $scope.cacheSearch = function (query) {
-        if (query !== ''){
+        if (query.length > 3){
             return ProfileService.searchUndergraduate(query);
         }else{
             return ProfileService.searchUndergraduate($scope.userDetails.indexNumber.toString().substring(0,4) || '1');

@@ -7,6 +7,10 @@ let mysql = require('../../modules/database');
 
 router.get('/undergraduate/:pattern', function (req, res) {
     let pattern = req.params['pattern'] || 0;
+    if (("" + pattern).length < 4){
+        res.send([]);
+        return;
+    }
     let query = "SELECT " +
                 "   `indexNumber`, `gpa`, `rank` " +
                 "FROM `undergraduate` " +
