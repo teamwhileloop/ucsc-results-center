@@ -7,6 +7,7 @@ app.controller('LoginController',function (
     FacebookService,
     ProfileService,
     automaticLogin,
+    $mdDialog,
     $location
 ) {
     console.log('Login controller loaded');
@@ -91,4 +92,22 @@ app.controller('LoginController',function (
         }
 
     };
+
+    this.collectingDataInfo = ()=>{
+        $mdDialog.show(
+            $mdDialog.alert()
+                .parent(angular.element(document.querySelector('#popupContainer')))
+                .clickOutsideToClose(true)
+                .title('Information we collect from your Facebook account')
+                .textContent('Upon your Facebook login to this system we will collect and store your ' +
+                    'email address, full name, gender, link provided by Facebook to profile (No longer collected after ' +
+                    'August 1, 2018), short name, URL to your picture and to your cover photo, education and your Facebook ID.' +
+                    ' You will also be informed about the permission used by this system by Facebook ' +
+                    'upon your app use confirmation. Any changes to these data will be updated whenever ' +
+                    'you login to this system, and the system will not maintain a history of these changes. ' +
+                    'You can contact the team whileLOOP and remove these data from the system which will also' +
+                    ' revoke your access to the system. For further information contact team whileLOOP')
+                .ok('Got it!')
+        );
+    }
 });

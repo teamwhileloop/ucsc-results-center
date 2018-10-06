@@ -13,7 +13,7 @@ app.controller('AdminUsersController',function (
     $scope.paginationCtrl = {
         pages: [],
         current: 0,
-        count: 25,
+        count: 50,
         total: -1,
         loading: true,
         search: '',
