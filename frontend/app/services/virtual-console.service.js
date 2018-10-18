@@ -6,6 +6,9 @@ app.service('VirtualConsoleService',function ($rootScope,FacebookService, apiCli
             count ? query += `count=${count}&` : null;
             filter ? query += `filter=${filter}` : null;
             return apiClient.get(`/admin/console?${query}`);
+        },
+        clearConsoleLogs: function () {
+            return apiClient.delete(`/admin/console/clear`);
         }
     };
 });

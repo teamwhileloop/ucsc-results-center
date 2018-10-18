@@ -5,6 +5,7 @@ app.controller('VirtualConsoleController',function (
     ProfileService,
     loggedInUser,
     $location,
+    $mdDialog,
     ApplicationService,
     VirtualConsoleService)
 {
@@ -12,7 +13,7 @@ app.controller('VirtualConsoleController',function (
     $scope.paginationCtrl = {
         pages: [],
         current: 0,
-        count: 15,
+        count: 25,
         total: -1,
         loading: true,
         filter: undefined
@@ -65,6 +66,46 @@ app.controller('VirtualConsoleController',function (
         })
     };
 
+    this.clearLogs = function () {
+        let confirm = $mdDialog.confirm()
+            .title('Clear Logs?')
+            .textContent(`Are you sure that you want to clear all the logs? This cannot be undone`)
+            .ok('Clear Logs')
+            .cancel('Cancel');
+        $mdDialog.show(confirm).then(function() {
+            ApplicationService.showNavigationIndicator({
+                icon: 'swap_horiz',
+                enabled: true,
+                text: 'Clearing logs'
+            });
+            VirtualConsoleService.clearConsoleLogs()
+            .then((_data)=>{
+                ApplicationService.hideNavigationIndicator();
+                $rootScope.$broadcast('virtual-console.refresh');
+                $mdDialog.show(
+                    $mdDialog.alert()
+                    .clickOutsideToClose(true)
+                    .title('Success!')
+                    .textContent('All the logs have being cleared.')
+                    .ok('Okay')
+                );
+            })
+            .catch((error)=>{
+                ApplicationService.hideNavigationIndicator();
+                $mdDialog.show(
+                    $mdDialog.alert()
+                    .clickOutsideToClose(true)
+                    .title('Failed!')
+                    .textContent('Failed to clear logs. Refer the console error for more details.')
+                    .ok('Okay')
+                );
+                console.error(error);
+            })
+        }, function() {
+            return 0;
+        });
+    };
+
     console.log('VirtualConsoleController loaded');
     console.log(loggedInUser);
 
@@ -73,7 +114,11 @@ app.controller('VirtualConsoleController',function (
     if (loggedInUser.power >= 50){
         $scope.accessDenied = false;
 
-        this.refreshLogs(1, 15);
+        this.refreshLogs(1, 25);
     }
+
+    $rootScope.$on('virtual-console.refresh', (_event, _args)=> {
+        this.refreshLogs(1, 25);
+    });
 
 });

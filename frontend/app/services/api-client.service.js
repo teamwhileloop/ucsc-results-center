@@ -85,6 +85,49 @@ app.service('apiClient',function ($rootScope, FacebookService, $http, $q, $locat
                 })
             });
             return deferred.promise;
+        },
+        delete: function (url, data, userHeaders = {}) {
+            let deferred = $q.defer();
+            let headers = {
+                headers: Object.assign(userHeaders, FacebookService.getApiClientHeaders())
+            };
+            $http.delete(url, headers)
+                .then((data)=>{
+                    deferred.resolve(data);
+                })
+                .catch((error)=>{
+                    FacebookService.softReAuthenticate()
+                        .then(()=>{
+                            let headers = {
+                                headers: Object.assign(userHeaders, FacebookService.getApiClientHeaders())
+                            };
+                            $http.delete(url, headers)
+                                .then((data)=>{
+                                    deferred.resolve(data);
+                                })
+                                .catch(()=>{
+                                    deferred.reject(error);
+                                    ApplicationService.pushNotification({
+                                        title: 'Unable to update Access Token',
+                                        text : 'For some reasons we could not could not update the Facebook access token. Please try logging in again.',
+                                        template : 'error',
+                                        autoDismiss : false
+                                    });
+                                    $location.path('/login');
+                                })
+                        })
+                        .catch(()=>{
+                            deferred.reject(error);
+                            ApplicationService.pushNotification({
+                                title: 'Unable to update Access Token',
+                                text : 'For some reasons we could not could not update the Facebook access token. Please try logging in again.',
+                                template : 'error',
+                                autoDismiss : false
+                            });
+                            $location.path('/login');
+                        })
+                });
+            return deferred.promise;
         }
 
     }
