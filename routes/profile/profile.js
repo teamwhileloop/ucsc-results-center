@@ -163,11 +163,16 @@ function getBatchDistribution(indexNumber) {
 
 function getGpaVariation(indexNumber) {
     return new Promise((resolve, reject)=>{
-        mysql.query('SELECT `y1s1_gpa`, `y1s2_gpa`, `y2s1_gpa`, `y2s2_gpa`, `y3s1_gpa`, `y3s2_gpa`, `y4s1_gpa`, `y4s2_gpa` FROM `undergraduate` WHERE `indexNumber` = ?',
+        mysql.query('SELECT NULLIF(`y1s1_gpa`,0) as y1s1_gpa, NULLIF(`y1s2_gpa`,0) as y1s2_gpa, ' +
+            'NULLIF(`y2s1_gpa`,0) as y2s1_gpa, NULLIF(`y2s2_gpa`,0) as y2s2_gpa, ' +
+            'NULLIF(`y3s1_gpa`,0) as y3s1_gpa, NULLIF(`y3s2_gpa`,0) as y3s2_gpa, ' +
+            'NULLIF(`y4s1_gpa`,0) as y4s1_gpa, NULLIF(`y4s2_gpa`,0) as y4s2_gpa FROM `undergraduate` WHERE `indexNumber` = ?',
         [indexNumber],
         function (err, payload) {
             if (!err){
-                resolve(Object.values(payload[0]));
+                let correctedPayload = payload[0];
+                correctedPayload['y3s2_gpa'] = correctedPayload['y3s1_gpa'];
+                resolve(Object.values(correctedPayload));
             }else {
                 reject(err);
             }
