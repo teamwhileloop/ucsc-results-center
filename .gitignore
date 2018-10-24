@@ -4,3 +4,7 @@
 /public/html
 /public/js
 package-lock.json
+**/.idea/*
+**/__pycache__/*
+system/**/*.json
+system/*.log
