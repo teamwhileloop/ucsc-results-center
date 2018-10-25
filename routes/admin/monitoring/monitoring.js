@@ -8,6 +8,11 @@ router.post('/ping',function (req,res) {
     if (!global.monitoring.online){
         logger.log("Monitoring client connected.")
     }
+
+    if (global.monitoring.online && global.monitoring.notResponding){
+        logger.log("Monitoring client responded.")
+    }
+    
     global.monitoring = Object.assign({
         status: "Offline",
         lastPing: + new Date(),

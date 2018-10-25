@@ -21,7 +21,7 @@ setInterval(function () {
     });
 
     let curTime = + new Date();
-    if ((curTime - global.monitoring.lastPing) > 25*1000){
+    if ((curTime - global.monitoring.lastPing) > 60*1000){
         if (global.monitoring.online){
             logger.log("Monitoring client went offline.", 'warn', true);
             global.monitoring.online = false;
