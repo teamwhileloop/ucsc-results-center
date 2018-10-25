@@ -58,6 +58,7 @@ app.controller('PageHeaderController',function ($scope, $timeout, $mdSidenav, $l
 
     socket.on('statistics', function(response){
         $scope.statistics = response;
+        console.log(response.monitoring);
         $scope.$apply();
     });
 
