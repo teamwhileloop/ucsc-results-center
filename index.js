@@ -29,7 +29,7 @@ setInterval(function () {
         global.monitoring.status = "Offline [" + new Date(global.monitoring.lastPing).toLocaleString('en-US', { timeZone: 'Asia/Colombo' }) + ']';
     }else if((curTime - global.monitoring.lastPing) > 15*1000){
         global.monitoring.status = "Not Responding";
-        if (!global.monitoring.notResponding){
+        if (global.monitoring.online && !global.monitoring.notResponding){
             logger.log("Monitoring client is not responding", 'warn', true);
             global.monitoring.notResponding = true;
         }
