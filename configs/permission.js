@@ -8,6 +8,7 @@ let permissionModules = {
             '/system/maintenance' : 100,
             '/result/dataset' : 100,
             '/console/generate/[0-9]{1,}' : 100,
+            '/monitoring/*' : 100,
             '/calculate/pattern/[0-9]{1,}' : 100
         }
     },

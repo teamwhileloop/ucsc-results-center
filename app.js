@@ -23,7 +23,14 @@ global.maintananceMode = {
     status: false,
     message: 'System under maintenance',
     adminName: 'Administrator'
-}
+};
+
+global.monitoring = {
+    status: "Offline",
+    lastPing: + new Date(),
+    online: false,
+    notResponding: false
+};
 
 // Setup Logger
 if (!credentials.isDeployed){

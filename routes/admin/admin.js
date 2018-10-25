@@ -9,6 +9,7 @@ let calculate = require('./calculate/calculate');
 let result = require('./result/result');
 let system = require('./system/system');
 let users = require('./users/users');
+let monitoring = require('./monitoring/monitoring');
 
 // Authentication and Verification Middleware
 router.use('/', permission());
@@ -19,5 +20,6 @@ router.use('/calculate',calculate);
 router.use('/result',result);
 router.use('/system',system);
 router.use('/users',users);
+router.use('/monitoring',monitoring);
 
 module.exports = router;

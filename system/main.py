@@ -35,6 +35,7 @@ def detectAndApplyChanges(pdfUrlList):
     for pdfUrl in pdfUrlList:
         subjectCode = os.path.basename(unquote(pdfUrl)).split(".")[0].replace(" ", "")
         logger.info("Checking subject: " + subjectCode)
+        resultcenter.ping("Scanning " + subjectCode)
         pdfhead = requests.get(pdfUrl)
         hashInput = str(pdfhead.headers['Last-Modified'])
         hash = (hashlib.sha256(hashInput.encode('utf-8')).hexdigest())
@@ -72,6 +73,7 @@ def fetchFromDB(map):
 
 
 logger.info("Initializing loadup")
+resultcenter.ping("Starting")
 connection = pymysql.connect(host=os.environ['AWS_RDB_HOST'],
                                  user=os.environ['AWS_RDB_USERNAME'],
                                  password=os.environ['AWS_RDB_PASSWORD'],
@@ -89,6 +91,7 @@ logger.info("Wait time is: " + waitTime)
 itterationNumber = 1
 while True:
     converter.clearAffectedIndexes()
+    resultcenter.ping("Initializing Scan")
     logger.info("Scanning for changes. Itteration number: #" + str(itterationNumber))
     detectAndApplyChanges(getPDFList())
     logger.info("Scan completed.")
@@ -98,7 +101,9 @@ while True:
             logger.info("Recalculating for pattern: " + str(pattern))
             resultcenter.recalculate(pattern)
     itterationNumber += 1
-    time.sleep(int(waitTime))
+    for i in range(int(waitTime)):
+        resultcenter.ping("Next scan in " + str(int(waitTime) - i) + "s")
+        time.sleep(1)
 
 
 exit(0)

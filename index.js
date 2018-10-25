@@ -20,11 +20,27 @@ setInterval(function () {
         return array.indexOf(value) === index;
     });
 
+    let curTime = + new Date();
+    if ((curTime - global.monitoring.lastPing) > 60*1000){
+        if (global.monitoring.online){
+            logger.log("Monitoring client went offline.", 'warn', true);
+            global.monitoring.online = false;
+        }
+        global.monitoring.status = "Offline [" + new Date(global.monitoring.lastPing).toLocaleString('en-US', { timeZone: 'Asia/Colombo' }) + ']';
+    }else if((curTime - global.monitoring.lastPing) > 15*1000){
+        global.monitoring.status = "Not Responding";
+        if (!global.monitoring.notResponding){
+            logger.log("Monitoring client is not responding", 'warn', true);
+            global.monitoring.notResponding = true;
+        }
+    }
+
     io.emit('statistics',{
         hits: global.APIhits,
         users: global.users,
         records: global.records,
         online: uniqueUsers.length,
-        onlineUsers: uniqueUsers
+        onlineUsers: uniqueUsers,
+        monitoring: global.monitoring
     });
 }, 1000);
