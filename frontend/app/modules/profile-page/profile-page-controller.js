@@ -43,15 +43,12 @@ app.controller('ProfilePageController',function (
 
     $rootScope.onlyBest = $localStorage.onlyBest;
 
-    if (!$rootScope.resAutomation){
-        ApplicationService.pushNotification({
-            title: 'Important Notice',
-            text : 'The process of results sheet fetching and parsing has being fully automated and no longer manually verified. Please report any incorrect/missing results via whileLOOP Facebook page.',
-            template : 'warn',
-            autoDismiss : false
-        });
-        $rootScope.resAutomation = true;
-    }
+    ProfileService.getAlerts()
+    .then((resposne)=>{
+        _.forEach(resposne.data, function (o) {
+            ApplicationService.pushNotification(o);
+        })
+    });
 
     ProfileService.getProfileResults(indexNumber)
     .then((data)=>{

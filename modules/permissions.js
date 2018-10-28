@@ -78,7 +78,10 @@ module.exports = function() {
         facebook.validateAccessToken(fbToken,fbUid)
             .then(validationReport=>{
                 req.accessTokenUsed = false;
-                mysql.query('SELECT `index_number` as indexNumber,`state`,`power`,`alternate_email` FROM facebook WHERE id=?;',[validationReport.id],function (error,payload) {
+                mysql.query(
+                    'SELECT `index_number` as indexNumber,`state`,`power`,`alternate_email`, `alert_version` ' +
+                    'FROM facebook WHERE id=?;',[validationReport.id],
+                    function (error,payload) {
                     if(error){
                         logger.log(JSON.stringify(_.assignIn(error,{
                             meta: validationReport,

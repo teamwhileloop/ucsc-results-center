@@ -24,6 +24,12 @@ app.service('ProfileService',function ($rootScope, FacebookService, $http, apiCl
         },
         setPrivacy: function (privacy = 'public') {
             return apiClient.post('/user/privacy', { privacy: privacy });
+        },
+        getAlerts: function () {
+            return apiClient.get('v1.0/alerts/status');
+        },
+        sendAlertAck: function (remoteId) {
+            return apiClient.get('v1.0/alerts/ack/' + remoteId);
         }
     };
 });
