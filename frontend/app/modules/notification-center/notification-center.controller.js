@@ -128,7 +128,7 @@ app.controller('NotificationCenterController',function (
     }
 
     function update(object){
-        alert(object);
+        alert("Feature not implemented.");
     }
 
     reloadNotificationList()
