@@ -37,3 +37,17 @@ i.material-icons{
   border-radius: 2px;
   margin: -1px;
 }
+
+button.iconed{
+  margin: 0 5px 0 0;
+  display: flex;
+  cursor: pointer;
+
+  i{
+    margin: 0 10px 0 0;
+  }
+
+  &:first-of-type{
+    margin-left: 20px;
+  }
+}

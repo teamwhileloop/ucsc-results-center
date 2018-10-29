@@ -11,7 +11,7 @@ app.controller('NotificationCenterController',function (
     $scope.isLoading = true;
     $scope.notificationList = [];
 
-    if (loggedInUser.state !== 'verified' && loggedInUser.power <= 10){
+    if (loggedInUser.state !== 'verified' || loggedInUser.power <= 10){
         $location.path('access-denied');
     }else{
         LoadingMaskService.deactivate();
@@ -37,6 +37,8 @@ app.controller('NotificationCenterController',function (
     };
 
     function reloadNotificationList() {
+        $scope.isLoading = true;
+        $scope.notificationList = [];
         AdminService.getNotificationList()
         .then((response)=>{
             $scope.isLoading = false;
@@ -98,9 +100,10 @@ app.controller('NotificationCenterController',function (
         }, function() {
             return 0;
         });
+    };
 
-
-
+    $scope.reloadAll = function () {
+        reloadNotificationList();
     };
 
     function add(object){
