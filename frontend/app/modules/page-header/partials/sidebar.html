@@ -37,6 +37,11 @@
              ng-if="userDetails.power >= 50">
             <i class="material-icons">people</i> Profile Management
         </div>
+        <div class="sidebar-button"
+             ng-click="goToPath('/administration/notification-center')"
+             ng-if="userDetails.power >= 100">
+            <i class="material-icons">add_comment</i> Notification Center
+        </div>
     </div>
 
     <div class="sidebar-button-collection">

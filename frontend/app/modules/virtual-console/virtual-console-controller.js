@@ -19,7 +19,7 @@ app.controller('VirtualConsoleController',function (
         filter: undefined
     };
 
-    if (loggedInUser.state !== 'verified'){
+    if (loggedInUser.state !== 'verified' || loggedInUser.power <= 10){
         $location.path('access-denied');
     }else{
         LoadingMaskService.deactivate();

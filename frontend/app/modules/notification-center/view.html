@@ -1,0 +1,45 @@
+<div class="container admin-members" style="margin-top: 50px">
+    <!--<button type="button" click-confirm='ctrlAdminUsers.acceptConfirmation' ng-click="ctrlAdminUsers.acceptRequest(232)">Hello</button>-->
+    <md-card>
+        <md-card-title>
+            <md-card-title-text>
+                <span class="md-headline">Notification Center</span>
+            </md-card-title-text>
+        </md-card-title>
+
+        <div layout="column" layout-align="center center" class="loading-indicator-cmp" ng-if="isLoading">
+            <md-progress-circular md-mode="indeterminate" md-diameter="40px"></md-progress-circular>
+            <div class="info-text">Loading Notification</div>
+        </div>
+
+        <md-card-content ng-if="!isLoading">
+            <div class="row">
+                <button type="button" class="btn btn-primary iconed" ng-click="newNotification()">
+                    <i class="material-icons">add_alert</i>New Notification
+                </button>
+                <button type="button" class="btn btn-info iconed" ng-click="reloadAll()">
+                    <i class="material-icons">refresh</i>Reload
+                </button>
+
+            </div>
+            <md-list>
+                <md-subheader
+                        ng-if="notificationList.length == 0"
+                        class="md-no-sticky">There are no stored alerts</md-subheader>
+                <md-list-item class="noright" ng-repeat="notification in notificationList">
+                    <p>{{ notification.title }}</p>
+                    <md-icon class="md-secondary material-icons md-light md-48"
+                             ng-click="editNotification(notification)"
+                             aria-label="Edit">create</md-icon>
+                    <md-icon class="md-secondary material-icons md-light md-48"
+                             ng-click="previewNotification(notification)"
+                             aria-label="Preview">play_arrow</md-icon>
+                    <md-icon class="md-secondary material-icons md-light md-48"
+                             ng-click="deleteNotification(notification.id)"
+                             aria-label="Delete">delete_forever</md-icon>
+                </md-list-item>
+            </md-list>
+        </md-card-content>
+    </md-card>
+
+</div>
