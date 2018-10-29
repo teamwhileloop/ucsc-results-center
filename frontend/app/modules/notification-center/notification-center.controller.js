@@ -63,6 +63,46 @@ app.controller('NotificationCenterController',function (
         });
     };
 
+    $scope.deleteNotification = function(remoteId){
+        let confirm = $mdDialog.confirm()
+            .title('Delete Notification?')
+            .textContent(`Are you sure that you want to delete this notification?`)
+            .ok('Delete')
+            .cancel('Cancel');
+        $mdDialog.show(confirm).then(function() {
+            ApplicationService.showNavigationIndicator({
+                icon: 'swap_horiz',
+                enabled: true,
+                text: 'Deleting notification'
+            });
+            AdminService.deleteNotification(remoteId)
+            .then((response)=>{
+                ApplicationService.hideNavigationIndicator();
+                ApplicationService.pushNotification({
+                    title: 'Success',
+                    text : "Notification deleted",
+                    template : 'success',
+                    autoDismiss : true
+                });
+                reloadNotificationList();
+            })
+            .catch(()=>{
+                ApplicationService.hideNavigationIndicator();
+                ApplicationService.pushNotification({
+                    title: 'Failed',
+                    text : "Failed to delete notification.",
+                    template : 'error',
+                    autoDismiss : true
+                });
+            });
+        }, function() {
+            return 0;
+        });
+
+
+
+    };
+
     function add(object){
         AdminService.addNotification(object)
         .then((response)=>{
@@ -72,6 +112,7 @@ app.controller('NotificationCenterController',function (
                 template : 'success',
                 autoDismiss : true
             });
+            reloadNotificationList();
         })
         .catch(()=>{
             ApplicationService.pushNotification({
@@ -88,5 +129,5 @@ app.controller('NotificationCenterController',function (
     }
 
     reloadNotificationList()
-    
+
 });

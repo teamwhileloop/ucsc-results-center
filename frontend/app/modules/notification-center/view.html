@@ -9,7 +9,7 @@
 
         <div layout="column" layout-align="center center" class="loading-indicator-cmp" ng-if="isLoading">
             <md-progress-circular md-mode="indeterminate" md-diameter="40px"></md-progress-circular>
-            <div class="info-text">Loading Virtual Console Events</div>
+            <div class="info-text">Loading Notification</div>
         </div>
 
         <md-card-content ng-if="!isLoading">
@@ -31,7 +31,7 @@
                              ng-click="previewNotification(notification)"
                              aria-label="Preview">play_arrow</md-icon>
                     <md-icon class="md-secondary material-icons md-light md-48"
-                             ng-click="null"
+                             ng-click="deleteNotification(notification.id)"
                              aria-label="Delete">delete_forever</md-icon>
                 </md-list-item>
             </md-list>

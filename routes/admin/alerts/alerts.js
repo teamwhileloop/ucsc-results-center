@@ -57,4 +57,16 @@ router.get('/list', function (req, res) {
     });
 });
 
+router.delete('/delete/:id', function (req, res) {
+    let id = parseInt(req.params['id']);
+    let query = "DELETE FROM `results`.`alerts` WHERE `id`=?;";
+    mysql.query(query, [id],function (err,payload) {
+        if (!err){
+            res.send(payload);
+        } else{
+            res.status(500).send({success:false,error:err});
+        }
+    });
+});
+
 module.exports = router;
