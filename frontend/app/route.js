@@ -180,6 +180,10 @@ app.config(function($routeProvider) {
             template:'<p>Error occured</p>'
         })
         .when("/access-denied",{
-            template:'<p>Access Desnied</p>'
+            controller: 'AccessDeniedController',
+            templateUrl:'public/html/modules/access-denied/view.html',
+            resolve: {
+                loggedInUser : applicationAuthenticator
+            }
         })
 });
