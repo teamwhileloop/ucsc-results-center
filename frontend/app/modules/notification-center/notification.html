@@ -1,0 +1,91 @@
+<md-dialog style="width: 640px">
+    <form ng-cloak>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>{{ editMode ? "Edit Notification" : "New Notification"}}</h2>
+                <span flex></span>
+                <md-icon class="md-secondary material-icons md-light md-48" style="cursor: pointer"
+                         ng-click="cancel()"
+                         aria-label="Delete">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <form>
+                    <div class="form-group">
+                        <label for="title">Title</label>
+                        <input type="text"
+                               class="form-control"
+                               id="title"
+                               ng-model="notificationTemplate.title"
+                               placeholder="Notification Title">
+                    </div>
+                    <div class="form-group">
+                        <label for="content">Content</label>
+                        <textarea class="form-control"
+                                  id="content"
+                                  ng-model="notificationTemplate.text"
+                                  placeholder="Content of the notification"></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="template">Select Template</label>
+                                <select class="form-control" id="template" ng-model="notificationTemplate.template">
+                                    <option value="info">Information</option>
+                                    <option value="success">Success</option>
+                                    <option value="warn">Warning</option>
+                                    <option value="error">Error</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="alwaysShow">Display this notification</label>
+                                <select class="form-control" id="alwaysShow" ng-model="notificationTemplate.showAlways">
+                                    <option value="1">Always</option>
+                                    <option value="0">Once</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="dismissMode">Dismiss this notification</label>
+                                <select class="form-control" id="dismissMode" ng-model="notificationTemplate.autoDismiss">
+                                    <option value="1">Automatically</option>
+                                    <option value="0">Manually</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6" ng-if="notificationTemplate.autoDismiss  == '1'">
+                            <div class="form-group">
+                                <label for="dismissDelay">Automatic dismiss delay</label>
+                                <input type="number"
+                                       class="form-control"
+                                       id="dismissDelay"
+                                       ng-model="notificationTemplate.autoDismissDelay">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <center>
+                        <div class="form-group"
+                             style="display: flex;flex-direction: column;align-items: center;margin-top: 20px"
+                             ng-include="'public/html/modules/notification-center/partials/' + notificationTemplate.template + '.html'"></div>
+                    </center>
+                </form>
+            </div>
+        </md-dialog-content>
+
+        <md-dialog-actions layout="row">
+            <md-button
+                    class="md-raised md-primary"
+                    ng-click="submit()">
+                {{ editMode ? "Update" : "Submit" }}
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

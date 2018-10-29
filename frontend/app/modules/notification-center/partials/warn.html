@@ -1,0 +1,17 @@
+<li class='notification-item-li '>
+    <div class='notification-box'>
+        <div class='notification-box-panel-a'
+             style='background-color: #ffd700; color: #fff'>
+            <i class="fa fa-exclamation-triangle aria-hidden="></i>
+        </div>
+        <div class='notification-box-panel-b'>
+            <div class='notification-box-header'>
+                {{ notificationTemplate.title || 'Notifiaction Title' }}
+                <i class="fa fa-times notification-close" aria-hidden="true" onclick="null"></i>
+            </div>
+            <div class='notification-box-body'>
+                {{ notificationTemplate.text || 'Notifiaction Content' }}
+            </div>
+        </div>
+    </div>
+</li>

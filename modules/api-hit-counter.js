@@ -12,7 +12,7 @@ exports.updateApiHits = function updateApiHits() {
             global.APIhits = parseInt(payload[0].value);
             logger.log("API hit counter initialized from " + global.APIhits);
         }else{
-            logger.log("API hit retrieval failed." + JSON.decode(err),'warn');
+            logger.log("API hit retrieval failed." + JSON.stringify(err),'warn');
         }
     })
 };
