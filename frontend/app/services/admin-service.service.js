@@ -25,6 +25,9 @@ app.service('AdminService',function ($rootScope, FacebookService, $http, apiClie
         },
         deleteNotification: function (remoteId) {
             return apiClient.delete('/admin/alerts/delete/' + remoteId);
+        },
+        changeUserRole: function (userId, power) {
+            return apiClient.post('/admin/users/role', {id:userId, power: power});
         }
     };
 });

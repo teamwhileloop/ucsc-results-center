@@ -141,6 +141,11 @@
                             <p>Email : {{ individualUser.alternate_email || individualUser.email || 'No email provided' }} {{ individualUser.handlerName ? '/ Handler Name : ' + individualUser.handlerName : '' }}</p>
                         </div>
                         <md-icon class="md-secondary material-icons md-light md-48"
+                                 ng-if="individualUser.power > 0 && currentUser.power > 50"
+                                 ng-click="setRank(individualUser)"
+                                 role="img"
+                                 aria-label="Accept">security</md-icon>
+                        <md-icon class="md-secondary material-icons md-light md-48"
                                  ng-if="individualUser.state === 'pending'"
                                  ng-click="acceptRequest(individualUser)"
                                  role="img"

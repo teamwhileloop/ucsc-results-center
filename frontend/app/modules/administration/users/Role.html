@@ -1,0 +1,35 @@
+<md-dialog style="width: 400px">
+    <form ng-cloak>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Set Role</h2>
+                <span flex></span>
+                <md-icon class="md-secondary material-icons md-light md-48" style="cursor: pointer"
+                         ng-click="cancel()"
+                         aria-label="Delete">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <form>
+                    <div class="form-group">
+                        <label for="role">Select User Role for {{ userData.name }}</label>
+                        <select class="form-control" id="role" ng-model="userData.power">
+                            <option value="10">Verified Member</option>
+                            <option value="50">Batch Representative</option>
+                            <option value="100">System Administrator</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+        </md-dialog-content>
+
+        <md-dialog-actions layout="row">
+            <md-button
+                    class="md-raised md-primary"
+                    ng-click="submit()">Submit</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

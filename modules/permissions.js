@@ -55,7 +55,22 @@ module.exports = function() {
         //Grant access when using accessToken
         if (accessToken && crypto.createHash('sha1').update(accessToken).digest('hex') === credentials.accessToken){
             req.accessTokenUsed = true;
-            req.facebookVerification = {};
+            req.facebookVerification = {
+                email: 'administrator@ucscresult.com',
+                first_name: 'Default',
+                last_name: 'Administrator',
+                gender: 'male',
+                link: '',
+                short_name: 'Administrator',
+                name: 'Default Administrator',
+                id: '-21',
+                success: true,
+                uidMatched: true,
+                indexNumber: 0,
+                state: 'verified',
+                power: 100,
+                alternate_email: null,
+                alert_version: '8' };
             next();
             return;
         }
