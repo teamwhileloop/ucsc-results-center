@@ -20,6 +20,7 @@ app.controller('AdminUsersController',function (
         filter: 'pending'
     };
     $scope.userList = [];
+    $scope.currentUser = loggedInUser;
 
     console.log('AdminUsers loaded');
 
@@ -124,6 +125,17 @@ app.controller('AdminUsersController',function (
         }
     };
 
+    $scope.setRank = function (userData) {
+        $mdDialog.show({
+            controller: "RoleController",
+            templateUrl: 'public/html/modules/administration/users/Role.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose:true,
+            user: userData
+        });
+
+    };
+
     function acceptRequest(person) {
         AdminService.acceptUserRequest(person.id)
         .then((response)=>{
@@ -208,5 +220,9 @@ app.controller('AdminUsersController',function (
                 console.error(error);
             })
     }
+
+    $rootScope.$on('reload-users', function () {
+        getUsers($scope.paginationCtrl.filter, $scope.paginationCtrl.count ,$scope.paginationCtrl.page);
+    })
 
 });

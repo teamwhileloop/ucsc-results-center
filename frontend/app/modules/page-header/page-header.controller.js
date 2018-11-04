@@ -27,6 +27,8 @@ app.controller('PageHeaderController',function ($scope, $timeout, $mdSidenav, $l
             return 'Guest User';
         }if (power === 10){
             return 'Verified Member';
+        }if (power === 50){
+            return 'Batch Representative';
         }if (power === 100){
             return 'System Administrator';
         }

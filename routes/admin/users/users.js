@@ -244,4 +244,56 @@ router.post('/reset/:fbId', function (req, res) {
         });
 });
 
+router.post('/role', function (req, res) {
+    let targetId = req.body.id || '-1';
+    let newPower = parseInt(req.body.power) || 0;
+
+    if (targetId === '-1'){
+        res.status(400).send({
+            success: false,
+            error: 'Invalid user id'
+        });
+        return;
+    }
+
+    if (newPower < 10){
+        res.status(400).send({
+            success: false,
+            error: `New power cannot be less than 10 (< ${newPower})`
+        });
+        return;
+    }
+
+    if (req.facebookVerification.id === targetId){
+        res.status(403).send({
+            success: false,
+            error: `You cannot promote or demote yourself. Self demoting and promoting is forbidden.`
+        });
+        return;
+    }
+
+    const query = "UPDATE `facebook` SET `power` = ? WHERE `id` = ? AND `power` >= 10;";
+    mysql.query(query, [newPower, targetId], function(err, payload){
+        if (err){
+            reportError(req, res, err, true);
+            return;
+        }
+
+        mysql.query("SELECT `name`, `power` from `facebook` WHERE `id` = ?;",[targetId], function (err, resp) {
+            logger.log(`${req.facebookVerification.name} change the power of ${resp[0].name} to ${newPower}`, 'warn', true);
+        });
+
+        if (payload.affectedRows === 0){
+            res.status(404).send({
+                success: false,
+                error: `User(${targetId}) not found.`
+            });
+        }else{
+            res.send({
+                success: true
+            });
+        }
+    });
+});
+
 module.exports = router;
