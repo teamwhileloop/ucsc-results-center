@@ -73,11 +73,13 @@ app.use(bodyParser.json());
 const user = require('./routes/user');
 const admin = require('./routes/admin/admin');
 const apiV1 = require('./routes/api-v1');
-const statistics = require('./routes/statistics')
+const statistics = require('./routes/statistics');
+const webhook = require('./routes/fb-webhook');
 app.use('/user', user);
 app.use('/admin', admin);
 app.use('/v1.0', apiV1);
-app.use('/statistics', statistics)
+app.use('/statistics', statistics);
+app.use('/webhook', webhook);
 
 // Static Files
 app.use('/public',express.static(path.join(__dirname, 'public')));
