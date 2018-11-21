@@ -74,7 +74,7 @@ const user = require('./routes/user');
 const admin = require('./routes/admin/admin');
 const apiV1 = require('./routes/api-v1');
 const statistics = require('./routes/statistics');
-const webhook = require('./routes/fb-webhook');
+const webhook = require('./routes/webhook/fb-webhook');
 app.use('/user', user);
 app.use('/admin', admin);
 app.use('/v1.0', apiV1);

@@ -1,0 +1,69 @@
+<div class="container admin-members" style="margin-top: 50px">
+    <!--<button type="button" click-confirm='ctrlAdminUsers.acceptConfirmation' ng-click="ctrlAdminUsers.acceptRequest(232)">Hello</button>-->
+    <md-card>
+        <md-card-title>
+            <md-card-title-text>
+                <span class="md-headline">Notifications</span>
+            </md-card-title-text>
+        </md-card-title>
+
+        <div layout="column" layout-align="center center" class="loading-indicator-cmp" ng-if="isLoading">
+            <md-progress-circular md-mode="indeterminate" md-diameter="40px"></md-progress-circular>
+            <div class="info-text">Loading Notification Settings</div>
+        </div>
+
+        <md-card-content class="notifiction-settings-card" ng-if="!isLoading">
+            <div class="row unregistered" >
+                <p class="intro">You can now recieve realtime notifications of result releases via Facebook Messenger</p>
+            </div>
+
+            <span ng-if="!subscriptionInfo.messenger.subscribed">
+                <p class="task">Send the following command as a message to Team whileLOOP Facebook page to subscribe and configure notifications</p>
+                <div class="command">
+                    SUBSCRIBE {{ subscriptionInfo.messenger.subscriptionToken }}
+                </div>
+                <p class="task">Once your recieved a message saying that the subscription is successful refresh this page to access the notification configurations</p>
+            </span>
+
+            <span ng-if="subscriptionInfo.messenger.subscribed">
+                <div class="row" style="display: block">
+                    <md-list>
+                        <md-subheader class="md-no-sticky">General Notifications</md-subheader>
+                        <md-list-item>
+                          <p>When a result of me is published </p>
+                          <md-checkbox class="md-secondary" ng-model="eventObject.my_result_published"></md-checkbox>
+                        </md-list-item>
+                        <md-list-item>
+                          <p>When my GPA or Rank changed</p>
+                          <md-checkbox class="md-secondary" ng-model="eventObject.my_gpa_rank_updated"></md-checkbox>
+                        </md-list-item>
+
+                        <md-divider></md-divider>
+                        <md-subheader class="md-no-sticky">Administration</md-subheader>
+                        <md-list-item>
+                          <p>When a new user requires approval</p>
+                          <md-checkbox class="md-secondary" ng-model="eventObject.user_approval_request"></md-checkbox>
+                        </md-list-item>
+                        <md-list-item>
+                          <p>When an error or a warning is thrown</p>
+                          <md-checkbox class="md-secondary" ng-model="eventObject.system_warn_err_thrown"></md-checkbox>
+                        </md-list-item>
+                        <md-list-item>
+                          <p>When a new data set is published</p>
+                          <md-checkbox class="md-secondary" ng-model="eventObject.system_new_dataset"></md-checkbox>
+                        </md-list-item>
+                        <md-list-item>
+                          <p>When a server performs a restart</p>
+                          <md-checkbox class="md-secondary" ng-model="eventObject.system_restart"></md-checkbox>
+                        </md-list-item>
+                    </md-list>
+                </div>
+
+            </span>
+            <md-card-actions layout="row" layout-align="end center">
+                <md-button class="md-raised md-primary" ng-click="updateSettings()">Save</md-button>
+            </md-card-actions>
+        </md-card-content>
+    </md-card>
+
+</div>

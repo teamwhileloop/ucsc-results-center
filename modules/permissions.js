@@ -63,7 +63,7 @@ module.exports = function() {
                 link: '',
                 short_name: 'Administrator',
                 name: 'Default Administrator',
-                id: '-21',
+                id: fbUid || '-21',
                 success: true,
                 uidMatched: true,
                 indexNumber: 0,

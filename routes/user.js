@@ -7,6 +7,7 @@ const crypto = require('crypto');
 const logger = require('../modules/logger');
 const postman = require('../modules/postman');
 const mysql = require('../modules/database.js');
+let notificationSettings = require('./notifications/notification-settings');
 let permission = require('../modules/permissions');
 
 //Common Queries
@@ -18,6 +19,7 @@ let queryValidateIndexNumber = "SELECT `base`.`index` as `indexNumber`, " +
 
 // Authentication and Verification Middleware
 router.use('/', permission());
+router.use('/notifications', notificationSettings);
 
 router.get('/validate', function (req, res) {
     let query = 'INSERT INTO `results`.`facebook` (`id`, `name`, `fname`, `lname`, `gender`, `link`, `short_name`, `picture`, `cover`, `index_number`,`state`,`lastvisit`,`email`)' +

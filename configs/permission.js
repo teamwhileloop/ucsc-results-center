@@ -17,7 +17,8 @@ let permissionModules = {
     'user': {
         base: 0,
         routes: {
-            '/validate' : 0
+            '/validate' : 0,
+            '/notifications/*' : 10,
         }
     },
 
