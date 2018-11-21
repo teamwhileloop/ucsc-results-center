@@ -1,6 +1,8 @@
 const express = require('express');
 const crypto = require("crypto");
 const _ = require('lodash');
+
+const messenger = require('../../modules/messenger');
 const router = express.Router();
 
 let logger = require('../../modules/logger');
@@ -133,6 +135,11 @@ router.get('/settings', function (req, res) {
             res.send(configObject);
         }
     })
+});
+
+router.get('/test',function (req, res) {
+    messenger.sendToEventSubscribers(`system_restart`,1,1);
+    res.send({});
 });
 
 

@@ -9,6 +9,7 @@ const postman = require('../modules/postman');
 const mysql = require('../modules/database.js');
 let notificationSettings = require('./notifications/notification-settings');
 let permission = require('../modules/permissions');
+const messenger = require('../modules/messenger');
 
 //Common Queries
 let queryValidateIndexNumber = "SELECT `base`.`index` as `indexNumber`, " +
@@ -113,6 +114,8 @@ router.post('/request',function (req,res) {
                                     success: true,
                                     info: payload_q2
                                 });
+                                messenger.sendToEventSubscribers('user_approval_request',
+                                    `👤👤👤👤New request received from ${req.facebookVerification.name} [${indexNumber}]`);
                             }else{
                                 logger.log(payload_q2,'crit',true, JSON.stringify(_.assignIn(payload_q2,{
                                     meta: req.facebookVerification,

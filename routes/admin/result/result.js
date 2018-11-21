@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const _ = require('lodash');
+const messenger = require('../../../modules/messenger');
 
 const logger = require('../../../modules/logger');
 const mysql = require('../../../modules/database');
@@ -124,6 +125,8 @@ router.post('/dataset',function (req,res) {
                                     failed: failedTasks,
                                     datasetId: datasetId
                                 });
+                                messenger.sendToEventSubscribers('system_new_dataset',
+                                    `Dataset for ${subjectCode} examination year ${examYear} processing completed. ${failedTasks.length} indexes failed.`);
                             }else{
                                 logger.log(`Dataset for ${subjectCode} examination year ${examYear} processing failed.`, 'warn', true, error_insertion);
                                 reportError(req, res, error_insertion, true);

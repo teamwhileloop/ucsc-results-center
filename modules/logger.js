@@ -1,4 +1,5 @@
 let database = require('./database');
+let messenger = require('./messenger');
 
 let databaseWrite = true;
 let statusCodes = { event : 'EVENT' };
@@ -80,6 +81,10 @@ exports.log = function (message,statusCode = defaultStatusCodeKey,writeToDatabas
 
     // LOG TO CONSOLE
     console.log(date,"|",time,"|",statusCode,"|",message);
+
+    if (statusCode === 'WARN' || statusCode === 'CRIT'){
+        messenger.sendToEventSubscribers('system_warn_err_thrown', `Event Raised: ${statusCode}\n${message}`);
+    }
 
     virtualConsoleLog.push({
         date: date,
