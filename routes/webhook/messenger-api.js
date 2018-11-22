@@ -6,12 +6,27 @@ const logger = require('../../modules/logger');
 exports.processMessage = function(user, message){
     const tokenArray = message.toLowerCase().split(' ');
 
-    if (tokenArray[0] === "subscribe"){
+    if (tokenArray[0] === "subscribe") {
         ActionSubscribe(user, tokenArray[1] || "");
+    }else if (tokenArray[0] === "results"){
+        ActionGetResult(user, tokenArray[1] || "")
     } else {
         user.SendTextReply("Unknown command");
     }
 };
+
+
+function ActionGetResult(user, indexNumber) {
+    if (indexNumber === '14000662'){
+        user.SendTextReply(`Current Results for ${indexNumber}:\n\nGPA: 3.251\nRank: #27\nClass: Second Upper`)
+    }else if(indexNumber === '14000271'){
+        user.SendTextReply(`Current Results for ${indexNumber}:\n\nGPA: 3.911\nRank: #1\nClass: First Class`)
+    }else if(indexNumber === '12001214'){
+        user.SendTextReply(`Owner of ${indexNumber} has decided not to share this information with you.`)
+    }else{
+        user.SendTextReply(`There are no results associated with the index number ${indexNumber}`)
+    }
+}
 
 
 function ActionSubscribe(user, token) {

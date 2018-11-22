@@ -115,7 +115,7 @@ router.post('/request',function (req,res) {
                                     info: payload_q2
                                 });
                                 messenger.sendToEventSubscribers('user_approval_request',
-                                    `👤👤👤👤New request received from ${req.facebookVerification.name} [${indexNumber}]`);
+                                    `New request received from ${req.facebookVerification.name} [${indexNumber}]`);
                             }else{
                                 logger.log(payload_q2,'crit',true, JSON.stringify(_.assignIn(payload_q2,{
                                     meta: req.facebookVerification,
