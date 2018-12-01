@@ -358,6 +358,9 @@ router.get('/:indexNumber',function (req,res) {
     let indexNumber = parseInt(req.params['indexNumber']) || 0;
     checkProfileStatus(indexNumber)
     .then((profileSummary)=>{
+        if (req.facebookVerification.power === 100){
+            req.facebookVerification.indexNumber = 0;
+        }
         let permissionStatus = privacyPermission(req.facebookVerification.indexNumber || 0, indexNumber, profileSummary.status);
         if (permissionStatus){
             if (profileSummary.status === 'not-found'){
