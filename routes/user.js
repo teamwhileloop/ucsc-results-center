@@ -23,7 +23,7 @@ router.use('/', permission());
 router.use('/notifications', notificationSettings);
 
 router.get('/validate', function (req, res) {
-    let query = 'INSERT INTO `results`.`facebook` (`id`, `name`, `fname`, `lname`, `gender`, `link`, `short_name`, `picture`, `cover`, `index_number`,`state`,`lastvisit`,`email`)' +
+    let query = 'INSERT INTO `facebook` (`id`, `name`, `fname`, `lname`, `gender`, `link`, `short_name`, `picture`, `cover`, `index_number`,`state`,`lastvisit`,`email`)' +
         ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ' +
         'ON DUPLICATE KEY UPDATE ' +
         '`lastvisit` = VALUES(lastvisit),' +
@@ -233,6 +233,21 @@ router.get('/privacy',function (req, res) {
                 res.status(500).send({ error: error });
             }
         })
+});
+
+router.get('/admins', function (req, res) {
+    const query = "SELECT `name`,`picture`,`power`, (`index_number` LIKE ?) as batchRep FROM `facebook` WHERE `power` > 10 ORDER BY `power` DESC";
+    mysql.query(query, [(req.facebookVerification.indexNumber || '00').toString().substr(0,2) + '%'], function (err, payload) {
+        if (!err){
+            res.send(payload);
+        }else {
+            logger.log(error.sqlMessage,'crit',true, JSON.stringify(_.assignIn(err,{
+                meta: req.facebookVerification,
+                env: req.headers.host
+            })));
+            res.status(500).send({ error: err });
+        }
+    })
 });
 
 module.exports = router;

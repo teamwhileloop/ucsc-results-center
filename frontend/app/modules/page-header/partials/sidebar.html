@@ -14,6 +14,11 @@
     <div class="sidebar-button-collection">
         <div class="sidebar-button-header">Go to</div>
         <div class="sidebar-button"
+             ng-if="userDetails.state === 'guest' || userDetails.state === 'pending'"
+             ng-click="goToPath('/registration')">
+            <i class="material-icons">receipt</i> Registration
+        </div>
+        <div class="sidebar-button"
              ng-if="userDetails.state === 'verified'"
              ng-click="goToProfile(userDetails.indexNumber)">
             <i class="material-icons">person</i> My Profile
@@ -45,7 +50,7 @@
         <div class="sidebar-button"
              ng-click="goToPath('/notifications')"
              ng-if="userDetails.power > 10">
-            <i class="material-icons">mail</i> Notifications
+            <i class="material-icons">mail</i> Notification Settings
         </div>
     </div>
 

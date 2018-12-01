@@ -26,10 +26,10 @@
     </span>
 </div>
 <div class="alert alert-warning" role="alert" ng-if="indexNumberStatus === 'conflict'">
-    Seems to be that someone else has already claimed this index number. You can report this incident to the administrators and claim this index number.
+    Seems to be that someone else has already claimed this index number. You can report this incident to the administrators and claim this index number. Drop a message to Team whileLOOP Facebook page
 </div>
 <div class="action-buttons">
     <button ng-click="goBack()" type="button" class="btn btn-light btn-sm">Back</button>
     <button ng-click="goToStep(2)" type="button" class="btn btn-primary btn-sm" ng-if="indexNumberStatus === 'available'">Continue</button>
-    <button type="button" class="btn btn-warning btn-sm" ng-if="indexNumberStatus === 'conflict'">Report this incident</button>
+    <button type="button" onclick="window.open('https://m.me/whileLOOP')" class="btn btn-warning btn-sm" ng-if="indexNumberStatus === 'conflict'">Report this incident</button>
 </div>

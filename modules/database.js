@@ -41,7 +41,7 @@ function reconnect(recon = false) {
             resetExponentialBackOff();
             const apiHitCounter = require('./api-hit-counter');
             apiHitCounter.updateApiHits();
-            logger.log('Connected to the database in ' + logger.timeSpent(databaseConnectionTime), 'info', true);
+            logger.log(`Connected to the database ${credentials.database.database} in ${logger.timeSpent(databaseConnectionTime)}`, 'info', true);
         }
     });
 }

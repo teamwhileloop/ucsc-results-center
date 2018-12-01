@@ -16,6 +16,7 @@ app.controller('RegistrationController',function (
     $scope.invalidUserEmail = false;
     $scope.useAlternateEmail = false;
     $scope.submitting = false;
+    $scope.admins = [];
 
     this.preferedEmail = '';
     this.requestedIndexNumber = '';
@@ -33,9 +34,11 @@ app.controller('RegistrationController',function (
             break;
         case 'pending':
             $scope.step = 4;
+            updateAdmins();
             break;
         case 'blocked':
             $scope.step = 5;
+            updateAdmins();
             break;
         default:
             console.error('Unknown user state');
@@ -119,6 +122,7 @@ app.controller('RegistrationController',function (
         ProfileService.submitClaimRequest(request)
         .then((_response)=>{
             $scope.step = 4;
+            updateAdmins();
             $scope.loggedInUser.state = 'pending';
             $scope.loggedInUser.indexNumber = request['indexNumber'];
             $scope.loggedInUser.alternate_email = request['email'];
@@ -135,6 +139,23 @@ app.controller('RegistrationController',function (
                 autoDismiss : false
             });
         });
-    }
+    };
+
+    function updateAdmins(){
+        ProfileService.getAdmins()
+            .then((data)=>{
+                $scope.admins = data.data;
+            })
+            .catch((err)=>{
+                ApplicationService.pushNotification({
+                    title: 'Unable Get Administrators',
+                    text : 'For some reasons we could not fetch the administrators you can contact for further assistance.',
+                    template : 'error',
+                    autoDismiss : false
+                });
+            })
+    };
+
+
 
 });

@@ -23,13 +23,8 @@
         <td>Course</td>
         <td>{{ loggedInUser.indexNumber.substring(2,4) === '02' ? 'Information Systems' : 'Computer Science' }}</td>
     </tr>
-    <tr ng-hide="1">
-        <td>Batch Rep Admins</td>
-        <td>
-            <a href>Sulochana Kodituwakku</a>
-            <a href>Sulochana Kodituwakku</a>
-            <a href>Sulochana Kodituwakku</a>
-            <a href>Sulochana Kodituwakku</a>
-        </td>
-    </tr>
 </table>
+<br>
+<div class="title">Further Assistance</div>
+<p class="text">Contact any of the following administrators for further assistance.</p>
+<div ng-include="'public/html/modules/registration/partials/admins.html'"></div>

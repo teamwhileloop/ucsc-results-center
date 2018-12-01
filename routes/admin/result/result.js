@@ -20,7 +20,7 @@ function validateSubject(subjectCode = '') {
 
 function createNewDatasetEntry(subjectCode, description) {
     return new Promise(function (resolve,reject) {
-        mysql.query("INSERT INTO `results`.`dataset` (`subject`, `description`, `date`) VALUES ( ?,?,? );",
+        mysql.query("INSERT INTO `dataset` (`subject`, `description`, `date`) VALUES ( ?,?,? );",
             [subjectCode, description, new Date().toISOString()],
             function (error, payload) {
                 if (!error) {
