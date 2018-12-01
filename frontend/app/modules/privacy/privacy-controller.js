@@ -17,7 +17,8 @@ app.controller('PrivacyController',function ($scope, LoadingMaskService, loggedI
         ProfileService.getPrivacy()
         .then((response)=>{
             $scope.data = {
-                privacyValue : response.data.privacy
+                privacyValue : response.data.privacy,
+                showCase: response.data.userShowCase === 1
             };
             $scope.loadingData = false;
             $scope.saved = displaySavedBanner;
@@ -26,7 +27,7 @@ app.controller('PrivacyController',function ($scope, LoadingMaskService, loggedI
 
     $scope.save = function () {
         $scope.savingData = true;
-        ProfileService.setPrivacy($scope.data.privacyValue)
+        ProfileService.setPrivacy($scope.data.privacyValue, $scope.data.showCase ? 1 : 0)
         .then(()=>{
             reloadData(true);
             $scope.savingData = false;

@@ -169,6 +169,8 @@ router.post('/privacy',function (req, res) {
         });
         return;
     }
+
+    req.body.showcase = parseInt(req.body.showcase) === 1 ? 1 : 0;
     mysql.query(
         'SELECT `undergraduate`.`privacy` ' +
         'FROM ' +
@@ -182,8 +184,8 @@ router.post('/privacy',function (req, res) {
             if (!error){
                 if (payload.length === 1){
                     mysql.query(
-                        'UPDATE `undergraduate` SET `privacy` = ? WHERE `undergraduate`.`indexNumber` = ?',
-                        [req.body.privacy, req.facebookVerification.indexNumber],
+                        'UPDATE `undergraduate` SET `privacy` = ?, `user_showcase` = ? WHERE `undergraduate`.`indexNumber` = ?',
+                        [req.body.privacy, req.body.showcase, req.facebookVerification.indexNumber],
                         function (error_write, payload_write) {
                             if (!error_write){
                                 res.send(payload_write);
@@ -210,7 +212,7 @@ router.post('/privacy',function (req, res) {
 
 router.get('/privacy',function (req, res) {
     mysql.query(
-        'SELECT `undergraduate`.`privacy` ' +
+        'SELECT `undergraduate`.`privacy`, `undergraduate`.`user_showcase` as `userShowCase`' +
         'FROM ' +
         '`facebook` ' +
         'JOIN `undergraduate` ' +

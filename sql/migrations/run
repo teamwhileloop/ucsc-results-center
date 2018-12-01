@@ -1,0 +1,2 @@
+echo "EXECUTING $1"
+mysql --user="$AWS_RDB_USERNAME" --password="$AWS_RDB_PASSWORD" --database="$AWS_RDB_DATABASE" --host="$AWS_RDB_HOST" < $1

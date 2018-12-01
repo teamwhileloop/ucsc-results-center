@@ -21,8 +21,14 @@
             <div class="col-lg-8">
                 <div class="card result-summary-card">
                     <div class="card-body">
-                        <h4 class="card-title">Overview of {{ indexNumber }}</h4>
-                        <h6 class="card-subtitle mb-2">Last updated : {{ lastUpdate }}</h6>
+                        <div class="user-data">
+                            <img ng-if="profileOwnerInfo.picture"
+                                    src="{{ profileOwnerInfo.picture }}">
+                            <div class="text">
+                                <h4 class="card-title">Overview of {{ profileOwnerInfo.name || indexNumber }}</h4>
+                                <h6 class="card-subtitle mb-2">{{ profileOwnerInfo.indexNumber ? "Index Number: " + profileOwnerInfo.indexNumber + " | Last updated : "  : "Last updated : "}}{{ lastUpdate }}</h6>
+                            </div>
+                        </div>
                         <div class="row data-card-group">
                             <div class="col-lg-4 data-card">
                                 <div class="data-card-data">{{ gpa | number:3 }}</div>
@@ -108,7 +114,7 @@
                                     ng-click="goToProfile(person.indexNumber)"
                                     class="list-group-item ranking-item {{ myIndexNumber.toString() === person.indexNumber.toString() ? 'active' : 'nope' }}">
                                     <div ng-if="person.gpa !== undefined" class="rank">#{{ person.rank }}</div>
-                                    <div ng-if="person.gpa !== undefined" class="name">{{ person.indexNumber }}</div>
+                                    <div ng-if="person.gpa !== undefined" class="name">{{ person.name || person.indexNumber }}</div>
                                     <div ng-if="person.gpa !== undefined" class="gpa">{{ person.gpa | number:4 }}</div>
                                     <div ng-if="person.gpa === undefined" class="private">Private Account</div>
                                 </li>

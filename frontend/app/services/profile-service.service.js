@@ -22,8 +22,8 @@ app.service('ProfileService',function ($rootScope, FacebookService, $http, apiCl
         getPrivacy: function () {
             return apiClient.get('/user/privacy');
         },
-        setPrivacy: function (privacy = 'public') {
-            return apiClient.post('/user/privacy', { privacy: privacy });
+        setPrivacy: function (privacy = 'public', showcase = 1) {
+            return apiClient.post('/user/privacy', { privacy: privacy, showcase: showcase });
         },
         getAlerts: function () {
             return apiClient.get('v1.0/alerts/status');

@@ -45,6 +45,21 @@ div.profile-page.container{
       color: #333;
       height: 100%;
 
+      .user-data{
+        display: flex;
+
+        img{
+          height: 50px;
+          width: 50px;
+          border-radius: 5px;
+          margin: 0 14px 0 0;
+        }
+
+        .text{
+          padding-top: 2px;
+        }
+      }
+
       &.degree-fc {
         background-color: $bootstrap-color-primary;
 

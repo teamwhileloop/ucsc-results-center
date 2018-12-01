@@ -5,12 +5,12 @@
         md-search-text="$ctrl.searchText"
         md-selected-item-change="searchConfirm(item)"
         md-items="item in cacheSearch($ctrl.searchText)"
-        md-item-text="item.indexNumber.toString()"
+        md-item-text="item.name || item.indexNumber.toString()"
         md-min-length="0"
         placeholder="Search by Index Number ...">
     <md-item-template>
         <div class="search-item">
-            <div class="line-1" md-highlight-text="$ctrl.searchText" md-highlight-flags="i">{{ item.indexNumber }}</div>
+            <div class="line-1" md-highlight-text="$ctrl.searchText" md-highlight-flags="i">{{ item.name || item.indexNumber }}</div>
             <div class="line-2"> GPA: <b>{{ item.gpa | number:3 }}</b> / Rank: <b>{{ item.rank }}</b></div>
         </div>
     </md-item-template>
