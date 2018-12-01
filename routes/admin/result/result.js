@@ -126,7 +126,7 @@ router.post('/dataset',function (req,res) {
                                     datasetId: datasetId
                                 });
                                 messenger.sendToEventSubscribers('system_new_dataset',
-                                    `Dataset for ${subjectCode} examination year ${examYear} processing completed. ${failedTasks.length} indexes failed.`);
+                                    `Dataset for ${subjectCode} examination year ${examYear} processing completed.`);
                             }else{
                                 logger.log(`Dataset for ${subjectCode} examination year ${examYear} processing failed.`, 'warn', true, error_insertion);
                                 reportError(req, res, error_insertion, true);
