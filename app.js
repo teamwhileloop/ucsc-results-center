@@ -12,6 +12,7 @@ const app = express();
 const fs = require('fs');
 const socketIO = require('./index');
 const bodyParser = require('body-parser');
+const messenger = require('./modules/messenger');
 
 let privateKey;
 let certificate;
@@ -74,7 +75,7 @@ const user = require('./routes/user');
 const admin = require('./routes/admin/admin');
 const apiV1 = require('./routes/api-v1');
 const statistics = require('./routes/statistics');
-const webhook = require('./routes/fb-webhook');
+const webhook = require('./routes/webhook/fb-webhook');
 app.use('/user', user);
 app.use('/admin', admin);
 app.use('/v1.0', apiV1);
@@ -109,5 +110,12 @@ app.get('/test', function(req, res) {
 app.get('/privacy', function(req, res) {
     res.send(privacyPolicy);
 });
+
+if (credentials.isDeployed){
+    messenger.sendToEventSubscribers('system_restart',
+        'Application Status Update:\n\nServer started: ' + new Date(),
+        "APPLICATION_UPDATE");
+}
+
 
 module.exports = credentials.isDeployed ? https : http;

@@ -42,6 +42,11 @@
              ng-if="userDetails.power >= 100">
             <i class="material-icons">add_comment</i> Notification Center
         </div>
+        <div class="sidebar-button"
+             ng-click="goToPath('/notifications')"
+             ng-if="userDetails.power > 10">
+            <i class="material-icons">mail</i> Notifications
+        </div>
     </div>
 
     <div class="sidebar-button-collection">

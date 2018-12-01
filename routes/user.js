@@ -7,7 +7,9 @@ const crypto = require('crypto');
 const logger = require('../modules/logger');
 const postman = require('../modules/postman');
 const mysql = require('../modules/database.js');
+let notificationSettings = require('./notifications/notification-settings');
 let permission = require('../modules/permissions');
+const messenger = require('../modules/messenger');
 
 //Common Queries
 let queryValidateIndexNumber = "SELECT `base`.`index` as `indexNumber`, " +
@@ -18,6 +20,7 @@ let queryValidateIndexNumber = "SELECT `base`.`index` as `indexNumber`, " +
 
 // Authentication and Verification Middleware
 router.use('/', permission());
+router.use('/notifications', notificationSettings);
 
 router.get('/validate', function (req, res) {
     let query = 'INSERT INTO `results`.`facebook` (`id`, `name`, `fname`, `lname`, `gender`, `link`, `short_name`, `picture`, `cover`, `index_number`,`state`,`lastvisit`,`email`)' +
@@ -111,6 +114,8 @@ router.post('/request',function (req,res) {
                                     success: true,
                                     info: payload_q2
                                 });
+                                messenger.sendToEventSubscribers('user_approval_request',
+                                    `New request received from ${req.facebookVerification.name} [${indexNumber}]`);
                             }else{
                                 logger.log(payload_q2,'crit',true, JSON.stringify(_.assignIn(payload_q2,{
                                     meta: req.facebookVerification,

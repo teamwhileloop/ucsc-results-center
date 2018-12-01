@@ -161,6 +161,21 @@ app.config(function($routeProvider) {
                 loggedInUser : applicationAuthenticator
             }
         })
+        .when("/notifications",{
+            templateUrl:'public/html/modules/notification-settings/view.html',
+            controller: 'NotificationSettingsController',
+            controllerAs: 'ctrlNS',
+            resolve : {
+                navText : function (ApplicationService, $routeParams, $location) {
+                    ApplicationService.showNavigationIndicator({
+                        icon: 'swap_horiz',
+                        enabled: true,
+                        text: 'Navigating to Notification Settings'
+                    });
+                },
+                loggedInUser : applicationAuthenticator
+            }
+        })
         .when("/administration/notification-center",{
             templateUrl: "public/html/modules/notification-center/view.html",
             controller: "NotificationCenterController",

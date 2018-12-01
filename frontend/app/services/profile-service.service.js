@@ -30,6 +30,15 @@ app.service('ProfileService',function ($rootScope, FacebookService, $http, apiCl
         },
         sendAlertAck: function (remoteId) {
             return apiClient.get('v1.0/alerts/ack/' + remoteId);
+        },
+        getMessengerNotificationStatus: function () {
+            return apiClient.get('/user/notifications/status');
+        },
+        getNotificationSettings: function () {
+            return apiClient.get('/user/notifications/settings');
+        },
+        updateNotificationSettings: function (data) {
+            return apiClient.post('/user/notifications/settings', data);
         }
     };
 });
