@@ -181,6 +181,24 @@ function getGpaVariation(indexNumber) {
     });
 }
 
+function getOwnerInfo(indexNumber) {
+    return new Promise((resolve, reject)=>{
+        const query = "SELECT `facebook`.`name`, `facebook`.`picture`, `facebook`.`index_number` as indexNumber " +
+            "FROM `undergraduate` JOIN `facebook` " +
+            "ON `undergraduate`.`indexNumber` = `facebook`.`index_number` " +
+                "AND `undergraduate`.`indexNumber` = ? " +
+                "AND `undergraduate`.`user_showcase` = 1;";
+        mysql.query(query, [indexNumber], function (err, payload) {
+                if (!err){
+                    resolve(payload);
+                }else {
+                    reject(err);
+                }
+            });
+
+    });
+}
+
 function getGradeDistribution(indexNumber) {
     return new Promise((resolve, reject)=>{
         getCompletedSemesters(indexNumber.toString().substring(0,4))
@@ -346,7 +364,12 @@ router.get('/:indexNumber',function (req,res) {
                         getProfileGraphs(indexNumber)
                         .then((graphData)=>{
                             profileSummary.graphs = graphData;
-                            res.send(profileSummary);
+                            getOwnerInfo(indexNumber)
+                                .then((ownerInfo)=>{
+                                    profileSummary.ownerInfo = ownerInfo;
+                                    res.send(profileSummary);
+                                })
+                                .catch((error)=>{reportError(req, res, error, true)});
                         })
                         .catch((error)=>{reportError(req, res, error, true)});
                     })

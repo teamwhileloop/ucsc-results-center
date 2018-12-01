@@ -12,9 +12,13 @@
         </div>
         <md-radio-group ng-model="data.privacyValue">
             <md-radio-button value="public" class="md-primary">Public - Anyone registered in the system can view your profile.</md-radio-button>
-            <md-radio-button value="shared" class="md-primary"> Shared - Only your batch mates can view your profile</md-radio-button>
+            <md-radio-button value="shared" class="md-primary">Shared - Only your batch mates can view your profile</md-radio-button>
             <md-radio-button value="private" class="md-primary">Private - Only you can view your profile</md-radio-button>
         </md-radio-group>
+        <br>
+        <md-checkbox ng-model="data.showCase" aria-label="Show user information">
+            Show my information on my profile page
+        </md-checkbox>
         <md-card-actions layout="row" layout-align="end center">
             <md-button
                     ng-click="save()"

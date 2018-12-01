@@ -36,6 +36,7 @@ app.controller('ProfilePageController',function (
     $scope.total_credits = 'NA';
     $scope.degreeCode = 'NA';
     $scope.resultSets = [];
+    $scope.profileOwnerInfo = {};
 
     if ($localStorage.onlyBest === undefined){
         $localStorage.onlyBest = true;
@@ -233,6 +234,7 @@ app.controller('ProfilePageController',function (
 
                 $scope.summary = data.data.summary;
                 $scope.resultSets = data.data.results.reverse();
+                $scope.profileOwnerInfo = data.data.ownerInfo[0] || {};
 
                 $scope.total_credits = data.data.summary.credits;
             }
