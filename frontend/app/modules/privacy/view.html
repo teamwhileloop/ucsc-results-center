@@ -5,7 +5,7 @@
     </div>
 
     <div class="card" ng-if="!loadingData">
-        <h2>Select your privacy method {{ privacyValue }}</h2>
+        <h2>Privacy Settings</h2>
         <br>
         <div class="alert alert-success" role="alert" ng-if="saved">
             Your privacy setting has being <b>updated!</b>.
@@ -16,9 +16,14 @@
             <md-radio-button value="private" class="md-primary">Private - Only you can view your profile</md-radio-button>
         </md-radio-group>
         <br>
+        <h5>Show who you are</h5>
         <md-checkbox ng-model="data.showCase" aria-label="Show user information">
             Show my information on my profile page
         </md-checkbox>
+        <p>This will display your name in your profile overview, ranking list and the global search. People will be able to search you by name.</p>
+        <div class="alert alert-info" role="alert">
+            This only works with the people who you have decided to share your profile with depending on whether its Public, Shared or Private.
+        </div>
         <md-card-actions layout="row" layout-align="end center">
             <md-button
                     ng-click="save()"

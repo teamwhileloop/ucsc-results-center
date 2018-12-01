@@ -114,7 +114,7 @@
                                     ng-click="goToProfile(person.indexNumber)"
                                     class="list-group-item ranking-item {{ myIndexNumber.toString() === person.indexNumber.toString() ? 'active' : 'nope' }}">
                                     <div ng-if="person.gpa !== undefined" class="rank">#{{ person.rank }}</div>
-                                    <div ng-if="person.gpa !== undefined" class="name">{{ person.indexNumber }}</div>
+                                    <div ng-if="person.gpa !== undefined" class="name">{{ person.name || person.indexNumber }}</div>
                                     <div ng-if="person.gpa !== undefined" class="gpa">{{ person.gpa | number:4 }}</div>
                                     <div ng-if="person.gpa === undefined" class="private">Private Account</div>
                                 </li>

@@ -315,8 +315,14 @@ function getBatchRankings(indexNumber, req) {
         return Promise.resolve(cacheRankings[pattern]);
     }else{
         return new Promise(function (resolve, reject) {
-            let query = `SELECT \`indexNumber\`,\`gpa\`,\`rank\`,\`privacy\` FROM \`undergraduate\` WHERE \`indexNumber\` LIKE '${pattern}%' ORDER BY \`rank\` ASC`;
-            mysql.query(query, function (error, payload) {
+            // let query = `SELECT \`indexNumber\`,\`gpa\`,\`rank\`,\`privacy\` FROM \`undergraduate\` WHERE \`indexNumber\` LIKE '${pattern}%' ORDER BY \`rank\` ASC`;
+            let query = "SELECT * FROM (" +
+                                         "SELECT `undergraduate`.`indexNumber`, `undergraduate`.`gpa`, `undergraduate`.`rank`, `undergraduate`.`user_showcase`, `undergraduate`.`privacy`, `facebook`.`name`" +
+                                         "FROM `undergraduate`" +
+                                         "LEFT JOIN `facebook`" +
+                                         "ON `undergraduate`.`indexNumber` = `facebook`.`index_number`" +
+                ") as tmp WHERE `indexNumber` LIKE CONCAT(? ,'%') ORDER BY `rank` ASC";
+            mysql.query(query, [pattern], function (error, payload) {
                 if (!error){
                     _.forEach(payload, function (value, key) {
                         if (!privacyPermission(req.facebookVerification.indexNumber || 0, value.indexNumber, value.privacy)){
@@ -325,6 +331,12 @@ function getBatchRankings(indexNumber, req) {
                             delete payload[key]['gpa'];
                             delete payload[key]['rank'];
                         }
+
+                        if (payload[key]['user_showcase'] === 0){
+                            delete payload[key]['name'];
+                        }
+
+                        delete payload[key]['user_showcase'];
                     });
                     cacheRankings[pattern] = payload;
                     resolve(payload);
