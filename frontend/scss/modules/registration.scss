@@ -4,6 +4,54 @@
   flex-direction: column;
   align-items: center;
 
+  .admin-avatar{
+    vertical-align: middle;
+    border-style: none;
+    width: 42px;
+    height: 42px;
+    margin-right: 12px;
+    border-radius: 50%;
+    box-sizing: content-box;
+  }
+
+  .use-this-email{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0 10px;
+  }
+
+  .use-this-email-input{
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem !important;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  }
+
+  .admin-box{
+    display: flex;
+    flex-direction: row;
+
+    .avatar-box{
+      padding: 0;
+    }
+    .detail-box{
+      .name{
+        font-size: 16px;
+        line-height: 1.3rem;
+      }
+      .data{
+        font-size: 10px;
+        color: #666;
+      }
+    }
+  }
+
   .registration-box{
     box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
     width: 650px;

@@ -39,6 +39,9 @@ app.service('ProfileService',function ($rootScope, FacebookService, $http, apiCl
         },
         updateNotificationSettings: function (data) {
             return apiClient.post('/user/notifications/settings', data);
+        },
+        getAdmins: function () {
+            return apiClient.get('/user/admins');
         }
     };
 });

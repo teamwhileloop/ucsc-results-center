@@ -1,4 +1,4 @@
-app.controller('PageHeaderController',function ($scope, $timeout, $mdSidenav, $location, ProfileService) {
+app.controller('PageHeaderController',function ($scope, $timeout, $mdSidenav, $location, ProfileService, $rootScope) {
 
     $scope.pageHeaderVisibility = false;
     $scope.navigationIndicatorVisibility = false;
@@ -22,7 +22,7 @@ app.controller('PageHeaderController',function ($scope, $timeout, $mdSidenav, $l
         $mdSidenav('sidebar').close();
     };
 
-    $scope.getRankName = function (power = 0) {
+    $rootScope.getRankName = function (power = 0) {
         if (power === 0){
             return 'Guest User';
         }if (power === 10){

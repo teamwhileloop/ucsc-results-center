@@ -1,0 +1,54 @@
+<div class="list-group">
+    <p class="text"> Administrators from your batch</p>
+    <a ng-repeat="admin in admins | filter: {batchRep: 1}"
+       class="list-group-item list-group-item-action flex-column align-items-start"
+       style="padding: 0.5rem 1rem;"
+    >
+        <div class="admin-box">
+            <div class="avatar-box">
+                <img alt="{{ admin.name }}"
+                     ng-src="{{ admin.picture }}"
+                     onerror="this.src='../../../../public/img/default_user.png'"
+                     class="admin-avatar" />
+            </div>
+            <div class="detail-box">
+                <div class="name">{{ admin.name }}</div>
+                <div class="">
+                    <span class="badge" ng-class="{
+                        'badge-success': admin.power == 100,
+                        'badge-info': admin.power == 50
+                    }">{{ getRankName(admin.power) }}</span>
+                </div>
+            </div>
+
+        </div>
+    </a>
+</div>
+<br>
+<div class="list-group">
+    <p class="text"> Additional Administrators</p>
+    <a ng-repeat="admin in admins | filter: {batchRep: 0}"
+       class="list-group-item list-group-item-action flex-column align-items-start"
+       style="padding: 0.5rem 1rem;"
+    >
+        <div class="admin-box">
+            <div class="avatar-box">
+                <img alt="{{ admin.name }}"
+                     ng-src="{{ admin.picture }}"
+                     onerror="this.src='../../../../public/img/default_user.png'"
+                     class="admin-avatar" />
+            </div>
+            <div class="detail-box">
+                <div class="name">{{ admin.name }}</div>
+                <div class="">
+                    <span class="badge" ng-class="{
+                        'badge-success': admin.power == 100,
+                        'badge-info': admin.power == 50
+                    }">{{ getRankName(admin.power) }}</span>
+                </div>
+
+            </div>
+
+        </div>
+    </a>
+</div>

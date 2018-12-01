@@ -10,7 +10,7 @@ let mysql = require('../../modules/database');
 
 function attachSubscriptionToken(userId, token, exp){
     return new Promise(function(resolve, reject){
-        let query = 'INSERT INTO `results`.`messnger_subscription_tokens` (`userId`, `token`, `expirydate`)' +
+        let query = 'INSERT INTO `messnger_subscription_tokens` (`userId`, `token`, `expirydate`)' +
             ' VALUES (?, ?, ?) ' +
             'ON DUPLICATE KEY UPDATE ' +
             '`token` = VALUES(token),' +
@@ -89,7 +89,7 @@ router.post('/settings', function (req, res) {
         configObject.system_restart = parseInt(req.body.system_restart) === 1 ? 1 : 0;
     }
 
-    let query = 'INSERT INTO `results`.`event_subscriptions` (`fbid`, `event`, `value`)' +
+    let query = 'INSERT INTO `event_subscriptions` (`fbid`, `event`, `value`)' +
         ' VALUES (?, "my_result_published", ?), ' +
         ' (?, "my_gpa_rank_updated", ?), ' +
         ' (?, "user_approval_request", ?), ' +

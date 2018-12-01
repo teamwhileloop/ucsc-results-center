@@ -7,13 +7,17 @@
 </p>
 <br>
 <div class="input-group">
-    <span class="input-group-addon">
+    <span class="input-group-addon use-this-email">
       <input type="checkbox" ng-model="useAlternateEmail"> Use this Email
     </span>
     <input type="text"
-           class="form-control"
+           class="form-control use-this-email-input"
            ng-model="alternateEmailInput"
            ng-change="ctrlReg.checkEmailValidity(alternateEmailInput)">
+
+</div>
+<div class="alert alert-primary" role="alert">
+    This step is <b>optional.</b> You may skip this step if required.
 </div>
 <div class="alert alert-danger"
      role="alert"

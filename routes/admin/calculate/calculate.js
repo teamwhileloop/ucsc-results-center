@@ -117,7 +117,7 @@ function setSemesterRankings(pattern, column, updateColumn){
                     prevGPA = data.gpa;
                     if ((cur+buffer) === payload.length){
                         valuesQuery = valuesQuery.substring(0,valuesQuery.length -1);
-                        mysql.query(`INSERT INTO \`results\`.\`undergraduate\`
+                        mysql.query(`INSERT INTO \`undergraduate\`
                                         (  \`indexNumber\`,\`${updateColumn}\`) 
                                     VALUES ${valuesQuery} 
                                     ON DUPLICATE KEY UPDATE \`${updateColumn}\` = VALUES(${updateColumn});`,
@@ -293,7 +293,7 @@ router.post('/pattern/:pattern',function (req,res) {
                                         if (completedUgs === undergraduateList.length){
                                             valuesQuery = valuesQuery.substring(0,valuesQuery.length -1);
                                             logger.log(`Submitting Query for Y${semester.year}S${semester.semester} after ${logger.timeSpent(startTime)}`);
-                                            mysql.query(`INSERT INTO \`results\`.\`undergraduate\`
+                                            mysql.query(`INSERT INTO \`undergraduate\`
                                                         (  \`indexNumber\`, 
                                                             \`y${semester.year}s${semester.semester}_gpa\`, 
                                                             \`y${semester.year}s${semester.semester}_rank\`, 
