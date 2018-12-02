@@ -30,7 +30,8 @@ global.monitoring = {
     status: "Offline",
     lastPing: + new Date(),
     online: false,
-    notResponding: false
+    notResponding: false,
+    forceScan: false
 };
 
 // Setup Logger

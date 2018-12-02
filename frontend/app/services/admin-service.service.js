@@ -28,6 +28,9 @@ app.service('AdminService',function ($rootScope, FacebookService, $http, apiClie
         },
         changeUserRole: function (userId, power) {
             return apiClient.post('/admin/users/role', {id:userId, power: power});
+        },
+        forceResultScan: function () {
+            return apiClient.get(`/admin/system/forcescan`);
         }
     };
 });

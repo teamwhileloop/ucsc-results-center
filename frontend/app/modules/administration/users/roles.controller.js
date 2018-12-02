@@ -65,6 +65,8 @@ app.controller('RoleController',function (
             return 'Verified Member';
         }if (power === 50){
             return 'Batch Representative';
+        }if (power === 60){
+            return 'Analytics Users';
         }if (power === 100){
             return 'System Administrator';
         }

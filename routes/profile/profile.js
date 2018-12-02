@@ -187,7 +187,7 @@ function getOwnerInfo(indexNumber, userPower = 0) {
             "FROM `undergraduate` JOIN `facebook` " +
             "ON `undergraduate`.`indexNumber` = `facebook`.`index_number` " +
                 "AND `undergraduate`.`indexNumber` = ? ";
-        if (userPower !== 100){
+        if (userPower < 60){
             query += "AND `undergraduate`.`user_showcase` = 1";
         }
         query += ";";
@@ -328,7 +328,7 @@ function getBatchRankings(indexNumber, req, userPower = 0) {
             mysql.query(query, [pattern], function (error, payload) {
                 if (!error){
                     _.forEach(payload, function (value, key) {
-                        if (userPower === 100){
+                        if (userPower > 50){
                             return;
                         }
                         if (!privacyPermission(req.facebookVerification.indexNumber || 0, value.indexNumber, value.privacy)){
@@ -358,7 +358,7 @@ router.get('/:indexNumber',function (req,res) {
     let indexNumber = parseInt(req.params['indexNumber']) || 0;
     checkProfileStatus(indexNumber)
     .then((profileSummary)=>{
-        if (req.facebookVerification.power === 100){
+        if (req.facebookVerification.power > 50){
             req.facebookVerification.indexNumber = 0;
         }
         let permissionStatus = privacyPermission(req.facebookVerification.indexNumber || 0, indexNumber, profileSummary.status);

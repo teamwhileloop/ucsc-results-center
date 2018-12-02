@@ -105,7 +105,6 @@ function setSemesterRankings(pattern, column, updateColumn){
         mysql.query(`SELECT indexNumber, ${column} as gpa FROM undergraduate WHERE indexNumber LIKE '${pattern}%' ORDER BY ${column} DESC;`,
         function (error, payload) {
             if (!error){
-                logger.log(`Updating ${updateColumn} with pattern ${pattern} started`);
                 _.forEach(payload,function (data) {
                     if (data.gpa === prevGPA){
                         buffer++;
@@ -123,7 +122,6 @@ function setSemesterRankings(pattern, column, updateColumn){
                                     ON DUPLICATE KEY UPDATE \`${updateColumn}\` = VALUES(${updateColumn});`,
                         function (error_update, payload_update) {
                             if (!error_update){
-                                logger.log(`Updating ${updateColumn} with pattern ${pattern} completed`);
                                 resolve(payload_update);
                             }else{
                                 logger.log(`Updating ${updateColumn} with pattern ${pattern} failed`);
@@ -247,12 +245,10 @@ router.post('/pattern/:pattern',function (req,res) {
     taskLock = true;
     getUndergraduates(pattern)
         .then((undergraduateList)=>{
-            logger.log(`Undergraduates list received for pattern ${pattern} after ${logger.timeSpent(startTime)}`);
             getCompletedSemesters(pattern)
                 .then((completedSemesters)=>{
                     let overallProgress = 0;
                     let successCount = 0;
-                    logger.log(`Semester list received for pattern ${pattern} after ${logger.timeSpent(startTime)}`);
 
                     if (targetSemMode && _.filter(completedSemesters, { 'semester': academicSemester, 'year': academicYear }).length === 0){
                         taskLock = false;
@@ -265,7 +261,6 @@ router.post('/pattern/:pattern',function (req,res) {
                         return;
                     }
 
-                    logger.log(`Starting calculations for patten ${pattern} at ${logger.timeSpent(startTime)}`);
                     _.forEach(completedSemesters,function (semester) {
                         let valuesQuery = '';
                         let completedUgs = 0;
@@ -292,7 +287,6 @@ router.post('/pattern/:pattern',function (req,res) {
                                         logger.setLiveText(`Calculation progress for pattern '${pattern}' ${completedPercentage}%`);
                                         if (completedUgs === undergraduateList.length){
                                             valuesQuery = valuesQuery.substring(0,valuesQuery.length -1);
-                                            logger.log(`Submitting Query for Y${semester.year}S${semester.semester} after ${logger.timeSpent(startTime)}`);
                                             mysql.query(`INSERT INTO \`undergraduate\`
                                                         (  \`indexNumber\`, 
                                                             \`y${semester.year}s${semester.semester}_gpa\`, 
@@ -308,7 +302,6 @@ router.post('/pattern/:pattern',function (req,res) {
                                                         \`y${semester.year}s${semester.semester}_credits_non_gpa\` = VALUES(\`y${semester.year}s${semester.semester}_credits_non_gpa\`);`,
                                                 function (error, payload) {
                                                     if (!error){
-                                                        logger.log(`Calculation completed for Y${semester.year}S${semester.semester} after ${logger.timeSpent(startTime)}`);
                                                         successCount += 1;
 
                                                         let localSuccessCount = successCount;

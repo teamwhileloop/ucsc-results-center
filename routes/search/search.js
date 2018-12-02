@@ -20,7 +20,7 @@ router.get('/undergraduate/:pattern', function (req, res) {
         "WHERE (`indexNumber` LIKE CONCAT('%', ?,'%') OR IF(`user_showcase` = 1, `name` LIKE CONCAT('%', ?,'%'), 0)) " +
         "AND accessControl(?, `indexNumber`) ORDER BY `gpa` DESC LIMIT 10;";
 
-    if (req.facebookVerification.power === 100){
+    if (req.facebookVerification.power > 50){
         query = "SELECT `indexNumber`, `gpa`, `rank`, `name` FROM (" +
             "SELECT `undergraduate`.`indexNumber`, `undergraduate`.`gpa`, `undergraduate`.`rank`, `undergraduate`.`user_showcase`, `undergraduate`.`privacy`, `facebook`.`name` " +
             "FROM `undergraduate` " +
