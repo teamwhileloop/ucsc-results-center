@@ -52,6 +52,11 @@
              ng-if="userDetails.power > 10">
             <i class="material-icons">mail</i> Notification Settings
         </div>
+        <div class="sidebar-button"
+             ng-click="forceScan()"
+             ng-if="userDetails.power > 10">
+            <i class="material-icons">control_camera</i> Force Result Scan
+        </div>
     </div>
 
     <div class="sidebar-button-collection">
@@ -73,7 +78,7 @@
                 <i class="material-icons">track_changes</i> Result Tracking: {{ statistics.monitoring.status }}
             </div>
             <div class="row" style="margin: 10px;"></div>
-            <div class="online-user-item" ng-if="userDetails.power > 50" ng-repeat="user in statistics.onlineUsers">
+            <div class="online-user-item" ng-if="userDetails.power > 65" ng-repeat="user in statistics.onlineUsers">
                 <div class="online-dot"></div>{{ user }}
             </div>
         </div>

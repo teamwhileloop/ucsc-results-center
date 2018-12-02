@@ -1,4 +1,11 @@
-app.controller('PageHeaderController',function ($scope, $timeout, $mdSidenav, $location, ProfileService, $rootScope) {
+app.controller('PageHeaderController',function ($scope,
+                                                $timeout,
+                                                $mdSidenav,
+                                                $location,
+                                                ProfileService,
+                                                $rootScope,
+                                                AdminService)
+{
 
     $scope.pageHeaderVisibility = false;
     $scope.navigationIndicatorVisibility = false;
@@ -29,6 +36,8 @@ app.controller('PageHeaderController',function ($scope, $timeout, $mdSidenav, $l
             return 'Verified Member';
         }if (power === 50){
             return 'Batch Representative';
+        }if (power === 60){
+            return 'Analytics Users';
         }if (power === 100){
             return 'System Administrator';
         }
@@ -51,6 +60,11 @@ app.controller('PageHeaderController',function ($scope, $timeout, $mdSidenav, $l
 
     $scope.goToPath = function (path) {
         $location.path(path);
+        $mdSidenav('sidebar').close();
+    };
+
+    $scope.forceScan = function(){
+        AdminService.forceResultScan();
         $mdSidenav('sidebar').close();
     };
 

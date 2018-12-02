@@ -36,7 +36,16 @@ def detectAndApplyChanges(pdfUrlList):
         subjectCode = os.path.basename(unquote(pdfUrl)).split(".")[0].replace(" ", "")
         logger.info("Checking subject: " + subjectCode)
         resultcenter.ping("Scanning " + subjectCode)
-        pdfhead = requests.get(pdfUrl)
+        pdfhead = None
+        try:
+            pdfhead = requests.get(pdfUrl)
+        except:
+            logger.warn("Unable to fetch results sheet using URL: " + pdfUrl)
+
+        if (pdfhead.status_code != 200):
+            logger.warn("Request to fetch " + pdfUrl + " returned: " + str(pdfhead.status_code))
+            continue
+
         hashInput = str(pdfhead.headers['Last-Modified'])
         hash = (hashlib.sha256(hashInput.encode('utf-8')).hexdigest())
 
@@ -65,11 +74,10 @@ def detectAndApplyChanges(pdfUrlList):
 def fetchFromDB(map):
     logger.info("Fecthing previous checksums from Database")
     with connection.cursor() as cursor:
-        sql = "SELECT code, checksum FROM results.subject;"
+        sql = "SELECT code, checksum FROM subject;"
         cursor.execute(sql)
         for result in cursor.fetchall():
             map[result['code']] = result['checksum']
-
 
 
 logger.info("Initializing loadup")
@@ -93,16 +101,32 @@ while True:
     converter.clearAffectedIndexes()
     resultcenter.ping("Initializing Scan")
     logger.info("Scanning for changes. Itteration number: #" + str(itterationNumber))
-    detectAndApplyChanges(getPDFList())
-    logger.info("Scan completed.")
-    if len(converter.affectedIndexes) > 0:
-        logger.info("Following indexes requires recalculation: " + str(converter.affectedIndexes))
-        for pattern in converter.affectedIndexes:
-            logger.info("Recalculating for pattern: " + str(pattern))
-            resultcenter.recalculate(pattern)
+    pdfUrlList = None
+    nextScan = 0
+    try:
+        pdfUrlList = getPDFList()
+    except:
+        logger.warn("Failed to fetch result sheets from UGVLE")
+
+    if (pdfUrlList != None):
+        detectAndApplyChanges(pdfUrlList)
+        logger.info("Scan completed.")
+        if len(converter.affectedIndexes) > 0:
+            converter.affectedIndexes = list(set(converter.affectedIndexes))
+            logger.info("Following indexes requires recalculation: " + str(converter.affectedIndexes))
+            for pattern in converter.affectedIndexes:
+                logger.info("Recalculating for pattern: " + str(pattern))
+                resultcenter.recalculate(pattern)
+        nextScan = int(waitTime)
+    else:
+        nextScan = 60
     itterationNumber += 1
-    for i in range(int(waitTime)):
-        resultcenter.ping("Next scan in " + str(int(waitTime) - i) + "s")
+    logger.info("Running next scan in " + str(nextScan) + "s")
+    for i in range(nextScan):
+        resp = resultcenter.ping("Next scan in " + str(nextScan - i) + "s")
+        if (resp == "100"):
+            logger.info("Running a force scan")
+            break
         time.sleep(1)
 
 

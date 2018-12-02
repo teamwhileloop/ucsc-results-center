@@ -7,6 +7,7 @@ let permissionModules = {
             '/console/clear' : 100,
             '/users/role' : 100,
             '/system/maintenance' : 100,
+            '/system/forcescan' : 50,
             '/result/dataset' : 100,
             '/console/generate/[0-9]{1,}' : 100,
             '/monitoring/*' : 100,

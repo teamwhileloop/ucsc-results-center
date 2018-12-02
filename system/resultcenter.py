@@ -46,5 +46,7 @@ def ping(status):
         }, sort_keys=False, indent=4, separators=(',', ':')), headers=headers)
         if (resp.status_code != 200):
             logger.warn("Ping missed. [Bad Response]")
+        return resp.text
     except:
         logger.warn("Ping missed. [Connection Error]")
+        return None

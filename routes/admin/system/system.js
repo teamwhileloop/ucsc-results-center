@@ -23,4 +23,10 @@ router.post('/maintenance',function (req,res) {
     res.send(global.maintananceMode);
 });
 
+router.get('/forcescan', function (req, res) {
+    global.monitoring.forceScan = true;
+    logger.log("Force scan requested by " + req.facebookVerification.name);
+    res.send({});
+});
+
 module.exports = router;

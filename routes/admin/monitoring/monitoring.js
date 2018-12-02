@@ -12,14 +12,22 @@ router.post('/ping',function (req,res) {
     if (global.monitoring.online && global.monitoring.notResponding){
         logger.log("Monitoring client responded.")
     }
-    
+
     global.monitoring = Object.assign({
         status: "Offline",
         lastPing: + new Date(),
         online: true,
-        notResponding: false
+        notResponding: false,
+        forceScan: global.monitoring.forceScan
     },req.body);
-    res.send({});
+
+
+    let returnCode = "200";
+    if (global.monitoring.forceScan){
+        returnCode = "100";
+        global.monitoring.forceScan = false;
+    }
+    res.send(returnCode);
 });
 
 module.exports = router;

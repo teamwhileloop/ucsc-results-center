@@ -105,7 +105,6 @@ router.post('/dataset',function (req,res) {
                 let valuesQuery = '';
                 let failedTasks = [];
                 let completed = 0;
-                logger.log(`Dataset for ${subjectCode} examination year ${examYear} received and processing initiated.`);
                 _.forEach(Object.keys(resultData), function (indexNumber) {
                     let resultValidation = validateResult(indexNumber, resultData[indexNumber]);
                     if (resultValidation.success){
