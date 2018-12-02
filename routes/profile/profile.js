@@ -181,13 +181,16 @@ function getGpaVariation(indexNumber) {
     });
 }
 
-function getOwnerInfo(indexNumber) {
+function getOwnerInfo(indexNumber, userPower = 0) {
     return new Promise((resolve, reject)=>{
-        const query = "SELECT `facebook`.`name`, `facebook`.`picture`, `facebook`.`index_number` as indexNumber " +
+        let query = "SELECT `facebook`.`name`, `facebook`.`picture`, `facebook`.`index_number` as indexNumber " +
             "FROM `undergraduate` JOIN `facebook` " +
             "ON `undergraduate`.`indexNumber` = `facebook`.`index_number` " +
-                "AND `undergraduate`.`indexNumber` = ? " +
-                "AND `undergraduate`.`user_showcase` = 1;";
+                "AND `undergraduate`.`indexNumber` = ? ";
+        if (userPower !== 100){
+            query += "AND `undergraduate`.`user_showcase` = 1";
+        }
+        query += ";";
         mysql.query(query, [indexNumber], function (err, payload) {
                 if (!err){
                     resolve(payload);
@@ -308,7 +311,7 @@ function privacyPermission(currentUserIndex, targetUserIndex, privacyState) {
     }
 }
 
-function getBatchRankings(indexNumber, req) {
+function getBatchRankings(indexNumber, req, userPower = 0) {
     let pattern = indexNumber.toString().substring(0,4);
     // Temp disabled cache
     if (false && cacheRankings[pattern]){
@@ -325,6 +328,9 @@ function getBatchRankings(indexNumber, req) {
             mysql.query(query, [pattern], function (error, payload) {
                 if (!error){
                     _.forEach(payload, function (value, key) {
+                        if (userPower === 100){
+                            return;
+                        }
                         if (!privacyPermission(req.facebookVerification.indexNumber || 0, value.indexNumber, value.privacy)){
                             payload[key]['privacy'] = 'private';
                             delete payload[key]['indexNumber'];
@@ -352,6 +358,9 @@ router.get('/:indexNumber',function (req,res) {
     let indexNumber = parseInt(req.params['indexNumber']) || 0;
     checkProfileStatus(indexNumber)
     .then((profileSummary)=>{
+        if (req.facebookVerification.power === 100){
+            req.facebookVerification.indexNumber = 0;
+        }
         let permissionStatus = privacyPermission(req.facebookVerification.indexNumber || 0, indexNumber, profileSummary.status);
         if (permissionStatus){
             if (profileSummary.status === 'not-found'){
@@ -370,13 +379,13 @@ router.get('/:indexNumber',function (req,res) {
                 Promise.all(promiseArray)
                 .then((resultsData)=>{
                     profileSummary.results = resultsData;
-                    getBatchRankings(indexNumber, req)
+                    getBatchRankings(indexNumber, req, req.facebookVerification.power || 0)
                     .then((rankingData)=>{
                         profileSummary.rankingData = rankingData;
                         getProfileGraphs(indexNumber)
                         .then((graphData)=>{
                             profileSummary.graphs = graphData;
-                            getOwnerInfo(indexNumber)
+                            getOwnerInfo(indexNumber, req.facebookVerification.power || 0)
                                 .then((ownerInfo)=>{
                                     profileSummary.ownerInfo = ownerInfo;
                                     res.send(profileSummary);
