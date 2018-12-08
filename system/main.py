@@ -10,6 +10,9 @@ import logger
 import time
 import pymysql.cursors
 import resultcenter
+import sys
+import manualParse
+
 
 def getPDFList():
     logger.info("Retrieving results sheets from ugvle.ucsc.cmb.ac.lk")
@@ -64,6 +67,8 @@ def detectAndApplyChanges(pdfUrlList):
                 jsonData = converter.jsonGenerator(xmlData, pdfUrl)
                 if resultcenter.submitDataSet(jsonData):
                     updateSubjectCheckSumRemort(subjectCode, hash, "Update")
+                else:
+                    logger.crit("Failed to submit dataset: " + subjectCode)
                 subjectCheckSums[subjectCode] = hash
             except Exception as error:
                 print("ERROR" + str(error))
@@ -81,7 +86,12 @@ def fetchFromDB(map):
 
 
 logger.info("Initializing loadup")
-resultcenter.ping("Starting")
+manualMode = False
+if (len(sys.argv) == 1):
+    resultcenter.ping("Starting")
+else:
+    manualMode = True
+
 connection = pymysql.connect(host=os.environ['AWS_RDB_HOST'],
                                  user=os.environ['AWS_RDB_USERNAME'],
                                  password=os.environ['AWS_RDB_PASSWORD'],
@@ -97,6 +107,10 @@ fetchFromDB(subjectCheckSums)
 waitTime = os.environ['MONIT_WAIT_TIME']
 logger.info("Wait time is: " + waitTime)
 itterationNumber = 1
+if manualMode:
+    manualParse.manualRun(logger, subjectCheckSums, sys.argv[1])
+    exit(0)
+
 while True:
     converter.clearAffectedIndexes()
     resultcenter.ping("Initializing Scan")

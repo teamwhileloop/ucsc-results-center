@@ -1,5 +1,5 @@
 from time import gmtime, strftime
-
+import os
 
 def getTimeStamp():
     return strftime("%Y/%m/%d | %H:%M:%S", gmtime())
@@ -22,5 +22,10 @@ def logAndWrite(timestamp, code, message):
     f.write(timestamp + code + message + '\n')
     f.close()
 
-logFile = "ucscresults.monitor." + strftime("%Y%m%d.%H%M%S", gmtime()) + ".log"
+logDir = "logs"
+
+if not os.path.exists(logDir):
+    os.makedirs(logDir)
+
+logFile = logDir + "/ucscresults.monitor." + strftime("%Y%m%d.%H%M%S", gmtime()) + ".log"
 info("Logging to: " + logFile)

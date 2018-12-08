@@ -7,6 +7,12 @@ from urllib.parse import unquote
 import logger
 
 
+def safeCast(val, to_type, default=None):
+    try:
+        return to_type(val)
+    except (ValueError, TypeError):
+        return default
+
 def getFontResultIndex(txt):
     lineRegEx = re.search('font="[0-9]"(.*)>[1-9]{1}[0-9]{1}(00|02)[0-9]{4}<', txt)
     lineRegEx = re.search('font="[0-9]"', lineRegEx.group(0))
@@ -31,7 +37,7 @@ def brain(txt):
 
     txt = txt.strip()
     grades = ['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'E', 'F']
-    if (len(txt) == 8):
+    if (len(txt) == 8 and safeCast(txt, int, 0) > 0):
         return {'index': txt}
     elif (txt in grades):
         return {'grade': txt}
@@ -40,8 +46,11 @@ def brain(txt):
     elif (txt.count(' ') > 0):
         comp = {}
         for item in map(brain, txt.split(' ')):
-            comp.update(item)
+            if item != None:
+                comp.update(item)
         return comp
+    else:
+        return None
 
 
 def writeToFile(filePath, data):
@@ -50,7 +59,8 @@ def writeToFile(filePath, data):
     f.write(data)
     f.close()
 
-def jsonGenerator(xmlData, url):
+
+def jsonGenerator(xmlData, url, forcedSubjectCode = None):
     indexStack = []
     resultStack = []
     affected = []
@@ -82,6 +92,8 @@ def jsonGenerator(xmlData, url):
         output['year'] = getExaminationYear(xmlString)
         filePath = os.path.basename(unquote(url)).split(".")[0].replace(" ", "")
         output['subject'] = filePath
+        if (forcedSubjectCode != None):
+            output['subject'] = str(forcedSubjectCode)
         jsonOutput = json.dumps(output, sort_keys=False, indent=4, separators=(',', ':'))
         writeToFile(filePath, jsonOutput)
         logger.info('Affected index patterns: ' + str(affected))
