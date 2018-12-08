@@ -50,3 +50,20 @@ def ping(status):
     except:
         logger.warn("Ping missed. [Connection Error]")
         return None
+
+def report(type, text):
+    headers = {
+        'accessToken': os.environ['RESCENT_ACCESS_TOKEN'],
+        'Content-Type': 'application/json'
+    }
+    try:
+        resp = requests.post(domain + '/admin/monitoring/ping', data=json.dumps({
+            'type': type,
+            'text': text
+        }, sort_keys=False, indent=4, separators=(',', ':')), headers=headers)
+        if (resp.status_code != 200):
+            logger.warn("Failed to submit report. [Bad Response]")
+        return resp.text
+    except:
+        logger.warn("Failed to submit report. [Connection Error]")
+        return None

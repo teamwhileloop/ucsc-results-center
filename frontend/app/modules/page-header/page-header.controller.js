@@ -37,7 +37,7 @@ app.controller('PageHeaderController',function ($scope,
         }if (power === 50){
             return 'Batch Representative';
         }if (power === 60){
-            return 'Analytics Users';
+            return 'Analytics User';
         }if (power === 100){
             return 'System Administrator';
         }

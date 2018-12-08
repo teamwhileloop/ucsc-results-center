@@ -56,9 +56,10 @@ router.get('/validate', function (req, res) {
                 env: req.headers.host
             })));
             res.status(500).send({ error: error });
+        }else{
+            res.send(req.facebookVerification);
         }
     });
-    res.send(req.facebookVerification);
 });
 
 router.get('/state/:indexNumber',function (req,res) {
