@@ -12,7 +12,6 @@ import pymysql.cursors
 import resultcenter
 import sys
 import manualParse
-import uuid;
 
 
 def getPDFList():
@@ -56,10 +55,10 @@ def detectAndApplyChanges(pdfUrlList):
 
         if subjectCode not in subjectCheckSums:
             if subjectCode not in unknownSubjects:
-                logger.warn("Unknown subject: " + subjectCode, True)
+                logger.warn("Unknown subject detected: " + subjectCode, True)
                 unknownSubjects.append(subjectCode)
             else:
-                logger.info("Unknown subject: " + subjectCode)
+                logger.info("Skipping unknown subject: " + subjectCode)
             continue
 
         if subjectCheckSums[subjectCode] == None:
@@ -117,7 +116,7 @@ itterationNumber = 1
 if manualMode:
     manualParse.manualRun(logger, subjectCheckSums, sys.argv[1])
     exit(0)
-logger.info("Monitoring client Activated. Code: " + uuid.uuid4().hex.upper()[0:6].upper(), True)
+logger.info("Monitoring client Activated.", True)
 while True:
     converter.clearAffectedIndexes()
     resultcenter.ping("Initializing Scan")

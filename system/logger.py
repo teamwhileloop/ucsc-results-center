@@ -33,5 +33,6 @@ logDir = "logs"
 if not os.path.exists(logDir):
     os.makedirs(logDir)
 
-logFile = logDir + "/ucscresults.monitor." + strftime("%Y%m%d.%H%M%S", gmtime()) + ".log"
-info("Logging to: " + logFile)
+logFileName = "ucscresults.monitor." + strftime("%Y%m%d.%H%M%S", gmtime()) + ".log"
+logFile = logDir + '/' + logFileName
+info("Logging to: " + logFileName, True)
