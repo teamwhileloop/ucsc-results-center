@@ -1,20 +1,26 @@
 from time import gmtime, strftime
 import os
+import reporter
 
 def getTimeStamp():
     return strftime("%Y/%m/%d | %H:%M:%S", gmtime())
 
 
-def info(message):
+def info(message, sendReport=False):
     logAndWrite(getTimeStamp(), " | INFO | ", message)
+    if sendReport:
+        reporter.report('info', message)
 
-
-def warn(message):
+def warn(message, sendReport=False):
     logAndWrite(getTimeStamp(), " | WARN | ", message)
+    if sendReport:
+        reporter.report('warn', message)
 
 
-def crit(message):
+def crit(message, sendReport=False):
     logAndWrite(getTimeStamp(), " | CRIT | ", message)
+    if sendReport:
+        reporter.report('crit', message)
 
 def logAndWrite(timestamp, code, message):
     print(timestamp + code + message)

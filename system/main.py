@@ -1,3 +1,4 @@
+import logger
 import hashlib
 import os
 import downloader
@@ -6,12 +7,12 @@ import traceback
 import requests
 import re
 from urllib.parse import unquote
-import logger
 import time
 import pymysql.cursors
 import resultcenter
 import sys
 import manualParse
+import uuid;
 
 
 def getPDFList():
@@ -33,6 +34,7 @@ def updateSubjectCheckSumRemort(subject, checksum, reason):
         connection.commit()
 
 def detectAndApplyChanges(pdfUrlList):
+    global unknownSubjects
     tmpmap = {}
     connection.ping(True)
     for pdfUrl in pdfUrlList:
@@ -43,17 +45,21 @@ def detectAndApplyChanges(pdfUrlList):
         try:
             pdfhead = requests.get(pdfUrl)
         except:
-            logger.warn("Unable to fetch results sheet using URL: " + pdfUrl)
+            logger.warn("Unable to fetch results sheet using URL: " + pdfUrl, True)
 
         if (pdfhead.status_code != 200):
-            logger.warn("Request to fetch " + pdfUrl + " returned: " + str(pdfhead.status_code))
+            logger.warn("Request to fetch " + pdfUrl + " returned: " + str(pdfhead.status_code), True)
             continue
 
         hashInput = str(pdfhead.headers['Last-Modified'])
         hash = (hashlib.sha256(hashInput.encode('utf-8')).hexdigest())
 
         if subjectCode not in subjectCheckSums:
-            logger.warn("Unknown subject: " + subjectCode)
+            if subjectCode not in unknownSubjects:
+                logger.warn("Unknown subject: " + subjectCode, True)
+                unknownSubjects.append(subjectCode)
+            else:
+                logger.info("Unknown subject: " + subjectCode)
             continue
 
         if subjectCheckSums[subjectCode] == None:
@@ -68,7 +74,7 @@ def detectAndApplyChanges(pdfUrlList):
                 if resultcenter.submitDataSet(jsonData):
                     updateSubjectCheckSumRemort(subjectCode, hash, "Update")
                 else:
-                    logger.crit("Failed to submit dataset: " + subjectCode)
+                    logger.crit("Failed to submit dataset: " + subjectCode, True)
                 subjectCheckSums[subjectCode] = hash
             except Exception as error:
                 print("ERROR" + str(error))
@@ -85,7 +91,7 @@ def fetchFromDB(map):
             map[result['code']] = result['checksum']
 
 
-logger.info("Initializing loadup")
+logger.info("Starting Monitoring Client")
 manualMode = False
 if (len(sys.argv) == 1):
     resultcenter.ping("Starting")
@@ -99,18 +105,19 @@ connection = pymysql.connect(host=os.environ['AWS_RDB_HOST'],
                                  charset='utf8mb4',
                                  cursorclass=pymysql.cursors.DictCursor)
 if connection.open == False:
-    logger.crit("Failed to connect to the database")
+    logger.crit("Failed to connect to the database", True)
     exit(1)
 logger.info("Connected to database")
 subjectCheckSums = {}
 fetchFromDB(subjectCheckSums)
 waitTime = os.environ['MONIT_WAIT_TIME']
 logger.info("Wait time is: " + waitTime)
+unknownSubjects = []
 itterationNumber = 1
 if manualMode:
     manualParse.manualRun(logger, subjectCheckSums, sys.argv[1])
     exit(0)
-
+logger.info("Monitoring client Activated. Code: " + uuid.uuid4().hex.upper()[0:6].upper(), True)
 while True:
     converter.clearAffectedIndexes()
     resultcenter.ping("Initializing Scan")
@@ -120,7 +127,7 @@ while True:
     try:
         pdfUrlList = getPDFList()
     except:
-        logger.warn("Failed to fetch result sheets from UGVLE")
+        logger.warn("Failed to fetch result sheets from UGVLE", True)
 
     if (pdfUrlList != None):
         detectAndApplyChanges(pdfUrlList)

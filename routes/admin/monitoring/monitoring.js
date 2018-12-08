@@ -30,4 +30,18 @@ router.post('/ping',function (req,res) {
     res.send(returnCode);
 });
 
+router.post('/report', function (req, res) {
+    if (['info', 'warn', 'crit'].indexOf(req.body.type) === -1){
+        res.status(400).send("Invalid log type");
+        return;
+    }
+
+    if (req.body.text && req.body.text.length > 0){
+        logger.log('Monitoring client: ' + req.body.text, req.body.type);
+        res.send({});
+    }else{
+        res.status(400).send("log text is missing");
+    }
+});
+
 module.exports = router;
