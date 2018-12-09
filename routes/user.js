@@ -10,6 +10,7 @@ const mysql = require('../modules/database.js');
 let notificationSettings = require('./notifications/notification-settings');
 let permission = require('../modules/permissions');
 const messenger = require('../modules/messenger');
+const feedback = require('./feedback/feedback');
 
 //Common Queries
 let queryValidateIndexNumber = "SELECT `base`.`index` as `indexNumber`, " +
@@ -244,7 +245,7 @@ router.get('/admins', function (req, res) {
         if (!err){
             res.send(payload);
         }else {
-            logger.log(error.sqlMessage,'crit',true, JSON.stringify(_.assignIn(err,{
+            logger.log(err.sqlMessage,'crit',true, JSON.stringify(_.assignIn(err,{
                 meta: req.facebookVerification,
                 env: req.headers.host
             })));
@@ -252,5 +253,7 @@ router.get('/admins', function (req, res) {
         }
     })
 });
+
+router.use('/feedback', feedback);
 
 module.exports = router;
