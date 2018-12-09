@@ -71,7 +71,39 @@ module.exports = function() {
                 power: 100,
                 alternate_email: null,
                 alert_version: '8' };
-            next();
+            if (fbUid && !credentials.isDeployed){
+                mysql.query("SELECT * FROM `facebook` WHERE `id` = ?;", [fbUid], function (err, payload) {
+                    if (!err){
+                        if (payload.length > 0){
+                            req.facebookVerification = payload[0]
+                        }
+                        let permissionDetails = checkPermission(req.originalUrl, req.facebookVerification.power);
+                        if (!permissionDetails.status){
+                            res.status(401).send({
+                                error: {
+                                    systemError: {
+                                        type: 'permission',
+                                        message: 'Required permissions unmet',
+                                        error: permissionDetails
+                                    }
+                                }
+                            });
+                        }else{
+                            next()
+                        }
+                    }else{
+                        res.status(500).send({
+                            systemError: {
+                                type: 'database',
+                                message: 'Internal server error while executing database query',
+                                error: err
+                            }
+                        });
+                    }
+                })
+            }else {
+                next();
+            }
             return;
         }
 

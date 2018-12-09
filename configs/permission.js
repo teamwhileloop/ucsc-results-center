@@ -20,6 +20,7 @@ let permissionModules = {
         routes: {
             '/validate' : 0,
             '/notifications/*' : 10,
+            '/feedback/get' : 100
         }
     },
 

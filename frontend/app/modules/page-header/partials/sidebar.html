@@ -30,7 +30,7 @@
         </div>
         <div class="sidebar-button"
              ng-click="goToPath('/feedback/submit')">
-            <i class="material-icons">feedback</i> Feedback / Bug Reports
+            <i class="material-icons">feedback</i> Send Feedback / Bug Reports
         </div>
     </div>
 
@@ -45,6 +45,11 @@
              ng-click="goToPath('/administration/users')"
              ng-if="userDetails.power >= 50">
             <i class="material-icons">people</i> Profile Management
+        </div>
+        <div class="sidebar-button"
+             ng-click="goToPath('/feedback/view')"
+             ng-if="userDetails.power > 60">
+            <i class="material-icons">all_inbox</i> User Feedback
         </div>
         <div class="sidebar-button"
              ng-click="goToPath('/administration/notification-center')"

@@ -1,0 +1,23 @@
+<div class="container view-feedback-page">
+    <div class="card">
+        <h2>User Feedbacks</h2>
+        <div layout="column" layout-align="center center" class="loading-indicator-cmp" ng-if="isLoading">
+            <md-progress-circular md-mode="indeterminate" md-diameter="40px"></md-progress-circular>
+            <div class="info-text">Loading Feedback</div>
+        </div>
+        <md-list ng-if="!isLoading">
+            <md-subheader
+                    ng-if="feedbacks.length == 0"
+                    class="md-no-sticky">No user feedback received</md-subheader>
+            <md-list-item class="md-3-line md-long-text" ng-repeat="feedback in feedbacks">
+                <img ng-src="{{ feedback.picture }}" class="md-avatar" alt="{{ feedback.name }}" />
+                <div class="md-list-item-text">
+                    <h3>{{ feedback.name }}</h3>
+                    <p>{{ feedback.text }}</p>
+                </div>
+                <!--<md-icon class="md-secondary material-icons md-light md-48"-->
+                         <!--aria-label="Reset">delete_forever</md-icon>-->
+            </md-list-item>
+        </md-list>
+    </div>
+</div>

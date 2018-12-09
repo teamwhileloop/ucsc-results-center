@@ -23,7 +23,8 @@
                     <div class="card-body">
                         <div class="user-data">
                             <img ng-if="profileOwnerInfo.picture"
-                                    src="{{ profileOwnerInfo.picture }}">
+                                 onerror="this.src='../../../../public/img/default_user.png'"
+                                 ng-src="{{ profileOwnerInfo.picture }}">
                             <div class="text">
                                 <h4 class="card-title">Overview of {{ profileOwnerInfo.name || indexNumber }}</h4>
                                 <h6 class="card-subtitle mb-2">{{ profileOwnerInfo.indexNumber ? "Index Number: " + profileOwnerInfo.indexNumber + " | Last updated : "  : "Last updated : "}}{{ lastUpdate }}</h6>

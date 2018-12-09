@@ -31,6 +31,9 @@ app.service('AdminService',function ($rootScope, FacebookService, $http, apiClie
         },
         forceResultScan: function () {
             return apiClient.get(`/admin/system/forcescan`);
+        },
+        getUserFeedbacks: function () {
+            return apiClient.get('/user/feedback/get')
         }
     };
 });
