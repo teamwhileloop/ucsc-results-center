@@ -1,5 +1,5 @@
 -- Feedback recording
-CREATE TABLE `resultsdev`.`feedback` (
+CREATE TABLE `results`.`feedback` (
   `feedback_id` INT NOT NULL AUTO_INCREMENT,
   `fbid` VARCHAR(100) NOT NULL,
   `text` VARCHAR(3000) CHARACTER SET 'utf8' NOT NULL,
