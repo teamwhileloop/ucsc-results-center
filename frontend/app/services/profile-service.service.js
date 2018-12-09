@@ -42,6 +42,9 @@ app.service('ProfileService',function ($rootScope, FacebookService, $http, apiCl
         },
         getAdmins: function () {
             return apiClient.get('/user/admins');
+        },
+        sendFeedBack: function (text) {
+            return apiClient.post('/user/feedback/submit', {text: text});
         }
     };
 });

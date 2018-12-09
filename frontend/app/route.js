@@ -176,6 +176,36 @@ app.config(function($routeProvider) {
                 loggedInUser : applicationAuthenticator
             }
         })
+        .when("/feedback/submit",{
+            templateUrl:'public/html/modules/feedback-send/view.html',
+            controller: 'SendFeedBackController',
+            controllerAs: 'ctrlFeedback',
+            resolve : {
+                navText : function (ApplicationService, $routeParams, $location) {
+                    ApplicationService.showNavigationIndicator({
+                        icon: 'swap_horiz',
+                        enabled: true,
+                        text: 'Navigating to Feedback'
+                    });
+                },
+                loggedInUser : applicationAuthenticator
+            }
+        })
+        .when("/feedback/view",{
+            templateUrl:'public/html/modules/feedback-view/view.html',
+            controller: 'ViewFeedBackController',
+            controllerAs: 'ctrlViewFeedback',
+            resolve : {
+                navText : function (ApplicationService, $routeParams, $location) {
+                    ApplicationService.showNavigationIndicator({
+                        icon: 'swap_horiz',
+                        enabled: true,
+                        text: 'Navigating to Feedback Viewer'
+                    });
+                },
+                loggedInUser : applicationAuthenticator
+            }
+        })
         .when("/administration/notification-center",{
             templateUrl: "public/html/modules/notification-center/view.html",
             controller: "NotificationCenterController",

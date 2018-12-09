@@ -1,0 +1,31 @@
+<div class="container send-feedback-page">
+    <div class="card">
+        <h2>Feedback and Bug Reports</h2>
+        <span ng-if="!sent">
+            <p>Send us your feedback. Report any bugs from spelling mistakes to functionality breaks. Including missing result sheets and feature requests. These feedbacks will be forwarded to the Team whileLOOP</p>
+
+            <form>
+                <div class="form-group">
+                    <textarea class="form-control"
+                              placeholder="Enter your feedback here"
+                              id="feedbackText"
+                              ng-model="userFeedBack"
+                              maxlength="2980"
+                              rows="5"></textarea>
+                </div>
+            </form>
+            <md-card-actions layout="row" layout-align="end center">
+                <md-button class="md-raised md-primary"
+                           ng-disabled="sending || userFeedBack.length == 0"
+                           ng-click="submit(userFeedBack)">
+                    {{ sending ? "Sending" : "Send" }}
+                </md-button>
+            </md-card-actions>
+        </span>
+        <span ng-if="sent">
+            <div class="alert alert-success" role="alert">
+                <b>Thank you!</b> Your feedback has being sent to Team whileLOOP. Thank you for helping us to make this system better. <a href ng-click="resend()">Send another feedback</a>
+            </div>
+        </span>
+    </div>
+</div>
