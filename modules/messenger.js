@@ -1,9 +1,10 @@
 const request = require('request');
 const mysql = require('./database');
 const _ = require('lodash');
+const credentials = require('../modules/credentials');
 const basicTemplate = {
     "uri": "https://graph.facebook.com/v2.6/me/messages",
-    "qs": { "access_token": process.env.FB_PAGE_TOKEN },
+    "qs": { "access_token": credentials.facebook.pageToken},
     "method": "POST"
 };
 

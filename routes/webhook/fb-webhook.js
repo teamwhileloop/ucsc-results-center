@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const logger = require('../../modules/logger');
+const credentials = require('../../modules/credentials');
 const messengerAPI = require('./messenger-api');
 const MessengerUser = require('./messenger-user');
 
-const VERIFY_TOKEN = process.env.FB_VERIFY_TOKEN;
+const VERIFY_TOKEN = credentials.facebook.verifyToken;
 
 router.get('/', (req, res) => {
     let mode = req.query['hub.mode'];
