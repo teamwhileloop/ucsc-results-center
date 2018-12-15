@@ -2,6 +2,7 @@ const request = require('request');
 const mysql = require('./database');
 const _ = require('lodash');
 const credentials = require('../modules/credentials');
+const configurations = require('../modules/configurations');
 const basicTemplate = {
     "uri": "https://graph.facebook.com/v2.6/me/messages",
     "qs": { "access_token": credentials.facebook.pageToken},
@@ -15,6 +16,10 @@ function callSendAPI(sender_psid, response) {
         },
         "message": response
     };
+
+    if (!configurations.enableMessenger){
+        return;
+    }
 
     // Send the HTTP request to the Messenger Platform
     request(Object.assign(basicTemplate, {"json": request_body}), (err, res, body) => {
@@ -66,6 +71,11 @@ exports.sendToEventSubscribers = function(event, message, messageTypeTag = 'APPL
                 "messaging_type": "MESSAGE_TAG",
                 "tag": messageTypeTag
             };
+
+            if (!configurations.enableMessenger){
+                return;
+            }
+
             request(Object.assign(basicTemplate, {"json": request_body}), (err, res, body) => {
                 if (err){
                     console.error("Unable to send message:" + err);
