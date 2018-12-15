@@ -8,7 +8,8 @@ app.controller('ProfilePageController',function (
     ProfileService,
     $routeParams,
     $location,
-    $localStorage
+    $localStorage,
+    $mdDialog
 ) {
     if (loggedInUser.state !== 'verified'){
         $location.path('access-denied');
@@ -249,6 +250,20 @@ app.controller('ProfilePageController',function (
         if (indexNumber){
             $location.path(`/profile/${indexNumber}`)
         }
-    }
+    };
+
+    $scope.$on('subject.stat', (_event, args)=> {
+        $mdDialog.show({
+            controller: "SubjectStatsController",
+            templateUrl: 'public/html/modules/profile-page/partials/subject-stats.html',
+            parent:  angular.element(document.getElementById('dialog-root')),
+            clickOutsideToClose:true,
+            subject: args[0],
+            pattern: args[1],
+        });
+    });
+
+
+
 
 });

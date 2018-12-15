@@ -45,6 +45,9 @@ app.service('ProfileService',function ($rootScope, FacebookService, $http, apiCl
         },
         sendFeedBack: function (text) {
             return apiClient.post('/user/feedback/submit', {text: text});
+        },
+        getSubjectWiseAnalysis: function (subject, pattern) {
+            return apiClient.post('v1.0/statistics/subject', {subject: subject, pattern: pattern})
         }
     };
 });

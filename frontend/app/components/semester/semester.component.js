@@ -30,6 +30,11 @@ app.component('semester', {
             $localStorage.onlyBest = $rootScope.onlyBest;
         };
 
+        $scope.showSubjectStats = function (subject, pattern, event) {
+            pattern = pattern.toString().substr(0,2);
+            $rootScope.$broadcast('subject.stat', [subject, pattern, event]);
+        };
+
     },
     controllerAs : 'semesterCtrl'
 });
