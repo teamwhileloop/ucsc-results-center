@@ -7,12 +7,14 @@ app.controller('SubjectStatsController',function (
 {
     $scope.subjectdata = undefined;
     $scope.subject = subject;
+    $scope.pageTitle = '';
 
     ProfileService.getSubjectWiseAnalysis(subject, pattern)
     .then((data)=>{
         data = data.data;
         let overallArray = [0,0,0,0,0,0,0,0,0,0,0,0,0,0];
         let batchArray = [0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+        $scope.pageTitle = `Subject Analysis of ${subject} for ${data.batch}`;
         for (const object of data.data) {
             switch (object.grade){
                 case "A+":
@@ -77,7 +79,7 @@ app.controller('SubjectStatsController',function (
                     type: 'column'
                 },
                 title: {
-                    text: 'Subject Analysis of '+ subject +' for 12th Batch'
+                    text: ''
                 },
                 xAxis: {
                     categories: [
@@ -118,8 +120,11 @@ app.controller('SubjectStatsController',function (
                         borderWidth: 0
                     }
                 },
+                credits: {
+                    enabled: false
+                },
                 series: [{
-                    name: '12th Batch',
+                    name: `${data.batch}`,
                     color: 'rgba(126,86,134,.9)',
                     data: batchArray
 

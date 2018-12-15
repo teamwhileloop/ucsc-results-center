@@ -1,15 +1,13 @@
 <md-dialog style="width: 700px">
     <form ng-cloak>
-        <md-toolbar>
-            <div class="md-toolbar-tools">
-                <h2>Subject Analysis {{ subject }}</h2>
-                <span flex></span>
-                <md-icon class="md-secondary material-icons md-light md-48" style="cursor: pointer"
-                         ng-click="cancel()"
-                         aria-label="Delete">close</md-icon>
-                </md-button>
-            </div>
-        </md-toolbar>
+        <div class="md-toolbar-tools" ng-if="pageTitle.length">
+            <h2>{{ pageTitle }}</h2>
+            <span flex></span>
+            <md-icon class="md-secondary material-icons md-light md-48" style="cursor: pointer"
+                     ng-click="cancel()"
+                     aria-label="Delete">close</md-icon>
+            </md-button>
+        </div>
         <md-dialog-content>
             <div layout="column" layout-align="center center" class="loading-indicator-cmp" ng-if="subjectdata === undefined">
                 <md-progress-circular md-mode="indeterminate" md-diameter="40px"></md-progress-circular>
