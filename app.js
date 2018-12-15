@@ -39,8 +39,8 @@ if (!credentials.isDeployed){
     logger.disableDatabaseWrite();
 }else {
     logger.enableDatabaseWrite();
-    privateKey  = fs.readFileSync('/etc/letsencrypt/live/ucscresult.com/privkey.pem', 'utf8');
-    certificate = fs.readFileSync('/etc/letsencrypt/live/ucscresult.com/fullchain.pem', 'utf8');
+    privateKey  = fs.readFileSync(credentials.ssl.key, 'utf8');
+    certificate = fs.readFileSync(credentials.ssl.cert, 'utf8');
     httpsCredentials = {key: privateKey, cert: certificate};
 }
 
@@ -92,7 +92,7 @@ app.get('/', function(req, res) {
     // Redirect HTTPS traffic to HTTPS on production environment
     if (credentials.isDeployed && !req.secure){
         res.writeHead(302, {
-            'Location': 'https://www.ucscresult.com'
+            'Location': 'https://' + req.headers.host
         });
         res.end();
         return;

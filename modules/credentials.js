@@ -18,6 +18,11 @@ exports.facebook = {
     verifyToken: process.env.FB_VERIFY_TOKEN
 };
 
+exports.ssl = {
+    key: process.env.RSA_KEY,
+    cert: process.env.RSA_KEY
+};
+
 exports.accessToken = process.env.UCSC_RESULTS_CENTER_ACCESSTOKEN;
 
 exports.isDeployed = process.env.DEV_ENV === 'false';
