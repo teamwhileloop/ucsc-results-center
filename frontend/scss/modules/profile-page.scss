@@ -287,9 +287,15 @@ div.profile-page.container{
       display: flex;
       padding: 5px 20px;
       flex-direction: row;
+      cursor: pointer;
+      transition: all 0.2s linear;
 
       &.not-best{
         background-color: #edd;
+      }
+
+      &:hover{
+        background-color: #ffd70033;
       }
 
       .subject-info{
