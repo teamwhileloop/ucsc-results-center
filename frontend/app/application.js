@@ -1,5 +1,6 @@
 applicationIdJSON = {
   'localhost:3000':'1917234511877082',  // Dev Testing
+  'beta.ucscresult.com':'986846028190735', // Staging
   'www.ucscresult.com':'324582471336592'  // Production
 };
 
