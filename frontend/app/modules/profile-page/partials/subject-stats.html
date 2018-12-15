@@ -2,7 +2,7 @@
     <form ng-cloak>
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2>Subject Analysis SCS2100</h2>
+                <h2>Subject Analysis {{ subject }}</h2>
                 <span flex></span>
                 <md-icon class="md-secondary material-icons md-light md-48" style="cursor: pointer"
                          ng-click="cancel()"
@@ -11,15 +11,12 @@
             </div>
         </md-toolbar>
         <md-dialog-content>
-            Hey pren <3
+            <div layout="column" layout-align="center center" class="loading-indicator-cmp" ng-if="subjectdata === undefined">
+                <md-progress-circular md-mode="indeterminate" md-diameter="40px"></md-progress-circular>
+                <div class="info-text">Loading statistics</div>
+            </div>
 
             <highchart hc-options="subjectdata" ng-if="subjectdata != undefined"></highchart>
         </md-dialog-content>
-
-        <md-dialog-actions layout="row">
-            <md-button
-                    class="md-raised md-primary"
-                    ng-click="cancel()">Close</md-button>
-        </md-dialog-actions>
     </form>
 </md-dialog>

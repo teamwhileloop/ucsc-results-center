@@ -31,6 +31,7 @@ app.component('semester', {
         };
 
         $scope.showSubjectStats = function (subject, pattern, event) {
+            pattern = pattern.toString().substr(0,2);
             $rootScope.$broadcast('subject.stat', [subject, pattern, event]);
         };
 

@@ -252,7 +252,7 @@ app.controller('ProfilePageController',function (
         }
     };
 
-    $rootScope.$on('subject.stat', (_event, args)=> {
+    $scope.$on('subject.stat', (_event, args)=> {
         $mdDialog.show({
             controller: "SubjectStatsController",
             templateUrl: 'public/html/modules/profile-page/partials/subject-stats.html',

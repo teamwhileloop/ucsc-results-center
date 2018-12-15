@@ -1,85 +1,136 @@
 app.controller('SubjectStatsController',function (
     $mdDialog,
+    ProfileService,
+    subject,
+    pattern,
     $scope)
 {
     $scope.subjectdata = undefined;
-    setTimeout(()=>{
-        alert("DD");
+    $scope.subject = subject;
+
+    ProfileService.getSubjectWiseAnalysis(subject, pattern)
+    .then((data)=>{
+        data = data.data;
+        let overallArray = [0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+        let batchArray = [0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+        for (const object of data.data) {
+            switch (object.grade){
+                case "A+":
+                    batchArray[0] = object.batch_perc;
+                    overallArray[0] = object.overall_perc;
+                    break;
+                case "A":
+                    batchArray[1] = object.batch_perc;
+                    overallArray[1] = object.overall_perc;
+                    break;
+                case "A-":
+                    batchArray[2] = object.batch_perc;
+                    overallArray[2] = object.overall_perc;
+                    break;
+                case "B+":
+                    batchArray[3] = object.batch_perc;
+                    overallArray[3] = object.overall_perc;
+                    break;
+                case "B":
+                    batchArray[4] = object.batch_perc;
+                    overallArray[4] = object.overall_perc;
+                    break;
+                case "B-":
+                    batchArray[5] = object.batch_perc;
+                    overallArray[5] = object.overall_perc;
+                    break;
+                case "C+":
+                    batchArray[6] = object.batch_perc;
+                    overallArray[6] = object.overall_perc;
+                    break;
+                case "C":
+                    batchArray[7] = object.batch_perc;
+                    overallArray[7] = object.overall_perc;
+                    break;
+                case "C-":
+                    batchArray[8] = object.batch_perc;
+                    overallArray[8] = object.overall_perc;
+                    break;
+                case "D+":
+                    batchArray[9] = object.batch_perc;
+                    overallArray[9] = object.overall_perc;
+                    break;
+                case "D":
+                    batchArray[10] = object.batch_perc;
+                    overallArray[10] = object.overall_perc;
+                    break;
+                case "D-":
+                    batchArray[11] = object.batch_perc;
+                    overallArray[11] = object.overall_perc;
+                    break;
+                case "E":
+                    batchArray[12] = object.batch_perc;
+                    overallArray[12] = object.overall_perc;
+                    break;
+                default:
+                    batchArray[13] = object.batch_perc;
+                    overallArray[13] = object.overall_perc;
+            }
+        }
         $scope.subjectdata = {
-            chart: {
-                type: 'column'
-            },
-            title: {
-                text: 'Efficiency Optimization by Branch'
-            },
-            xAxis: {
-                categories: [
-                    'Seattle HQ',
-                    'San Francisco',
-                    'Tokyo'
-                ]
-            },
-            yAxis: [{
-                min: 0,
+                chart: {
+                    type: 'column'
+                },
                 title: {
-                    text: 'Employees'
-                }
-            }, {
-                title: {
-                    text: 'Profit (millions)'
+                    text: 'Subject Analysis of '+ subject +' for 12th Batch'
                 },
-                opposite: true
-            }],
-            legend: {
-                shadow: false
-            },
-            tooltip: {
-                shared: true
-            },
-            plotOptions: {
-                column: {
-                    grouping: false,
-                    shadow: false,
-                    borderWidth: 0
-                }
-            },
-            series: [{
-                name: 'Employees',
-                color: 'rgba(165,170,217,1)',
-                data: [150, 73, 20],
-                pointPadding: 0.3,
-                pointPlacement: -0.2
-            }, {
-                name: 'Employees Optimized',
-                color: 'rgba(126,86,134,.9)',
-                data: [140, 90, 40],
-                pointPadding: 0.4,
-                pointPlacement: -0.2
-            }, {
-                name: 'Profit',
-                color: 'rgba(248,161,63,1)',
-                data: [183.6, 178.8, 198.5],
+                xAxis: {
+                    categories: [
+                        'A+',
+                        'A',
+                        'A-',
+                        'B+',
+                        'B',
+                        'B-',
+                        'C+',
+                        'C',
+                        'C-',
+                        'D+',
+                        'D',
+                        'D-',
+                        'E',
+                        'MC'
+                    ],
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: 'Percentage'
+                    }
+                },
                 tooltip: {
-                    valuePrefix: '$',
-                    valueSuffix: ' M'
+                    headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                    pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                        '<td style="padding:0"><b>{point.y:.1f}%</b></td></tr>',
+                    footerFormat: '</table>',
+                    shared: true,
+                    useHTML: true
                 },
-                pointPadding: 0.3,
-                pointPlacement: 0.2,
-                yAxis: 1
-            }, {
-                name: 'Profit Optimized',
-                color: 'rgba(186,60,61,.9)',
-                data: [203.6, 198.8, 208.5],
-                tooltip: {
-                    valuePrefix: '$',
-                    valueSuffix: ' M'
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
+                    }
                 },
-                pointPadding: 0.4,
-                pointPlacement: 0.2,
-                yAxis: 1
-            }]
-        };
-    }, 2000);
+                series: [{
+                    name: '12th Batch',
+                    color: 'rgba(126,86,134,.9)',
+                    data: batchArray
+
+                }, {
+                    name: 'Average',
+                    color: 'rgba(248,161,63,1)',
+                    data: overallArray
+
+                }]
+            };
+    });
 
     $scope.cancel = function() {
         $mdDialog.cancel();
