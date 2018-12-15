@@ -20,7 +20,7 @@ exports.facebook = {
 
 exports.ssl = {
     key: process.env.RSA_KEY,
-    cert: process.env.RSA_KEY
+    cert: process.env.RSA_CERT
 };
 
 exports.accessToken = process.env.UCSC_RESULTS_CENTER_ACCESSTOKEN;
