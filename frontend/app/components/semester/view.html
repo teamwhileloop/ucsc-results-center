@@ -43,6 +43,7 @@
         <!--Best Only-->
         <li ng-if="$root.onlyBest"
             class="list-group-item result-item"
+            ng-click="showSubjectStats(1,1)"
             ng-class="{'not-best' : subjectResult.isBest === 0}"
             ng-repeat="subjectResult in semesterCtrl.semesterData.results | filter: {isBest: 1}">
             <div class="subject-info">
@@ -57,6 +58,7 @@
         <!--All Results-->
         <li ng-if="!$root.onlyBest"
             class="list-group-item result-item"
+            ng-click="showSubjectStats(1,1, $event)"
             ng-class="{'not-best' : subjectResult.isBest === 0}"
             ng-repeat="subjectResult in semesterCtrl.semesterData.results">
             <div class="subject-info">

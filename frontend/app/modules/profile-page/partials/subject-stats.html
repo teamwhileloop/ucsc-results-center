@@ -1,0 +1,25 @@
+<md-dialog style="width: 700px">
+    <form ng-cloak>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Subject Analysis SCS2100</h2>
+                <span flex></span>
+                <md-icon class="md-secondary material-icons md-light md-48" style="cursor: pointer"
+                         ng-click="cancel()"
+                         aria-label="Delete">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            Hey pren <3
+
+            <highchart hc-options="subjectdata" ng-if="subjectdata != undefined"></highchart>
+        </md-dialog-content>
+
+        <md-dialog-actions layout="row">
+            <md-button
+                    class="md-raised md-primary"
+                    ng-click="cancel()">Close</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

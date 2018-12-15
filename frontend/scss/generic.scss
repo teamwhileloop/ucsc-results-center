@@ -51,3 +51,26 @@ button.iconed{
     margin-left: 20px;
   }
 }
+
+.dialog-root{
+  background-color: #fffffff;
+  height: 100%;
+  width: 100%;
+  display: block;
+  position: fixed;
+  z-index: 9;
+  pointer-events: none;
+  opacity: 1;
+
+  div{
+    pointer-events: all;
+  }
+}
+
+.md-dialog-is-showing {
+  max-height: initial !important;
+}
+
+md-dialog-content{
+  padding: 20px;
+}
