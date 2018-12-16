@@ -40,5 +40,9 @@ echo "Exporting Feature Configurations"
 export ENABLE_EMAILS='1'
 export MESSENGER_INTERGRATIONS='1'
 
+# Backup Manager
+echo "Backup Manager Configurations"
+export SQL_BACKUP_DIR='{SQL_BACKUP_DIR}'
+
 
 echo "Done"

@@ -6,7 +6,8 @@ domain = "http://127.0.0.1"
 if 'DEV_MODE' in os.environ:
     domain = "http://127.0.0.1:3000"
 
-def report(type, text):
+
+def report(type, text, toolName = 'Monitoring Client'):
     headers = {
         'accessToken': os.environ['RESCENT_ACCESS_TOKEN'],
         'Content-Type': 'application/json'
@@ -14,7 +15,8 @@ def report(type, text):
     try:
         resp = requests.post(domain + '/admin/monitoring/report', data=json.dumps({
             'type': type,
-            'text': text
+            'text': text,
+            'tool': toolName
         }, sort_keys=False, indent=4, separators=(',', ':')), headers=headers)
         if (resp.status_code != 200):
             print ("Failed to submit report. [Bad Response]")
