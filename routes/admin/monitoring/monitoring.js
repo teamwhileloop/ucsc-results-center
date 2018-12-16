@@ -36,8 +36,10 @@ router.post('/report', function (req, res) {
         return;
     }
 
+    let toolName = req.body.tool || 'Unknown Tool';
+
     if (req.body.text && req.body.text.length > 0){
-        logger.log('Monitoring client: ' + req.body.text, req.body.type);
+        logger.log(toolName + ': ' + req.body.text, req.body.type);
         res.send({});
     }else{
         res.status(400).send("log text is missing");

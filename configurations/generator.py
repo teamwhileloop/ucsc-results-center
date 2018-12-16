@@ -41,6 +41,10 @@ echo "Exporting Feature Configurations"
 export ENABLE_EMAILS='{ENABLE_EMAILS}'
 export MESSENGER_INTERGRATIONS='{MESSENGER_INTERGRATIONS}'
 
+# Backup Manager
+echo "Backup Manager Configurations"
+export SQL_BACKUP_DIR='{SQL_BACKUP_DIR}'
+
 
 echo "Done"'''
 
@@ -66,6 +70,8 @@ template = template.replace('{FB_PAGE_TOKEN}', raw_input('Facebook Page Token > 
 
 template = template.replace('{ENABLE_EMAILS}', raw_input('Enable Emails > '))
 template = template.replace('{MESSENGER_INTERGRATIONS}', raw_input('Enable Messenger Intergrations > '))
+
+template = template.replace('{SQL_BACKUP_DIR}', raw_input('Database backup location > '))
 
 f = open("config.sh", "w")
 f.write(template)
