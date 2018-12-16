@@ -1,0 +1,44 @@
+echo "Team whileLOOP"
+echo "UCSC Results Center Configuration File"
+echo ""
+
+# Database configuration
+echo "Exporting Database Configurations"
+export AWS_RDB_HOST=''
+export AWS_RDB_USERNAME=''
+export AWS_RDB_PASSWORD=''
+export AWS_RDB_DATABASE=''
+
+# Server configurations
+echo "Exporting Server Configurations"
+export DEV_ENV='false'
+export PORT=80
+export RESCENT_ACCESS_TOKEN=''
+
+# Mailman configurations
+echo "Exporting Mailman Configurations"
+export MAILMAN_EMAIL='ucscresultcenter@gmail.com'
+export MAILMAN_PASSWORD=''
+
+# RSA configurations
+echo "Exporting RSA Configurations"
+export RSA_KEY=''
+export RSA_CERT=''
+export UCSC_RESULTS_CENTER_ACCESSTOKEN=''
+
+# Monitoring client configurations
+echo "Exporting Monitoring Client Configurations"
+export MONIT_WAIT_TIME='900'
+
+# Facebook configurations
+echo "Exporting Facebook Configurations"
+export FB_VERIFY_TOKEN=''
+export FB_PAGE_TOKEN=''
+
+# Settings
+echo "Exporting Feature Configurations"
+export ENABLE_EMAILS='1'
+export MESSENGER_INTERGRATIONS='1'
+
+
+echo "Done"

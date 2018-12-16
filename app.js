@@ -39,8 +39,8 @@ if (!credentials.isDeployed){
     logger.disableDatabaseWrite();
 }else {
     logger.enableDatabaseWrite();
-    privateKey  = fs.readFileSync('/etc/letsencrypt/live/ucscresult.com/privkey.pem', 'utf8');
-    certificate = fs.readFileSync('/etc/letsencrypt/live/ucscresult.com/fullchain.pem', 'utf8');
+    privateKey  = fs.readFileSync(credentials.ssl.key, 'utf8');
+    certificate = fs.readFileSync(credentials.ssl.cert, 'utf8');
     httpsCredentials = {key: privateKey, cert: certificate};
 }
 
@@ -90,7 +90,7 @@ app.use('/cdn',express.static(path.join(__dirname, 'node_modules')));
 // Routing
 app.get('/', function(req, res) {
     // Redirect HTTPS traffic to HTTPS on production environment
-    if (credentials.isDeployed && !req.secure){
+    if (credentials.isDeployed && (!req.secure || req.headers.host !== 'www.ucscresult.com')){
         res.writeHead(302, {
             'Location': 'https://www.ucscresult.com'
         });

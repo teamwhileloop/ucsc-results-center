@@ -2,6 +2,7 @@
 const nodeMailer = require('nodemailer');
 const logger = require('./logger');
 const credentials = require('./credentials');
+const configurations = require('./configurations');
 const fs = require('fs');
 const ejs = require('ejs');
 
@@ -22,6 +23,11 @@ exports.sendTemplateMail = function (toAddress, subject, templateUrl, options) {
             logger.log('Failed to read the email template from :' + templateUrl,'crit',true);
         }else {
             let htmlCode = ejs.render(data, options);
+
+            if (!configurations.enableEmails){
+                return;
+            }
+
             transporter.sendMail({
                 from: '"UCSC Results Center" <ucscresultcenter@gmail.com>',
                 to: toAddress,
@@ -40,6 +46,11 @@ exports.sendTemplateMail = function (toAddress, subject, templateUrl, options) {
 };
 
 exports.sendTextMail = function (toAddress, subject, message) {
+
+    if (!configurations.enableEmails){
+        return;
+    }
+    
     transporter.sendMail({
         from: '"UCSC Results Center" <ucscresultcenter@gmail.com>',
         to: toAddress,
