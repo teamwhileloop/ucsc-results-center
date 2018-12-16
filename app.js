@@ -90,7 +90,7 @@ app.use('/cdn',express.static(path.join(__dirname, 'node_modules')));
 // Routing
 app.get('/', function(req, res) {
     // Redirect HTTPS traffic to HTTPS on production environment
-    if (credentials.isDeployed && !req.secure || req.headers.host !== 'www.ucscresult.com'){
+    if (credentials.isDeployed && (!req.secure || req.headers.host !== 'www.ucscresult.com')){
         res.writeHead(302, {
             'Location': 'https://www.ucscresult.com'
         });
