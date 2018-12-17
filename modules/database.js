@@ -1,7 +1,8 @@
 let mysql = require('mysql');
-const logger = require('./logger');
+const log = require('perfect-logger');
 let credentials = require('./credentials');
 let database = require('./database');
+let utilities = require('./utilities');
 
 let backOffTime = 1;
 let connection = mysql.createConnection({
@@ -12,7 +13,7 @@ let connection = mysql.createConnection({
 });
 
 function exponentialBackOff() {
-    logger.log ? logger.log(`Backing off for ${backOffTime} seconds`) : console.log(`Backing off for ${backOffTime} seconds`);
+    log.crit(`Backing off for ${backOffTime} seconds`);
     connection.end();
     setTimeout(function () {
         reconnect(true);
@@ -35,20 +36,20 @@ function reconnect(recon = false) {
     });
     connection.connect(function(err) {
         if (err){
-            logger.log('Unable to connect to the database after ' + logger.timeSpent(databaseConnectionTime),'crit',!recon);
+            log.crit_nodb('Unable to connect to the database after ' + utilities.timeSpent(databaseConnectionTime));
             exponentialBackOff();
         }else{
             resetExponentialBackOff();
             const apiHitCounter = require('./api-hit-counter');
             apiHitCounter.updateApiHits();
-            logger.log(`Connected to the database ${credentials.database.database} in ${logger.timeSpent(databaseConnectionTime)}`, 'info', true);
+            log.info(`Connected to the database ${credentials.database.database} in ${utilities.timeSpent(databaseConnectionTime)}`);
         }
     });
 }
 
 connection.on('error', function(err) {
-    logger.log('Error occurred in the database connection. ' + err.code, 'WARN', false, err);
-    logger.log('Attempting to reconnect to the database', 'INFO', true, err);
+    log.crit_nodb('Error occurred in the database connection. ' + err.code);
+    log.info('Attempting to reconnect to the database');
     if(err.code === 'PROTOCOL_CONNECTION_LOST') {
         reconnect(true);
     }

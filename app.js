@@ -1,8 +1,25 @@
-// Environment variables
-const port = process.env.PORT || 3000;
+// Logger Configurations
+let log = require('perfect-logger');
+const sysconfig = require('./modules/configurations');
 
-// Imports
-let logger = require('./modules/logger');
+log.setLogDirectory(sysconfig.logDirectory);
+log.setLogFileName("ucscresultcenter");
+log.setApplicationInfo({
+    name: "UCSC Result Center",
+    banner: "Copyright 2019 Team whileLOOP",
+    version: "1.0"
+});
+log.addStatusCode("mail", "MAIL", false, '', true);
+log.addStatusCode("crit_nodb", "CRIT", false, 'red');
+log.addStatusCode("fbmsg", "FBMS", false, '', true);
+log.addStatusCode("socket", "SOCK", false, '', true);
+log.setMaximumLogSize(8000000);
+log.setTimeZone("Asia/Colombo");
+log.initialize();
+
+//*************************************************************************************************
+
+const port = process.env.PORT || 3000;
 let credentials = require('./modules/credentials');
 let postman = require('./modules/postman');
 
@@ -35,10 +52,7 @@ global.monitoring = {
 };
 
 // Setup Logger
-if (!credentials.isDeployed){
-    logger.disableDatabaseWrite();
-}else {
-    logger.enableDatabaseWrite();
+if (credentials.isDeployed){
     privateKey  = fs.readFileSync(credentials.ssl.key, 'utf8');
     certificate = fs.readFileSync(credentials.ssl.cert, 'utf8');
     httpsCredentials = {key: privateKey, cert: certificate};
@@ -46,27 +60,18 @@ if (!credentials.isDeployed){
 
 privacyPolicy  = fs.readFileSync('privacy.txt', 'utf8');
 
-logger.setStatusCodeLength(4);
-logger.setStatusCodes({
-    info : 'INFO',
-    warn : 'WARN',
-    crit : 'CRIT',
-    log : 'LOG'
-});
-logger.setDefaultStatusCodeKey('info');
-
 // Setup Express
 const http = require('http').Server(app);
 const https = require('https').Server(httpsCredentials, app);
 app.set('views', __dirname + '/');
 app.engine('html', require('ejs').renderFile);
 http.listen(port, function(){
-    logger.log('Server started and listening on PORT ' + port);
+    log.info('Server started and listening on PORT ' + port);
 });
 // Setup HTTPS
 if (credentials.isDeployed){
     https.listen(443, function(){
-        logger.log('Server started and listening on PORT ' + 443);
+        log.info('Server started and listening on PORT ' + 443);
     });
 }
 

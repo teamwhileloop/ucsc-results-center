@@ -5,7 +5,7 @@ const _ = require('lodash');
 const messenger = require('../../modules/messenger');
 const router = express.Router();
 
-let logger = require('../../modules/logger');
+let log = require('perfect-logger');
 let mysql = require('../../modules/database');
 
 function attachSubscriptionToken(userId, token, exp){

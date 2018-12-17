@@ -2,7 +2,7 @@ const express = require('express');
 const _ = require('lodash');
 const router = express.Router();
 
-let logger = require('../../modules/logger');
+let log = require('perfect-logger');
 let mysql = require('../../modules/database');
 
 router.get('/status', function (req, res) {
@@ -22,7 +22,7 @@ router.get('/ack/:remoteId', function (req, res) {
         let query = "UPDATE facebook SET alert_version = ? WHERE id = ? AND alert_version < ?";
         mysql.query(query,[remoteId, req.facebookVerification.id, remoteId],function (err,payload) {
             if (err){
-                logger.log(err.toString(), 'crit');
+                log.crit(err.toString(), err);
             }
         });
     }

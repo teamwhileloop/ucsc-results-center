@@ -2,7 +2,6 @@ const express = require('express');
 const _ = require('lodash');
 const router = express.Router();
 
-let logger = require('../../../modules/logger');
 let mysql = require('../../../modules/database');
 
 router.post('/add', function (req, res) {

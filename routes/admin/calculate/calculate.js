@@ -2,8 +2,9 @@ const express = require('express');
 const router = express.Router();
 const _ = require('lodash');
 
-const logger = require('../../../modules/logger');
+const log = require('perfect-logger');
 const mysql = require('../../../modules/database.js');
+const utilities = require('../../../modules/utilities');
 
 let taskLock = false;
 
@@ -39,10 +40,10 @@ function getGradePoint(grade){
 }
 
 function reportError(req, res, error, sendResponse = false) {
-    logger.log(error.sqlMessage,'crit',true, JSON.stringify(_.assignIn(error,{
+    log.crit(error.sqlMessage, _.assignIn(error,{
         meta: req.facebookVerification,
         env: req.headers.host
-    })));
+    }));
     if (sendResponse){
         res.status(500).send({ error: error });
     }
@@ -124,7 +125,7 @@ function setSemesterRankings(pattern, column, updateColumn){
                             if (!error_update){
                                 resolve(payload_update);
                             }else{
-                                logger.log(`Updating ${updateColumn} with pattern ${pattern} failed`);
+                                log.crit(`Updating ${updateColumn} with pattern ${pattern} failed`, error_update);
                                 reject(error_update);
                             }
                         });
@@ -284,7 +285,7 @@ router.post('/pattern/:pattern',function (req,res) {
                                         overallProgress += 1;
                                         valuesQuery += `(${undergraduate.indexNumber}, ${GpaData.gpa}, NULL, ${GpaData.credits},  ${GpaData.nonGpaCredits}) ,`;
                                         completedPercentage = parseFloat(overallProgress*100.0 * (targetSemMode ? completedSemesters.length : 1)/(undergraduateList.length*completedSemesters.length)).toFixed(2);
-                                        logger.setLiveText(`Calculation progress for pattern '${pattern}' ${completedPercentage}%`);
+                                        log.setLiveText(`Calculation progress for pattern '${pattern}' ${completedPercentage}%`);
                                         if (completedUgs === undergraduateList.length){
                                             valuesQuery = valuesQuery.substring(0,valuesQuery.length -1);
                                             mysql.query(`INSERT INTO \`undergraduate\`
@@ -314,19 +315,19 @@ router.post('/pattern/:pattern',function (req,res) {
                                                                         setSemesterRankings(pattern,'gpa','rank')
                                                                         .then((_overallUpdateResponse)=>{
                                                                             if (taskReport.success){
-                                                                                logger.log(`Calculation successfully completed for pattern ${pattern} after ${logger.timeSpent(startTime)}`);
-                                                                                logger.setLiveText('');
+                                                                                log.info(`Calculation successfully completed for pattern ${pattern} after ${utilities.timeSpent(startTime)}`);
+                                                                                log.setLiveText('');
                                                                                 taskLock = false;
                                                                                 res.send({
                                                                                     success: true,
-                                                                                    timeSpent: logger.timeSpent(startTime)
+                                                                                    timeSpent: utilities.timeSpent(startTime)
                                                                                 })
                                                                             }else{
-                                                                                logger.log(`Calculation completed with failures for pattern ${pattern} after ${logger.timeSpent(startTime)}`,'crit',true,taskReport);
+                                                                                log.crit(`Calculation completed with failures for pattern ${pattern} after ${utilities.timeSpent(startTime)}`, taskReport);
                                                                                 res.status(500).send({
                                                                                     success: false,
                                                                                     errors: taskReport.errors,
-                                                                                    timeSpent: logger.timeSpent(startTime)
+                                                                                    timeSpent: utilities.timeSpent(startTime)
                                                                                 })
                                                                             }
                                                                         })
@@ -335,19 +336,19 @@ router.post('/pattern/:pattern',function (req,res) {
                                                                         })
                                                                     }else{
                                                                         if (taskReport.success){
-                                                                            logger.log(`Calculation successfully completed for pattern ${pattern} after ${logger.timeSpent(startTime)}`);
-                                                                            logger.setLiveText('');
+                                                                            log.info(`Calculation successfully completed for pattern ${pattern} after ${utilities.timeSpent(startTime)}`);
+                                                                            log.setLiveText('');
                                                                             taskLock = false;
                                                                             res.send({
                                                                                 success: true,
-                                                                                timeSpent: logger.timeSpent(startTime)
+                                                                                timeSpent: utilities.timeSpent(startTime)
                                                                             })
                                                                         }else{
-                                                                            logger.log(`Calculation completed with failures for pattern ${pattern} after ${logger.timeSpent(startTime)}`,'crit',true,taskReport);
+                                                                            log.crit(`Calculation completed with failures for pattern ${pattern} after ${utilities.timeSpent(startTime)}`,'crit',true,taskReport);
                                                                             res.status(500).send({
                                                                                 success: false,
                                                                                 errors: taskReport.errors,
-                                                                                timeSpent: logger.timeSpent(startTime)
+                                                                                timeSpent: utilities.timeSpent(startTime)
                                                                             })
                                                                         }
                                                                     }

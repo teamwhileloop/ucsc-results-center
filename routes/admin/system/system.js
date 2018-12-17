@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const _ = require('lodash');
 
-const logger = require('../../../modules/logger');
+const log = require('perfect-logger');
 
 router.post('/maintenance',function (req,res) {
     global.maintananceMode = Object.assign({
@@ -16,16 +16,16 @@ router.post('/maintenance',function (req,res) {
     }
     global.maintananceMode.adminName = adminName;
     if (global.maintananceMode.status){
-        logger.log(`Server was put to maintenance mode by ${adminName}`, 'warn', true);
+        log.warn(`Server was put to maintenance mode by ${adminName}`, global.maintananceMode);
     }else{
-        logger.log(`Server brought online by ${adminName}`, 'warn', true);
+        log.warn(`Server brought online by ${adminName}`);
     }
     res.send(global.maintananceMode);
 });
 
 router.get('/forcescan', function (req, res) {
     global.monitoring.forceScan = true;
-    logger.log("Force scan requested by " + req.facebookVerification.name);
+    log.info("Force scan requested by " + req.facebookVerification.name);
     res.send({});
 });
 

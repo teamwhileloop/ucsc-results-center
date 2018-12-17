@@ -1,6 +1,7 @@
 const request = require('request');
 const mysql = require('./database');
 const _ = require('lodash');
+const log = require('perfect-logger');
 const credentials = require('../modules/credentials');
 const configurations = require('../modules/configurations');
 const basicTemplate = {
@@ -24,9 +25,9 @@ function callSendAPI(sender_psid, response) {
     // Send the HTTP request to the Messenger Platform
     request(Object.assign(basicTemplate, {"json": request_body}), (err, res, body) => {
         if (!err) {
-            console.log('message sent!')
+            log.fbmsg('Message sent to ' + sender_psid)
         } else {
-            console.error("Unable to send message:" + err);
+            log.crit("Unable to send Facebook Message", err);
         }
     });
 }
@@ -56,6 +57,7 @@ exports.test = function(){
 };
 
 exports.sendToEventSubscribers = function(event, message, messageTypeTag = 'APPLICATION_UPDATE'){
+    log.debug(`Sending message '${message}' to '${event}' subscribers`);
     const query = "SELECT `facebook`.`psid` " +
         "FROM `event_subscriptions` " +
         "JOIN `facebook` " +
@@ -78,7 +80,7 @@ exports.sendToEventSubscribers = function(event, message, messageTypeTag = 'APPL
 
             request(Object.assign(basicTemplate, {"json": request_body}), (err, res, body) => {
                 if (err){
-                    console.error("Unable to send message:" + err);
+                    log.crit("Unable to send Facebook Message:", err);
                 }
             });
         })

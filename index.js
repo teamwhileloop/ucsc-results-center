@@ -1,16 +1,17 @@
 const http = require('./app');
 const io = require('socket.io')(http);
-let logger = require('./modules/logger');
+const log = require('perfect-logger');
 
 let onlineUsers = {};
 
 io.on('connection', function(socket){
     socket.on('usr-auth', function (data) {
         onlineUsers[socket.id] = data.name;
-        //logger.log("User " + data.name + " connected from " +  socket.handshake.address);
+        log.socket("User " + data.name + " connected from " +  socket.handshake.address);
     });
 
     socket.on('disconnect', function () {
+        log.socket("User " + onlineUsers[socket.id] + " disconnected");
         delete onlineUsers[socket.id];
     });
 });
@@ -23,14 +24,14 @@ setInterval(function () {
     let curTime = + new Date();
     if ((curTime - global.monitoring.lastPing) > 60*1000){
         if (global.monitoring.online){
-            logger.log("Monitoring client went offline.", 'warn', true);
+            log.warn("Monitoring client went offline.");
             global.monitoring.online = false;
         }
         global.monitoring.status = "Offline [" + new Date(global.monitoring.lastPing).toLocaleString('en-US', { timeZone: 'Asia/Colombo' }) + ']';
     }else if((curTime - global.monitoring.lastPing) > 15*1000){
         global.monitoring.status = "Not Responding";
         if (global.monitoring.online && !global.monitoring.notResponding){
-            logger.log("Monitoring client is not responding", 'warn', true);
+            log.warn("Monitoring client is not responding");
             global.monitoring.notResponding = true;
         }
     }

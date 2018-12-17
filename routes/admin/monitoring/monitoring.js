@@ -2,15 +2,15 @@ const express = require('express');
 const router = express.Router();
 const _ = require('lodash');
 
-const logger = require('../../../modules/logger');
+const log = require('perfect-logger');
 
 router.post('/ping',function (req,res) {
     if (!global.monitoring.online){
-        logger.log("Monitoring client connected.")
+        log.info("Monitoring client connected.")
     }
 
     if (global.monitoring.online && global.monitoring.notResponding){
-        logger.log("Monitoring client responded.")
+        log.info("Monitoring client responded.")
     }
 
     global.monitoring = Object.assign({
@@ -39,7 +39,7 @@ router.post('/report', function (req, res) {
     let toolName = req.body.tool || 'Unknown Tool';
 
     if (req.body.text && req.body.text.length > 0){
-        logger.log(toolName + ': ' + req.body.text, req.body.type);
+         log[req.body.type](toolName + ': ' + req.body.text);
         res.send({});
     }else{
         res.status(400).send("log text is missing");

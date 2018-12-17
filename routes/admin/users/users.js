@@ -1,16 +1,16 @@
 const express = require('express');
 const router = express.Router();
 
-const logger = require('../../../modules/logger');
+const log = require('perfect-logger');
 const mysql = require('../../../modules/database');
 const postman = require('../../../modules/postman');
 const _ = require('lodash');
 
 function reportError(req, res, error, sendResponse = false) {
-    logger.log(error.sqlMessage,'crit',true, JSON.stringify(_.assignIn(error,{
+    log.crit(error.sqlMessage, _.assignIn(error,{
         meta: req.facebookVerification,
         env: req.headers.host
-    })));
+    }));
     if (sendResponse){
         res.status(500).send({ error: error });
     }
@@ -22,7 +22,7 @@ function getUserDetails(fbId = 0) {
             if (!error){
                 resolve(payload)
             }else{
-                logger.log(error.sqlMessage,'crit',true, JSON.stringify(error));
+                log.crit(error.sqlMessage, error);
             }
         })
     })
@@ -280,7 +280,7 @@ router.post('/role', function (req, res) {
         }
 
         mysql.query("SELECT `name`, `power` from `facebook` WHERE `id` = ?;",[targetId], function (err, resp) {
-            logger.log(`${req.facebookVerification.name} change the power of ${resp[0].name} to ${newPower}`, 'warn', true);
+            log.warn(`${req.facebookVerification.name} change the power of ${resp[0].name} to ${newPower}`);
         });
 
         if (payload.affectedRows === 0){

@@ -2,7 +2,7 @@ const express = require('express');
 const _ = require('lodash');
 const router = express.Router();
 
-let logger = require('../../modules/logger');
+let log = require('perfect-logger');
 let mysql = require('../../modules/database');
 
 router.post('/submit', function (req, res) {
@@ -21,10 +21,10 @@ router.post('/submit', function (req, res) {
                 succes: true
             })
         }else{
-            logger.log(error.sqlMessage,'crit',true, JSON.stringify(_.assignIn(error,{
+            log.crit(error.sqlMessage, _.assignIn(error,{
                 meta: req.facebookVerification,
                 env: req.headers.host
-            })));
+            }));
             res.status(500).send({ error: error });
         }
     });
@@ -41,10 +41,10 @@ router.get('/get', function (req, res) {
         if (!error){
             res.send(payload)
         }else {
-            logger.log(error.sqlMessage,'crit',true, JSON.stringify(_.assignIn(error,{
+            log.crit(error.sqlMessage, _.assignIn(error,{
                 meta: req.facebookVerification,
                 env: req.headers.host
-            })));
+            }));
             res.status(500).send({ error: error });
         }
     })

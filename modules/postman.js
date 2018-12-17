@@ -1,6 +1,6 @@
 'use strict';
 const nodeMailer = require('nodemailer');
-const logger = require('./logger');
+const log = require('perfect-logger');
 const credentials = require('./credentials');
 const configurations = require('./configurations');
 const fs = require('fs');
@@ -15,12 +15,12 @@ let transporter = nodeMailer.createTransport({
 
 exports.sendTemplateMail = function (toAddress, subject, templateUrl, options) {
     if (!toAddress){
-        logger.log(`'${subject}' mail was not sent as the receiver was not valid`);
+        log.info(`'${subject}' mail was not sent as the receiver was not valid`);
         return;
     }
     fs.readFile(templateUrl, 'utf8', function (err,data) {
         if (err) {
-            logger.log('Failed to read the email template from :' + templateUrl,'crit',true);
+            log.crit('Failed to read the email template from :' + templateUrl, err);
         }else {
             let htmlCode = ejs.render(data, options);
 
@@ -35,9 +35,9 @@ exports.sendTemplateMail = function (toAddress, subject, templateUrl, options) {
                 html: htmlCode
             },function (error, _info) {
                 if (error){
-                    logger.log('Error occurred while sending '+ subject + ' email to ' + toAddress,'warn',true);
+                    log.warn('Error occurred while sending '+ subject + ' email to ' + toAddress, error);
                 }else {
-                    logger.log(subject + ' email sent to ' + toAddress,'info',true);
+                    log.mail(subject + ' email sent to ' + toAddress);
                 }
             });
         }
@@ -58,9 +58,9 @@ exports.sendTextMail = function (toAddress, subject, message) {
         text: message
     },function (error, _info) {
         if (error){
-            logger.log('Error occurred while sending '+ subject + ' email to ' + toAddress,'warn',true);
+            log.warn('Error occurred while sending '+ subject + ' email to ' + toAddress, error);
         }else {
-            logger.log(subject + ' email sent to ' + toAddress,'info',true);
+            log.mail(subject + ' email sent to ' + toAddress);
         }
     });
 };

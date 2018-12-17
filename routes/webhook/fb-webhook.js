@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const logger = require('../../modules/logger');
+const log = require('perfect-logger');
 const credentials = require('../../modules/credentials');
 const messengerAPI = require('./messenger-api');
 const MessengerUser = require('./messenger-user');
@@ -15,9 +15,9 @@ router.get('/', (req, res) => {
     if (mode && token) {
         if (mode === 'subscribe' && token === VERIFY_TOKEN) {
             res.status(200).send(challenge);
-            logger.log("Facebook WebHook verified");
+            log.info("Facebook WebHook verified");
         } else {
-            logger.log(`Facebook WebHook verification failed. {mode:${mode}, token:${token}`, warn);
+            log.warn(`Facebook WebHook verification failed. {mode:${mode}, token:${token}`);
             res.sendStatus(403);
         }
     } else {

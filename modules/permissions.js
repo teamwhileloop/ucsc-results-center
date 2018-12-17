@@ -1,6 +1,6 @@
 const _ = require('lodash');
 const crypto = require('crypto');
-const logger = require('../modules/logger');
+const log = require('perfect-logger');
 const postman = require('../modules/postman');
 const mysql = require('../modules/database.js');
 const facebook = require('../modules/facebook');
@@ -102,6 +102,7 @@ module.exports = function() {
                     }
                 })
             }else {
+                log.debug(`Granting access to ${req.originalUrl} from AccessToken`);
                 next();
             }
             return;
@@ -130,11 +131,11 @@ module.exports = function() {
                     'FROM facebook WHERE id=?;',[validationReport.id],
                     function (error,payload) {
                     if(error){
-                        logger.log(JSON.stringify(_.assignIn(error,{
+                        log.crit('Failed to validate user',_.assignIn(error,{
                             meta: validationReport,
                             env: req.headers.host,
                             uid: fbUid
-                        })),'crit',true);
+                        }));
                         res.status(500).send({
                             systemError: {
                                 type: 'database',
@@ -162,6 +163,7 @@ module.exports = function() {
                                     }
                                 }
                             });
+                            log.debug(`Denied access to ${req.originalUrl} for ${req.facebookVerification.name}`);
                         }else{
                             next()
                         }

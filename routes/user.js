@@ -4,7 +4,7 @@ const router = express.Router();
 const _ = require('lodash');
 const crypto = require('crypto');
 
-const logger = require('../modules/logger');
+const log = require('perfect-logger');
 const postman = require('../modules/postman');
 const mysql = require('../modules/database.js');
 let notificationSettings = require('./notifications/notification-settings');
@@ -52,7 +52,7 @@ router.get('/validate', function (req, res) {
         req.facebookVerification.email
     ],function (error, _payload) {
         if (error){
-            logger.log(error.sqlMessage,'crit',true, JSON.stringify(_.assignIn(error,{
+            log.crit(error.sqlMessage,-(_.assignIn(error,{
                 meta: req.facebookVerification,
                 env: req.headers.host
             })));
@@ -76,10 +76,10 @@ router.get('/state/:indexNumber',function (req,res) {
                 });
             }
         }else{
-            logger.log(error.sqlMessage,'crit',true, JSON.stringify(_.assignIn(error,{
+            log.crit(error.sqlMessage, _.assignIn(error,{
                 meta: req.facebookVerification,
                 env: req.headers.host
-            })));
+            }));
             res.status(500).send({ error: error });
         }
     })
@@ -119,21 +119,21 @@ router.post('/request',function (req,res) {
                                 messenger.sendToEventSubscribers('user_approval_request',
                                     `New request received from ${req.facebookVerification.name} [${indexNumber}]`);
                             }else{
-                                logger.log(payload_q2,'crit',true, JSON.stringify(_.assignIn(payload_q2,{
+                                log.crit(payload_q2, _.assignIn(payload_q2,{
                                     meta: req.facebookVerification,
                                     env: req.headers.host,
                                     data: req.body,
                                     endpoint: '/request'
-                                })));
+                                }));
                                 res.status(500).send({ error: payload_q2 });
                             }
                         }else {
-                            logger.log(error_q2.sqlMessage,'crit',true, JSON.stringify(_.assignIn(error_q2,{
+                            log.crit(error_q2.sqlMessage, _.assignIn(error_q2,{
                                 meta: req.facebookVerification,
                                 env: req.headers.host,
                                 data: req.body,
                                 endpoint: '/request'
-                            })));
+                            }));
                             res.status(500).send({ error: error_q2 });
                         }
                     });
@@ -154,10 +154,10 @@ router.post('/request',function (req,res) {
                 });
             }
         }else{
-            logger.log(error.sqlMessage,'crit',true, JSON.stringify(_.assignIn(error,{
+            log.crit(error.sqlMessage, _.assignIn(error,{
                 meta: req.facebookVerification,
                 env: req.headers.host
-            })));
+            }));
             res.status(500).send({ error: error });
         }
     })
@@ -192,10 +192,10 @@ router.post('/privacy',function (req, res) {
                             if (!error_write){
                                 res.send(payload_write);
                             }else{
-                                logger.log(error_write.sqlMessage,'crit',true, JSON.stringify(_.assignIn(error_write,{
+                                log.crit(error_write.sqlMessage, _.assignIn(error_write,{
                                     meta: req.facebookVerification,
                                     env: req.headers.host
-                                })));
+                                }));
                                 res.status(500).send({ error: error_write });
                             }
                         })
@@ -203,10 +203,10 @@ router.post('/privacy',function (req, res) {
                     res.status(400).send({ error: 'User must be verified state' });
                 }
             }else{
-                logger.log(error.sqlMessage,'crit',true, JSON.stringify(_.assignIn(error,{
+                log.crit(error.sqlMessage, _.assignIn(error,{
                     meta: req.facebookVerification,
                     env: req.headers.host
-                })));
+                }));
                 res.status(500).send({ error: error });
             }
         })
@@ -230,10 +230,10 @@ router.get('/privacy',function (req, res) {
                     res.status(400).send({ error: 'User must be verified state' });
                 }
             }else{
-                logger.log(error.sqlMessage,'crit',true, JSON.stringify(_.assignIn(error,{
+                log.crit(error.sqlMessage, _.assignIn(error,{
                     meta: req.facebookVerification,
                     env: req.headers.host
-                })));
+                }));
                 res.status(500).send({ error: error });
             }
         })
@@ -245,10 +245,10 @@ router.get('/admins', function (req, res) {
         if (!err){
             res.send(payload);
         }else {
-            logger.log(err.sqlMessage,'crit',true, JSON.stringify(_.assignIn(err,{
+            log.crit(err.sqlMessage, _.assignIn(err,{
                 meta: req.facebookVerification,
                 env: req.headers.host
-            })));
+            }));
             res.status(500).send({ error: err });
         }
     })
