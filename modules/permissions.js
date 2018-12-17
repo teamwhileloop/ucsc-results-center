@@ -102,7 +102,6 @@ module.exports = function() {
                     }
                 })
             }else {
-                log.debug(`Granting access to ${req.originalUrl} from AccessToken`);
                 next();
             }
             return;
