@@ -57,7 +57,7 @@ exports.test = function(){
 };
 
 exports.sendToEventSubscribers = function(event, message, messageTypeTag = 'APPLICATION_UPDATE'){
-    log.debug(`Sending message '${message}' to '${event}' subscribers`);
+    log.debug(`Sending message '${message.replace('\n', ' ')}' to '${event}' subscribers`);
     const query = "SELECT `facebook`.`psid` " +
         "FROM `event_subscriptions` " +
         "JOIN `facebook` " +

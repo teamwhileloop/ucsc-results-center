@@ -13,7 +13,7 @@ router.get('/',function (req,res) {
 
     let result = _.filter(logs,function (o) {
         if (filter){
-            return o.statusCode.toLowerCase() === filter.toLowerCase();
+            return o.code.toLowerCase() === filter.toLowerCase();
         }else{
             return true;
         }
@@ -39,12 +39,20 @@ router.delete('/clear',function (req,res) {
     res.send({});
 });
 
-router.get('/generate/:count',function (req,res) {
+router.get('/generate/:count/:type',function (req,res) {
+    if (['info', 'warn', 'crit'].indexOf(req.params['type']) === -1){
+        res.status(400).send("Unknown type");
+        return;
+    }
     let count = parseInt(req.params['count']) || 0;
     _.forEach(_.range(count),function (n) {
-        log.info(`Dummy log with content ${Math.random().toString(36).substr(2, 6)}`);
+        log[req.params['type']](`Dummy log with content ${Math.random().toString(36).substr(2, 6)}`);
     });
     res.send({});
+});
+
+router.get('/download', function (req, res) {
+    res.download(log.getLogFileName());
 });
 
 module.exports = router;

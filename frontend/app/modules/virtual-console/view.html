@@ -13,6 +13,11 @@
             Refresh
         </button>
 
+        <button type="button" class="btn btn-primary clear" ng-click="ctrlVirtCons.viewFile()" ng-if="loggedInUser.power === 100">
+            <i class="material-icons">sd_storage</i>
+            View Log File
+        </button>
+
         <button type="button" class="btn btn-warning clear" ng-click="ctrlVirtCons.clearLogs()">
             <i class="material-icons">delete</i>
             Clear Events
@@ -82,12 +87,12 @@
                     </div>
                 </td>
             </tr>
-            <tr class="{{ logRecord.statusCode.toLowerCase() }}"
+            <tr class="{{ logRecord.code.toLowerCase() }}"
                 ng-if="!paginationCtrl.loading"
                 ng-repeat="logRecord in ctrlVirtCons.logs.data">
                 <td>{{ logRecord.date }}</td>
                 <td>{{ logRecord.time }}</td>
-                <td>{{ logRecord.statusCode }}</td>
+                <td>{{ logRecord.code }}</td>
                 <td>{{ logRecord.message }}</td>
             </tr>
         </table>

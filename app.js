@@ -31,6 +31,19 @@ const socketIO = require('./index');
 const bodyParser = require('body-parser');
 const messenger = require('./modules/messenger');
 
+function loggerCallback(data){
+    if (data.code === 'WARN' || data.code === 'CRIT'){
+        messenger.sendToEventSubscribers('system_warn_err_thrown', `Event Raised: ${data.code}\n${data.message}`);
+    }
+}
+
+function logDatabaseCallback(data){
+    return; //TODO: Implement
+}
+
+log.setCallback(loggerCallback);
+log.setDatabaseCallback(logDatabaseCallback);
+
 let privateKey;
 let certificate;
 let httpsCredentials;
