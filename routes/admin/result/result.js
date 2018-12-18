@@ -57,6 +57,7 @@ function reportBadRequest(res, code, message) {
             message: message
         }
     });
+    log.debug(`Bad Results encpoint call: ${message}`);
 }
 
 function validateResult(index, grade) {
@@ -164,6 +165,7 @@ router.delete('/dataset/:id',function (req,res) {
                     success: true,
                     payload: payload
                 });
+                log.info(`Result dataset ${datasetId} was deleted as requested by ${req.facebookVerification.name}`);
             }else{
                 res.status(404).send({
                     success : false

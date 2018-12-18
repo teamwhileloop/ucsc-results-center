@@ -32,11 +32,13 @@ router.get('/',function (req,res) {
         },
         data: page ? paginatedResults : result
     });
+    log.debug(`Console log sent as requested by ${req.facebookVerification.name}`);
 });
 
 router.delete('/clear',function (req,res) {
     log.clearVirtualConsoleLog();
     res.send({});
+    log.info(`Console logs cleared as requested by ${req.facebookVerification.name}`);
 });
 
 router.get('/generate/:count/:type',function (req,res) {
@@ -53,6 +55,7 @@ router.get('/generate/:count/:type',function (req,res) {
 
 router.get('/download', function (req, res) {
     res.download(log.getLogFileName());
+    log.debug(`Web system log sent as requested by ${req.facebookVerification.name}`);
 });
 
 module.exports = router;

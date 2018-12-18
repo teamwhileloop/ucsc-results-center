@@ -88,6 +88,7 @@ module.exports = function() {
                                     }
                                 }
                             });
+                            log.debug(`Denied access to ${req.originalUrl} for ${req.facebookVerification.name}`);
                         }else{
                             next()
                         }
@@ -118,6 +119,7 @@ module.exports = function() {
                     accessToken: accessToken
                 }
             });
+            log.debug(`Denied access to ${req.originalUrl}. Facebook credentials missing`);
             return;
         }
 

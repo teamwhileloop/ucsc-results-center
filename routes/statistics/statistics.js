@@ -42,6 +42,7 @@ router.post('/subject', function (req, res) {
             });
         }else {
             res.status(500).send({success:false,error: err});
+            log.crit(`Failed to fetch subject statistics for subject '${req.body.subject}'`, err);
         }
     })
 });

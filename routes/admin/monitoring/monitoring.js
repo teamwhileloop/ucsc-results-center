@@ -25,6 +25,7 @@ router.post('/ping',function (req,res) {
     let returnCode = "200";
     if (global.monitoring.forceScan){
         returnCode = "100";
+        log.debug('Requesting a force scan from Monitoring Client');
         global.monitoring.forceScan = false;
     }
     res.send(returnCode);

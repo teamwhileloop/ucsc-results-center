@@ -11,7 +11,9 @@ io.on('connection', function(socket){
     });
 
     socket.on('disconnect', function () {
-        log.socket("User " + onlineUsers[socket.id] + " disconnected");
+        if (onlineUsers[socket.id] !== undefined){
+            log.socket("User " + onlineUsers[socket.id] + " disconnected");
+        }
         delete onlineUsers[socket.id];
     });
 });
@@ -29,11 +31,11 @@ setInterval(function () {
         }
         global.monitoring.status = "Offline [" + new Date(global.monitoring.lastPing).toLocaleString('en-US', { timeZone: 'Asia/Colombo' }) + ']';
     }else if((curTime - global.monitoring.lastPing) > 15*1000){
-        global.monitoring.status = "Not Responding";
         if (global.monitoring.online && !global.monitoring.notResponding){
-            log.warn("Monitoring client is not responding");
+            log.warn("Monitoring client is not responding. Last known status: " + global.monitoring.status );
             global.monitoring.notResponding = true;
         }
+        global.monitoring.status = "Not Responding";
     }
 
     io.emit('statistics',{

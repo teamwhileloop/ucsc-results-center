@@ -69,6 +69,9 @@ if (credentials.isDeployed){
     privateKey  = fs.readFileSync(credentials.ssl.key, 'utf8');
     certificate = fs.readFileSync(credentials.ssl.cert, 'utf8');
     httpsCredentials = {key: privateKey, cert: certificate};
+    log.info("Server initializing in Production Mode")
+}else{
+    log.info("Server initializing in Development Mode")
 }
 
 privacyPolicy  = fs.readFileSync('privacy.txt', 'utf8');

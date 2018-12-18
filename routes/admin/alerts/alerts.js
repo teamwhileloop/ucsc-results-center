@@ -1,6 +1,7 @@
 const express = require('express');
 const _ = require('lodash');
 const router = express.Router();
+const log = require('perfect-logger');
 
 let mysql = require('../../../modules/database');
 
@@ -39,7 +40,9 @@ router.post('/add', function (req, res) {
     ],function (err,payload) {
         if (!err){
             res.send(payload);
+            log.info(`New alert '${ alert.title}' added by ${req.facebookVerification.name}`)
         } else{
+            log.crit(`Failed to add new alert as requested by ${req.facebookVerification.name}`, err);
             res.status(500).send({success:false,error:err});
         }
     });
@@ -51,6 +54,7 @@ router.get('/list', function (req, res) {
         if (!err){
             res.send(payload);
         } else{
+            log.crit(`Failed to list alerts as requested by ${req.facebookVerification.name}`, err);
             res.status(500).send({success:false,error:err});
         }
     });
@@ -61,8 +65,10 @@ router.delete('/delete/:id', function (req, res) {
     let query = "DELETE FROM `alerts` WHERE `id`=?;";
     mysql.query(query, [id],function (err,payload) {
         if (!err){
+            log.info(`Alert #${id} was deleted as requested by ${req.facebookVerification.name}`);
             res.send(payload);
         } else{
+            log.crit(`Failed to delete alert as requested by ${req.facebookVerification.name}`, err);
             res.status(500).send({success:false,error:err});
         }
     });

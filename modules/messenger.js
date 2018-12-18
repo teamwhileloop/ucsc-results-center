@@ -57,13 +57,18 @@ exports.test = function(){
 };
 
 exports.sendToEventSubscribers = function(event, message, messageTypeTag = 'APPLICATION_UPDATE'){
-    log.debug(`Sending message '${message.replace('\n', ' ')}' to '${event}' subscribers`);
     const query = "SELECT `facebook`.`psid` " +
         "FROM `event_subscriptions` " +
         "JOIN `facebook` " +
         "ON `event_subscriptions`.`event` = ? " +
         "AND `facebook`.`id` = `event_subscriptions`.`fbid`;";
     mysql.query(query, [event], function (err, payload) {
+        if (err){
+            log.crit(`Unable to fetch '${event}' event subscribers from database`, err);
+            return;
+        }
+
+        log.debug(`Sending message '${message.replace('\n', ' ')}' to '${event}' subscribers [count: ${payload.length}]`);
         _.forEach(payload, function (row) {
             let request_body = {
                 "recipient": {

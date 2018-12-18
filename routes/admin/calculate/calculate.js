@@ -198,6 +198,8 @@ router.post('/pattern/:pattern',function (req,res) {
     };
     const startTime = new Date();
 
+    log.debug(`Running recalculation for pattern ${pattern} as requested by ${req.facebookVerification.name}`);
+
     // academicYear validation
     if (academicYear && !new RegExp('^[1-4]$','gm').test(academicYear)){
         res.status(400).send({
@@ -206,6 +208,8 @@ router.post('/pattern/:pattern',function (req,res) {
                 message: `Invalid academic year ${academicYear}`
             }
         });
+
+        log.debug(`Recalculation task rejected: Invalid academic year: ${academicYear}`);
         return;
     }
 
@@ -217,6 +221,7 @@ router.post('/pattern/:pattern',function (req,res) {
                 message: `Invalid academic semester ${academicSemester}`
             }
         });
+        log.debug(`Recalculation task rejected: Invalid academic semester: ${academicSemester}`);
         return;
     }else if (academicYear){
         targetSemMode = true;
@@ -230,6 +235,7 @@ router.post('/pattern/:pattern',function (req,res) {
                 message: `Invalid pattern ${req.params['pattern']}`
             }
         });
+        log.debug(`Recalculation task rejected: Invalid pattern: ${pattern}`);
         return;
     }
 
@@ -240,10 +246,13 @@ router.post('/pattern/:pattern',function (req,res) {
                 message: 'A task is already in progress'
             }
         });
+        log.debug('Recalculation task rejected: Another recalculation task is in progress');
         return;
     }
 
+
     taskLock = true;
+    log.debug('Recalculation task lock acquired');
     getUndergraduates(pattern)
         .then((undergraduateList)=>{
             getCompletedSemesters(pattern)
@@ -253,6 +262,7 @@ router.post('/pattern/:pattern',function (req,res) {
 
                     if (targetSemMode && _.filter(completedSemesters, { 'semester': academicSemester, 'year': academicYear }).length === 0){
                         taskLock = false;
+                        log.debug(`Recalculation task lock released. Y${academicYear}S${academicSemester} for pattern ${pattern} not found`);
                         res.status(404).send({
                             error: {
                                 'semester': academicSemester,
@@ -318,6 +328,7 @@ router.post('/pattern/:pattern',function (req,res) {
                                                                                 log.info(`Calculation successfully completed for pattern ${pattern} after ${utilities.timeSpent(startTime)}`);
                                                                                 log.setLiveText('');
                                                                                 taskLock = false;
+                                                                                log.debug('Recalculation task lock released');
                                                                                 res.send({
                                                                                     success: true,
                                                                                     timeSpent: utilities.timeSpent(startTime)
@@ -339,6 +350,7 @@ router.post('/pattern/:pattern',function (req,res) {
                                                                             log.info(`Calculation successfully completed for pattern ${pattern} after ${utilities.timeSpent(startTime)}`);
                                                                             log.setLiveText('');
                                                                             taskLock = false;
+                                                                            log.debug('Recalculation task lock released');
                                                                             res.send({
                                                                                 success: true,
                                                                                 timeSpent: utilities.timeSpent(startTime)
@@ -382,12 +394,14 @@ router.post('/pattern/:pattern',function (req,res) {
                 .catch((error)=>{
                     reportError(req, res, error, true);
                     taskLock = false;
+                    log.debug('Recalculation task lock released: Error occurred');
                 });
         })
         .catch((error)=>{
             reportError(req, res, error);
             res.status(500).send({ error: error });
             taskLock = false;
+            log.debug('Recalculation task lock released: Error occurred');
         })
 });
 

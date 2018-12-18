@@ -18,6 +18,7 @@ router.get('/status', function (req, res) {
 
 router.get('/ack/:remoteId', function (req, res) {
     let remoteId = parseInt(req.params['remoteId'] || 0);
+    log.debug(`Alert acknowledgement for id #${remoteId} received from ${req.facebookVerification.name}`);
     if (req.facebookVerification.alert_version < remoteId){
         let query = "UPDATE facebook SET alert_version = ? WHERE id = ? AND alert_version < ?";
         mysql.query(query,[remoteId, req.facebookVerification.id, remoteId],function (err,payload) {

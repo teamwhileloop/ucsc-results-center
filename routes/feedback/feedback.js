@@ -19,7 +19,8 @@ router.post('/submit', function (req, res) {
         if (!error){
             res.send({
                 succes: true
-            })
+            });
+            log.info(`Feedback received from ${req.facebookVerification.name}`)
         }else{
             log.crit(error.sqlMessage, _.assignIn(error,{
                 meta: req.facebookVerification,
