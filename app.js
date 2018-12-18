@@ -5,7 +5,7 @@ const sysconfig = require('./modules/configurations');
 log.setLogDirectory(sysconfig.logDirectory);
 log.setLogFileName("ucscresultcenter");
 log.setApplicationInfo({
-    name: "UCSC Result Center",
+    name: "UCSC Results Center",
     banner: "Copyright 2019 Team whileLOOP",
     version: "1.0"
 });
