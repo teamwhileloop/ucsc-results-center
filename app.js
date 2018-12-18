@@ -125,8 +125,11 @@ app.get('/', function(req, res) {
     }
 });
 
-app.get('/test', function(req, res) {
-    res.render('templates/web/test.html');
+app.get('/status', function(req, res) {
+    const exec = require("child_process").exec;
+    exec("pm2 status", (error, stdout, stderr) => {
+        res.render('templates/web/pm2status.ejs', {status: stdout});
+    })
 });
 
 app.get('/privacy', function(req, res) {
