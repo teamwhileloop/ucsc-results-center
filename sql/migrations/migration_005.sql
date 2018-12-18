@@ -1,0 +1,8 @@
+-- Database logging
+ALTER TABLE `results`.`log`
+CHANGE COLUMN `message` `message` VARCHAR(1500) CHARACTER SET 'utf8' NOT NULL DEFAULT '' ,
+ADD COLUMN `data` VARCHAR(3000) CHARACTER SET 'utf8' NULL AFTER `message`;
+
+ALTER TABLE `results`.`log`
+ADD COLUMN `logid` INT NOT NULL AUTO_INCREMENT FIRST,
+ADD PRIMARY KEY (`logid`);

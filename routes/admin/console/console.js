@@ -48,7 +48,7 @@ router.get('/generate/:count/:type',function (req,res) {
     }
     let count = parseInt(req.params['count']) || 0;
     _.forEach(_.range(count),function (n) {
-        log[req.params['type']](`Dummy log with content ${Math.random().toString(36).substr(2, 6)}`);
+        log[req.params['type']](`Dummy log with content ${Math.random().toString(36).substr(2, 6)}`, req.facebookVerification);
     });
     res.send({});
 });

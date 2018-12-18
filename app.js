@@ -22,6 +22,7 @@ log.initialize();
 const port = process.env.PORT || 3000;
 let credentials = require('./modules/credentials');
 let postman = require('./modules/postman');
+let mysql = require('./modules/database');
 
 const express = require('express');
 const path = require('path');
@@ -38,7 +39,25 @@ function loggerCallback(data){
 }
 
 function logDatabaseCallback(data){
-    return; //TODO: Implement
+    let dataJSON = "";
+    if (data.details && typeof data.details !== "string"){
+        dataJSON = JSON.stringify(data.details);
+
+    }else{
+        dataJSON = data.details || "";
+    }
+    dataJSON = dataJSON.substr(0, 2900);
+
+    if (!credentials.isDeployed){
+        return;
+    }
+
+    const query = "INSERT INTO `log` (`date`, `time`, `code`, `message`, `data`) VALUES (?, ?, ?, ?, ?);";
+    mysql.query(query, [data.date, data.time, data.code, data.message, dataJSON], function (err, payload) {
+        if (err){
+            log.crit_nodb("Failed to send log event to database");
+        }
+    })
 }
 
 log.setCallback(loggerCallback);
