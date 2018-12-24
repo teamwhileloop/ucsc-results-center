@@ -87,7 +87,9 @@ app.controller('PageHeaderController',function ($scope,
         $scope.userDetails = args;
         if (!this.userRegistered){
             userDataUpdate();
-            showNotifications();
+            if($scope.userDetails.power > 0){
+                showNotifications();
+            }
             this.userRegistered = true;
         }
     });
