@@ -4,6 +4,7 @@ app.controller('PageHeaderController',function ($scope,
                                                 $location,
                                                 ProfileService,
                                                 $rootScope,
+                                                ApplicationService,
                                                 AdminService)
 {
 
@@ -12,6 +13,7 @@ app.controller('PageHeaderController',function ($scope,
     $scope.navigationInfoBox = {};
     $scope.mainSearchEnabled = false;
     $scope.userDetails = false;
+    this.userRegistered = false;
 
     this.selectedItem = {};
     this.searchText = '';
@@ -83,7 +85,13 @@ app.controller('PageHeaderController',function ($scope,
 
     $scope.$on('pageHeader.user.update', (_event, args)=> {
         $scope.userDetails = args;
-        userDataUpdate();
+        if (!this.userRegistered){
+            userDataUpdate();
+            if($scope.userDetails.power > 0){
+                showNotifications();
+            }
+            this.userRegistered = true;
+        }
     });
 
     $scope.$on('sidebar.close', (_event, _args)=> {
@@ -115,5 +123,14 @@ app.controller('PageHeaderController',function ($scope,
     function userDataUpdate()
     {
         socket.emit('usr-auth', { name: $scope.userDetails ? $scope.userDetails.name : "Facebook User"});
+    }
+
+    function showNotifications() {
+        ProfileService.getAlerts()
+        .then((resposne)=>{
+            _.forEach(resposne.data, function (o) {
+                ApplicationService.pushNotification(o);
+            })
+        });
     }
 });

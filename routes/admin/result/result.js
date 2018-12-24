@@ -3,7 +3,7 @@ const router = express.Router();
 const _ = require('lodash');
 const messenger = require('../../../modules/messenger');
 
-const logger = require('../../../modules/logger');
+const log = require('perfect-logger');
 const mysql = require('../../../modules/database');
 
 function validateSubject(subjectCode = '') {
@@ -41,10 +41,10 @@ function createNewDatasetEntry(subjectCode, description) {
 }
 
 function reportError(req, res, error, sendResponse = false) {
-    logger.log(error.sqlMessage,'crit',true, JSON.stringify(_.assignIn(error,{
+    log.crit(error.sqlMessage, _.assignIn(error,{
         meta: req.facebookVerification,
         env: req.headers.host
-    })));
+    }));
     if (sendResponse){
         res.status(500).send({ error: error });
     }
@@ -57,6 +57,7 @@ function reportBadRequest(res, code, message) {
             message: message
         }
     });
+    log.debug(`Bad Results encpoint call: ${message}`);
 }
 
 function validateResult(index, grade) {
@@ -126,7 +127,7 @@ router.post('/dataset',function (req,res) {
                         let query = mainQuery + valuesQuery;
                         mysql.query(query,function (error_insertion, payload_insertion) {
                             if (!error_insertion){
-                                logger.log(`Dataset for ${subjectCode} examination year ${examYear} processing completed. ${failedTasks.length} indexes failed.`);
+                                log.info(`Dataset for ${subjectCode} examination year ${examYear} processing completed. ${failedTasks.length} indexes failed.`);
                                 res.send({
                                     success: true,
                                     failed: failedTasks,
@@ -135,7 +136,7 @@ router.post('/dataset',function (req,res) {
                                 messenger.sendToEventSubscribers('system_new_dataset',
                                     `Dataset for ${subjectCode} examination year ${examYear} processing completed.`);
                             }else{
-                                logger.log(`Dataset for ${subjectCode} examination year ${examYear} processing failed.`, 'warn', true, error_insertion);
+                                log.crit(`Dataset for ${subjectCode} examination year ${examYear} processing failed.`, error_insertion);
                                 reportError(req, res, error_insertion, true);
                             }
                         })
@@ -164,6 +165,7 @@ router.delete('/dataset/:id',function (req,res) {
                     success: true,
                     payload: payload
                 });
+                log.info(`Result dataset ${datasetId} was deleted as requested by ${req.facebookVerification.name}`);
             }else{
                 res.status(404).send({
                     success : false

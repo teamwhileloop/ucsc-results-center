@@ -1,6 +1,6 @@
 const messenger = require('../../modules/messenger');
 const connection = require('../../modules/database');
-const logger = require('../../modules/logger');
+const log = require('perfect-logger');
 
 
 exports.processMessage = function(user, message){
@@ -38,6 +38,7 @@ function ActionSubscribe(user, token) {
     connection.query("SELECT * FROM messnger_subscription_tokens WHERE token=?",[token],(err, payload)=>{
         if (err){
             user.SendTextReply('Error occurred. Please try again later.');
+            log.crit("Failed to fetch user by token", err);
             return;
         }
 
@@ -60,14 +61,13 @@ function ActionSubscribe(user, token) {
 function registerUser(user, userId) {
     connection.query("DELETE FROM messnger_subscription_tokens WHERE userId = ?",[userId],(err)=>{
         if (err){
-            logger.log("Failed to delete subscription tokens", 'warn', true, err);
+            log.warn("Failed to delete subscription tokens", err);
         }
     });
 
     connection.query("UPDATE facebook SET psid = ? WHERE id = ? AND psid = '0'",[user.GetPSID(), userId],(err, payload)=>{
         if (err){
-            console.log(err);
-            logger.log("Failed to delete subscription tokens", 'warn', true, err);
+            log.warn("Failed to delete subscription tokens", err);
             user.SendTextReply("Unable to register you on the system. Internal Error");
             return;
         }

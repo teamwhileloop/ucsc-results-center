@@ -2,18 +2,18 @@ const express = require('express');
 const router = express.Router();
 const _ = require('lodash');
 
-const logger = require('../../../modules/logger');
+const log = require('perfect-logger');
 
 router.get('/',function (req,res) {
     let page = parseInt(req.query.page);
     let count = parseInt(req.query.count) || 20;
     let filter = req.query.filter;
-    let logs = logger.getVirtualConsoleLog();
+    let logs = log.getVirtualConsoleLog();
     let paginatedResults = [];
 
     let result = _.filter(logs,function (o) {
         if (filter){
-            return o.statusCode.toLowerCase() === filter.toLowerCase();
+            return o.code.toLowerCase() === filter.toLowerCase();
         }else{
             return true;
         }
@@ -32,18 +32,30 @@ router.get('/',function (req,res) {
         },
         data: page ? paginatedResults : result
     });
+    log.debug(`Console log sent as requested by ${req.facebookVerification.name}`);
 });
 
 router.delete('/clear',function (req,res) {
-    res.send(logger.clearVirtualConsoleLog());
+    log.clearVirtualConsoleLog();
+    res.send({});
+    log.info(`Console logs cleared as requested by ${req.facebookVerification.name}`);
 });
 
-router.get('/generate/:count',function (req,res) {
+router.get('/generate/:count/:type',function (req,res) {
+    if (['info', 'warn', 'crit'].indexOf(req.params['type']) === -1){
+        res.status(400).send("Unknown type");
+        return;
+    }
     let count = parseInt(req.params['count']) || 0;
     _.forEach(_.range(count),function (n) {
-        logger.log(`Dummy log with content ${Math.random().toString(36).substr(2, 6)}`,['info','crit','warn'][Math.floor((Math.random() * 3))]);
+        log[req.params['type']](`Dummy log with content ${Math.random().toString(36).substr(2, 6)}`, req.facebookVerification);
     });
     res.send({});
+});
+
+router.get('/download', function (req, res) {
+    res.download(log.getLogFileName());
+    log.debug(`Web system log sent as requested by ${req.facebookVerification.name}`);
 });
 
 module.exports = router;

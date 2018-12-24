@@ -1,10 +1,32 @@
-// Environment variables
-const port = process.env.PORT || 3000;
-
-// Imports
-let logger = require('./modules/logger');
+// Logger Configurations
+let log = require('perfect-logger');
 let credentials = require('./modules/credentials');
+const sysconfig = require('./modules/configurations');
+
+log.setLogDirectory(sysconfig.logDirectory);
+log.setLogFileName("ucscresultcenter-web");
+if (!credentials.isDeployed){
+    log.maintainSingleLogFile();
+}
+log.setApplicationInfo({
+    name: "UCSC Results Center",
+    banner: "Copyright 2019 Team whileLOOP",
+    version: "1.0"
+});
+log.addStatusCode("mail", "MAIL", false, '', true);
+log.addStatusCode("crit_nodb", "CRIT", false, 'red');
+log.addStatusCode("fbmsg", "FBMS", false, '', true);
+log.addStatusCode("socket", "SOCK", false, '', true);
+log.setMaximumLogSize(500000);
+log.setTimeZone("Asia/Colombo");
+log.enableVirtualLogs();
+log.initialize();
+
+//*************************************************************************************************
+
+const port = process.env.PORT || 3000;
 let postman = require('./modules/postman');
+let mysql = require('./modules/database');
 
 const express = require('express');
 const path = require('path');
@@ -13,6 +35,56 @@ const fs = require('fs');
 const socketIO = require('./index');
 const bodyParser = require('body-parser');
 const messenger = require('./modules/messenger');
+
+function loggerCallback(data = {}){
+    if (data.details && data.details.skipFacebookMessenger === true)
+        return;
+    
+    if (data.code === 'WARN' || data.code === 'CRIT'){
+        messenger.sendToEventSubscribers('system_warn_err_thrown', `Event Raised: ${data.code}\n${data.message}`);
+    }
+}
+
+function logDatabaseCallback(data){
+
+    let dataJSON = "";
+    if (data.details){
+        log.writeData(data.details);
+    }
+
+    if (!mysql.connectedToDatabase)
+        return;
+
+    if (data.details && typeof data.details !== "string"){
+        dataJSON = JSON.stringify(data.details);
+
+    }else{
+        dataJSON = data.details || "";
+    }
+    dataJSON = dataJSON.substr(0, 2900);
+
+    if (!credentials.isDeployed){
+        return;
+    }
+
+    const query = "INSERT INTO `log` (`date`, `time`, `code`, `message`, `data`) VALUES (?, ?, ?, ?, ?);";
+    connection.ping(function (err) {
+        if (err){
+            log.writeData("No database connection for database callback");
+            log.writeData(err);
+        }else{
+            mysql.query(query, [data.date, data.time, data.code, data.message, dataJSON], function (err, payload) {
+                if (err){
+                    log.crit_nodb("Failed to send log event to database");
+                }
+            })
+        }
+    });
+
+}
+
+log.setCallback(loggerCallback);
+log.setDatabaseCallback(logDatabaseCallback);
 
 let privateKey;
 let certificate;
@@ -35,25 +107,16 @@ global.monitoring = {
 };
 
 // Setup Logger
-if (!credentials.isDeployed){
-    logger.disableDatabaseWrite();
-}else {
-    logger.enableDatabaseWrite();
+if (credentials.isDeployed){
     privateKey  = fs.readFileSync(credentials.ssl.key, 'utf8');
     certificate = fs.readFileSync(credentials.ssl.cert, 'utf8');
     httpsCredentials = {key: privateKey, cert: certificate};
+    log.info("Server initializing in Production Mode")
+}else{
+    log.info("Server initializing in Development Mode")
 }
 
 privacyPolicy  = fs.readFileSync('privacy.txt', 'utf8');
-
-logger.setStatusCodeLength(4);
-logger.setStatusCodes({
-    info : 'INFO',
-    warn : 'WARN',
-    crit : 'CRIT',
-    log : 'LOG'
-});
-logger.setDefaultStatusCodeKey('info');
 
 // Setup Express
 const http = require('http').Server(app);
@@ -61,12 +124,12 @@ const https = require('https').Server(httpsCredentials, app);
 app.set('views', __dirname + '/');
 app.engine('html', require('ejs').renderFile);
 http.listen(port, function(){
-    logger.log('Server started and listening on PORT ' + port);
+    log.info('Server started and listening on PORT ' + port);
 });
 // Setup HTTPS
 if (credentials.isDeployed){
     https.listen(443, function(){
-        logger.log('Server started and listening on PORT ' + 443);
+        log.info('Server started and listening on PORT ' + 443);
     });
 }
 
@@ -104,13 +167,35 @@ app.get('/', function(req, res) {
     }
 });
 
-app.get('/test', function(req, res) {
-    res.render('templates/web/test.html');
+app.get('/status', function(req, res) {
+    const exec = require("child_process").exec;
+    exec("pm2 status", (error, stdout, stderr) => {
+        res.render('templates/web/pm2status.ejs', {status: stdout});
+    })
 });
 
 app.get('/privacy', function(req, res) {
     res.send(privacyPolicy);
 });
+
+// Database disconnection endpoint for testing purposes
+app.get('/disconnect', function (req, res) {
+    if (!credentials.isDeployed){
+        mysql.connectedToDatabase = false;
+        mysql.end(function(err) {
+            res.send(err || {});
+        });
+    }else{
+        res.status(400).send("Cannot disconnect in production mode");
+    }
+});
+
+
+app.all('/*', function (req, res) {
+    log.debug(`Access unknown route: ${req.originalUrl}. IP: ${req.headers['x-forwarded-for'] || req.connection.remoteAddress}. METHOD: ${req.method}`);
+    res.status(404).render('templates/web/not-found.html');
+});
+
 
 if (credentials.isDeployed){
     messenger.sendToEventSubscribers('system_restart',

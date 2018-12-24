@@ -22,6 +22,7 @@ app.controller('VirtualConsoleController',function (
     if (loggedInUser.state !== 'verified' || loggedInUser.power <= 10){
         $location.path('access-denied');
     }else{
+        $scope.loggedInUser = loggedInUser;
         LoadingMaskService.deactivate();
         ApplicationService.hideNavigationIndicator();
         ApplicationService.displayPageHeader({ search: true});
@@ -103,6 +104,15 @@ app.controller('VirtualConsoleController',function (
             })
         }, function() {
             return 0;
+        });
+    };
+
+    this.viewFile = function(){
+        $mdDialog.show({
+            controller: "ViewFileController",
+            templateUrl: 'public/html/modules/virtual-console/partials/logview.html',
+            parent:  angular.element(document.body),
+            clickOutsideToClose:true
         });
     };
 

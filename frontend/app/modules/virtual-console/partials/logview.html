@@ -1,0 +1,20 @@
+<md-dialog style="width: 1000px; height: 600px">
+    <form ng-cloak>
+        <div class="md-toolbar-tools" ng-if="logText" style="padding: 25px;">
+            <h2>Web System Log File</h2>
+            <span flex></span>
+            <md-icon class="md-secondary material-icons md-light md-48" style="cursor: pointer"
+                     ng-click="cancel()"
+                     aria-label="Delete">close</md-icon>
+            </md-button>
+        </div>
+        <md-dialog-content>
+            <div layout="column" layout-align="center center" class="loading-indicator-cmp" ng-if="logText === ''">
+                <md-progress-circular md-mode="indeterminate" md-diameter="40px"></md-progress-circular>
+                <div class="info-text">Loading</div>
+            </div>
+
+            <pre>{{ logText }}</pre>
+        </md-dialog-content>
+    </form>
+</md-dialog>

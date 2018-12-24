@@ -2,10 +2,12 @@ const express = require('express');
 const _ = require('lodash');
 const router = express.Router();
 
-let logger = require('../../modules/logger');
+let log = require('perfect-logger');
 let mysql = require('../../modules/database');
 
 router.post('/submit', function (req, res) {
+    log.debug(`User feedback received from ${req.facebookVerification.name}`);
+    log.writeData(req.body);
     if (!req.body.text){
         res.status(400).send("No content");
         return;
@@ -19,12 +21,13 @@ router.post('/submit', function (req, res) {
         if (!error){
             res.send({
                 succes: true
-            })
+            });
+            log.info(`Feedback received from ${req.facebookVerification.name}`)
         }else{
-            logger.log(error.sqlMessage,'crit',true, JSON.stringify(_.assignIn(error,{
+            log.crit(error.sqlMessage, _.assignIn(error,{
                 meta: req.facebookVerification,
                 env: req.headers.host
-            })));
+            }));
             res.status(500).send({ error: error });
         }
     });
@@ -41,10 +44,10 @@ router.get('/get', function (req, res) {
         if (!error){
             res.send(payload)
         }else {
-            logger.log(error.sqlMessage,'crit',true, JSON.stringify(_.assignIn(error,{
+            log.crit(error.sqlMessage, _.assignIn(error,{
                 meta: req.facebookVerification,
                 env: req.headers.host
-            })));
+            }));
             res.status(500).send({ error: error });
         }
     })

@@ -45,13 +45,6 @@ app.controller('ProfilePageController',function (
 
     $rootScope.onlyBest = $localStorage.onlyBest;
 
-    ProfileService.getAlerts()
-    .then((resposne)=>{
-        _.forEach(resposne.data, function (o) {
-            ApplicationService.pushNotification(o);
-        })
-    });
-
     ProfileService.getProfileResults(indexNumber)
     .then((data)=>{
         ApplicationService.hideNavigationIndicator();

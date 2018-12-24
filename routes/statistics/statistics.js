@@ -1,8 +1,8 @@
 const express = require('express');
 const _ = require('lodash');
 const router = express.Router();
+const log = require('perfect-logger');
 
-let logger = require('../../modules/logger');
 let mysql = require('../../modules/database');
 
 function getRank(number) {
@@ -43,6 +43,7 @@ router.post('/subject', function (req, res) {
             });
         }else {
             res.status(500).send({success:false,error: err});
+            log.crit(`Failed to fetch subject statistics for subject '${req.body.subject}'`, err);
         }
     })
 });

@@ -2,8 +2,8 @@ const express = require('express');
 const _ = require('lodash');
 const router = express.Router();
 
-let logger = require('../../modules/logger');
 let mysql = require('../../modules/database');
+const log = require('perfect-logger');
 
 router.get('/undergraduate/:pattern', function (req, res) {
     let pattern = req.params['pattern'] || 0;
@@ -35,6 +35,7 @@ router.get('/undergraduate/:pattern', function (req, res) {
             res.send(payload);
         } else{
             res.status(500).send({success:false,error:err});
+            log.crit(`Failed to fetch search results for query '${payload}' failed.`, err);
         }
     });
 });

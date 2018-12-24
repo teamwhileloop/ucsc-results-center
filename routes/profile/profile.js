@@ -2,7 +2,7 @@ const express = require('express');
 const _ = require('lodash');
 const router = express.Router();
 
-let logger = require('../../modules/logger');
+let log = require('perfect-logger');
 let mysql = require('../../modules/database');
 
 let cacheRankings = {};
@@ -21,10 +21,10 @@ function ranker(number){
 }
 
 function reportError(req, res, error, sendResponse = false) {
-    logger.log(error.sqlMessage || error,'crit',true, JSON.stringify(_.assignIn(error,{
+    log.crit(error.sqlMessage || error, _.assignIn(error,{
         meta: req.facebookVerification,
         env: req.headers.host
-    })));
+    }));
     if (sendResponse){
         res.status(500).send({ error: error });
     }

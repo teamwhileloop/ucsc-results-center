@@ -1,5 +1,5 @@
 const mysql = require('./database');
-const logger = require('./logger');
+const log = require('perfect-logger');
 const credentials = require('./credentials');
 
 global.APIhits = 0;
@@ -10,9 +10,9 @@ exports.updateApiHits = function updateApiHits() {
     mysql.query('SELECT `value` from statistic WHERE `key`="apiHits"',function (err,payload) {
         if (!err){
             global.APIhits = parseInt(payload[0].value);
-            logger.log("API hit counter initialized from " + global.APIhits);
+            log.info("API hit counter initialized from " + global.APIhits);
         }else{
-            logger.log("API hit retrieval failed." + JSON.stringify(err),'warn');
+            log.warn("API hit retrieval failed.", err);
         }
     })
 };
@@ -24,7 +24,7 @@ setInterval(function () {
             if (credentials.isDeployed){
                 mysql.query('UPDATE statistic SET `value`=? WHERE `key`="apiHits"',[global.APIhits],function (err,payload) {
                     if (err){
-                        logger.log("API hit update failed." + JSON.decode(err),'warn');
+                        log.warn("API hit update failed.", err);
                     }
                 });
             }
@@ -33,7 +33,7 @@ setInterval(function () {
                     global.users = payload[0].users;
                     global.records = payload[0].records;
                 }else{
-                    logger.log("API hit update failed." + JSON.decode(err),'warn');
+                    log.warn("API hit update failed." , err);
                 }
             });
         }

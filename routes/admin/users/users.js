@@ -1,16 +1,16 @@
 const express = require('express');
 const router = express.Router();
 
-const logger = require('../../../modules/logger');
+const log = require('perfect-logger');
 const mysql = require('../../../modules/database');
 const postman = require('../../../modules/postman');
 const _ = require('lodash');
 
 function reportError(req, res, error, sendResponse = false) {
-    logger.log(error.sqlMessage,'crit',true, JSON.stringify(_.assignIn(error,{
+    log.crit(error.sqlMessage, _.assignIn(error,{
         meta: req.facebookVerification,
         env: req.headers.host
-    })));
+    }));
     if (sendResponse){
         res.status(500).send({ error: error });
     }
@@ -22,7 +22,7 @@ function getUserDetails(fbId = 0) {
             if (!error){
                 resolve(payload)
             }else{
-                logger.log(error.sqlMessage,'crit',true, JSON.stringify(error));
+                log.crit(error.sqlMessage, error);
             }
         })
     })
@@ -86,10 +86,13 @@ router.patch('/:fbId', function (req, res) {
         return;
     }
 
+    log.debug(`User state change for ${fbId} to ${state} requested by ${req.facebookVerification.name}`);
+
     mysql.query('SELECT * FROM `facebook` WHERE `id` = ?', [fbId], function (err_check, payload_check) {
         if (!err_check){
             if (payload_check.length){
                 let power = 0;
+                log.debug(`User state change for ${payload_check[0].name}(${fbId}) in progress`);
                 switch (state){
                     case 'verified':
                         power = payload_check[0].power > 10 ? payload_check[0].power : 10;
@@ -114,11 +117,13 @@ router.patch('/:fbId', function (req, res) {
                                 success: false,
                                 code: 0x001,
                                 message: `User with fbId ${fbId} was not found`
-                            })
+                            });
+                            log.debug(`User State change request for ${fbId} to ${state} failed: User not found`);
                         }else{
                             res.send({
                                 success: true
                             });
+                            log.info(`User State change request by ${req.facebookVerification.name} for ${payload_check[0].name}(${fbId}) to ${state} completed.`);
                         }
                     }else{
                         reportError(req, res, err, true);
@@ -130,6 +135,7 @@ router.patch('/:fbId', function (req, res) {
                     code: 0x001,
                     message: `User with fbId ${fbId} was not found`
                 });
+                log.debug(`User State change request for ${fbId} to ${state} failed: User not found`);
             }
         }else{
             reportError(req, res, err_check, true);
@@ -160,6 +166,7 @@ router.post('/approve/:fbId', function (req, res) {
                         success: true
                     });
                     getUserDetails(fbId).then((response)=>{
+                        log.info(`Join Request of ${response[0].name} was accepted by ${req.facebookVerification.name}`);
                         postman.sendTemplateMail(
                             response[0].alternate_email || response[0].email,
                             'Request Accepted',
@@ -199,6 +206,7 @@ router.post('/reject/:fbId', function (req, res) {
                         success: true
                     });
                     getUserDetails(fbId).then((response)=>{
+                        log.info(`Join Request of ${response[0].name} was rejected by ${req.facebookVerification.name}`);
                         postman.sendTemplateMail(
                             response[0].alternate_email || response[0].email,
                             'Request Rejected',
@@ -217,6 +225,7 @@ router.post('/reject/:fbId', function (req, res) {
 
 router.post('/reset/:fbId', function (req, res) {
     let fbId = parseInt(req.params['fbId']) || 0;
+    log.debug(`User state reset for ${fbId} was requested by ${req.facebookVerification.name}`);
     mysql.query(
         'UPDATE ' +
             '`facebook` SET `state` = ?, ' +
@@ -231,12 +240,14 @@ router.post('/reset/:fbId', function (req, res) {
                     res.send({
                         success: false,
                         code: 0x001,
-                        message: `User with fbId ${fbId} in 'pending' state was not found`
-                    })
+                        message: `User with fbId ${fbId} was not found`
+                    });
+                    log.debug(`User state reset failed: ${fbId} not found`);
                 }else{
                     res.send({
                         success: true
                     });
+                    log.info(`User state of ${fbId} was resetted as requested by ${req.facebookVerification.name}`);
                 }
             }else{
                 reportError(req, res, err, true);
@@ -245,6 +256,8 @@ router.post('/reset/:fbId', function (req, res) {
 });
 
 router.post('/role', function (req, res) {
+    log.debug(`Role change request received from ${req.facebookVerification.name}`);
+    log.writeData(req.body);
     let targetId = req.body.id || '-1';
     let newPower = parseInt(req.body.power) || 0;
 
@@ -280,7 +293,7 @@ router.post('/role', function (req, res) {
         }
 
         mysql.query("SELECT `name`, `power` from `facebook` WHERE `id` = ?;",[targetId], function (err, resp) {
-            logger.log(`${req.facebookVerification.name} change the power of ${resp[0].name} to ${newPower}`, 'warn', true);
+            log.warn(`${req.facebookVerification.name} change the power of ${resp[0].name} to ${newPower}`);
         });
 
         if (payload.affectedRows === 0){

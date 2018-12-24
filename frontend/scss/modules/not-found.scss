@@ -1,0 +1,29 @@
+.container.not-found{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 50px 0 20px 0;
+
+  .card{
+    padding: 30px;
+
+    img{
+      width: 675px;
+    }
+
+    .title{
+      font-size: 42px;
+      text-align: center;
+      font-weight: 500;
+      color: #666;
+    }
+
+    .description{
+      font-size: 16px;
+      text-align: center;
+      color: #666;
+      margin: 10px 0 10px 0;
+    }
+
+  }
+}
