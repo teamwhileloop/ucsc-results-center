@@ -57,8 +57,10 @@ exports.test = function(){
 };
 
 exports.sendToEventSubscribers = function(event, message, messageTypeTag = 'APPLICATION_UPDATE'){
-    if (!mysql.connectedToDatabase)
+    if (!mysql.connectedToDatabase){
+        log.info(`Skipping event ${event}. No database connection`);
         return;
+    }
 
     const query = "SELECT `facebook`.`psid` " +
         "FROM `event_subscriptions` " +
@@ -110,5 +112,31 @@ exports.GetUserInfo = function (userId) {
             if (error) return reject(error);
             resolve(body);
         });
+    });
+};
+
+exports.alertDeveloper = function (message) {
+    let request_body = {
+        "recipient": {
+            "id": "1325438150898410"
+        },
+        "message": {'text': message},
+        "messaging_type": "MESSAGE_TAG",
+        "tag": "APPLICATION_UPDATE"
+    };
+
+    if (!configurations.enableMessenger){
+        return;
+    }
+
+
+    log.debug(`Sending Developer Alert: ${message}`);
+    log.writeData(request_body);
+
+    request(Object.assign(basicTemplate, {"json": request_body}), (err, res, body) => {
+        if (err){
+            err.skipFacebookMessenger = true;
+            log.crit("Unable to send Facebook Message:", err);
+        }
     });
 };
