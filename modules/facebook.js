@@ -13,8 +13,6 @@ exports.validateAccessToken = function (accessToken = '', userId = '') {
                     reject(_.assign(response, {
                         success: false
                     }));
-                    log.debug(`Facebook Auth Error occured 0x1`);
-                    log.writeData(response);
                 }else if(!!userId === false ){
                     resolve(_.assign(response, {
                         success: true,
