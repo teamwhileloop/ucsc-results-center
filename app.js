@@ -2,6 +2,7 @@
 let log = require('perfect-logger');
 let credentials = require('./modules/credentials');
 const sysconfig = require('./modules/configurations');
+let mysql = require('./modules/database');
 
 log.setLogDirectory(sysconfig.logDirectory);
 log.setLogFileName("ucscresultcenter-web");
@@ -26,7 +27,6 @@ log.initialize();
 
 const port = process.env.PORT || 3000;
 let postman = require('./modules/postman');
-let mysql = require('./modules/database');
 
 const express = require('express');
 const path = require('path');
@@ -68,7 +68,7 @@ function logDatabaseCallback(data){
     }
 
     const query = "INSERT INTO `log` (`date`, `time`, `code`, `message`, `data`) VALUES (?, ?, ?, ?, ?);";
-    connection.ping(function (err) {
+    mysql.ping(function (err) {
         if (err){
             log.writeData("No database connection for database callback");
             log.writeData(err);
@@ -85,6 +85,7 @@ function logDatabaseCallback(data){
 
 log.setCallback(loggerCallback);
 log.setDatabaseCallback(logDatabaseCallback);
+messenger.alertDeveloper(`Initializing UCSC Results Center Web Server: ${log.getLogFileName()}`);
 
 let privateKey;
 let certificate;
@@ -197,10 +198,16 @@ app.all('/*', function (req, res) {
 });
 
 
-if (credentials.isDeployed){
-    messenger.sendToEventSubscribers('system_restart',
-        'Application Status Update:\n\nServer started: ' + new Date(),
-        "APPLICATION_UPDATE");
+if (credentials.isDeployed || true){
+    const interval = setInterval(function () {
+        if (!mysql.connectedToDatabase)
+            return;
+
+        messenger.sendToEventSubscribers('system_restart',
+            'Application Status Update:\n\nServer started: ' + new Date(),
+            "APPLICATION_UPDATE");
+        clearInterval(interval);
+    }, 100);
 }
 
 
