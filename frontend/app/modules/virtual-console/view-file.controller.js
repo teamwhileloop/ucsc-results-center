@@ -7,7 +7,6 @@ app.controller('ViewFileController',function (
     $scope.logText = '';
     VirtualConsoleService.viewFile()
     .then((data)=>{
-        console.log(data.data);
         $scope.logText = data.data.toString();
     });
 

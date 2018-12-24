@@ -4,7 +4,7 @@ let credentials = require('./modules/credentials');
 const sysconfig = require('./modules/configurations');
 
 log.setLogDirectory(sysconfig.logDirectory);
-log.setLogFileName("ucscresultcenter");
+log.setLogFileName("ucscresultcenter-web");
 if (!credentials.isDeployed){
     log.maintainSingleLogFile();
 }
@@ -17,7 +17,7 @@ log.addStatusCode("mail", "MAIL", false, '', true);
 log.addStatusCode("crit_nodb", "CRIT", false, 'red');
 log.addStatusCode("fbmsg", "FBMS", false, '', true);
 log.addStatusCode("socket", "SOCK", false, '', true);
-log.setMaximumLogSize(8000000);
+log.setMaximumLogSize(500000);
 log.setTimeZone("Asia/Colombo");
 log.enableVirtualLogs();
 log.initialize();
@@ -178,12 +178,15 @@ app.get('/privacy', function(req, res) {
     res.send(privacyPolicy);
 });
 
+// Database disconnection endpoint for testing purposes
 app.get('/disconnect', function (req, res) {
     if (!credentials.isDeployed){
         mysql.connectedToDatabase = false;
         mysql.end(function(err) {
             res.send(err || {});
         });
+    }else{
+        res.status(400).send("Cannot disconnect in production mode");
     }
 });
 
