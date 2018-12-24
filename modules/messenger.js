@@ -57,6 +57,9 @@ exports.test = function(){
 };
 
 exports.sendToEventSubscribers = function(event, message, messageTypeTag = 'APPLICATION_UPDATE'){
+    if (!mysql.connectedToDatabase)
+        return;
+
     const query = "SELECT `facebook`.`psid` " +
         "FROM `event_subscriptions` " +
         "JOIN `facebook` " +
@@ -64,7 +67,8 @@ exports.sendToEventSubscribers = function(event, message, messageTypeTag = 'APPL
         "AND `facebook`.`id` = `event_subscriptions`.`fbid`;";
     mysql.query(query, [event], function (err, payload) {
         if (err){
-            log.crit(`Unable to fetch '${event}' event subscribers from database`, err);
+            err.skipFacebookMessenger = true;
+            log.crit_nodb(`Unable to fetch '${event}' event subscribers from database`, err);
             return;
         }
 
@@ -83,8 +87,13 @@ exports.sendToEventSubscribers = function(event, message, messageTypeTag = 'APPL
                 return;
             }
 
+
+            log.debug(`Sending Facebook Messenger message to ${row.psid}`);
+            log.writeData(request_body);
+
             request(Object.assign(basicTemplate, {"json": request_body}), (err, res, body) => {
                 if (err){
+                    err.skipFacebookMessenger = true;
                     log.crit("Unable to send Facebook Message:", err);
                 }
             });

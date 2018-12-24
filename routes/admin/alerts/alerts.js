@@ -15,6 +15,9 @@ router.post('/add', function (req, res) {
         showAlways: 0
     };
 
+    log.debug(`Add new alert request received from ${req.facebookVerification.name}`);
+    log.writeData(req.body);
+
     if (req.body['title'] === undefined){
         res.status(400).send({success: false, error: "Title cannot be empty"});
     }

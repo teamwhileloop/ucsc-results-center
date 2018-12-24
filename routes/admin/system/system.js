@@ -20,12 +20,13 @@ router.post('/maintenance',function (req,res) {
     }else{
         log.warn(`Server brought online by ${adminName}`);
     }
+    log.writeData(global.maintananceMode);
     res.send(global.maintananceMode);
 });
 
 router.get('/forcescan', function (req, res) {
     global.monitoring.forceScan = true;
-    log.info("Force scan requested by " + req.facebookVerification.name);
+    log.debug("Force scan requested by " + req.facebookVerification.name);
     res.send({});
 });
 

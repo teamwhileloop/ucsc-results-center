@@ -12,6 +12,8 @@ let connection = mysql.createConnection({
     database: credentials.database.database
 });
 
+connection.connectedToDatabase = false;
+
 function exponentialBackOff() {
     log.crit(`Backing off for ${backOffTime} seconds`);
     connection.end();
@@ -37,20 +39,23 @@ function reconnect(recon = false) {
     connection.connect(function(err) {
         if (err){
             log.crit_nodb('Unable to connect to the database after ' + utilities.timeSpent(databaseConnectionTime));
+            log.writeData(err);
             exponentialBackOff();
         }else{
             resetExponentialBackOff();
             const apiHitCounter = require('./api-hit-counter');
             apiHitCounter.updateApiHits();
             log.info(`Connected to the database ${credentials.database.database} in ${utilities.timeSpent(databaseConnectionTime)}`);
+            connection.connectedToDatabase = true;
         }
     });
 }
 
 connection.on('error', function(err) {
     log.crit_nodb('Error occurred in the database connection. ' + err.code);
-    log.info('Attempting to reconnect to the database');
+    log.writeData(err);
     if(err.code === 'PROTOCOL_CONNECTION_LOST') {
+        log.info('Attempting to reconnect to the database');
         reconnect(true);
     }
 });

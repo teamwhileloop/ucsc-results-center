@@ -1,6 +1,7 @@
 const express = require('express');
 const _ = require('lodash');
 const router = express.Router();
+const log = require('perfect-logger');
 
 let mysql = require('../../modules/database');
 

@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const FacebookAPI = require('fb');
+const log =require('perfect-logger');
 
 exports.validateAccessToken = function (accessToken = '', userId = '') {
     return new Promise(
@@ -12,6 +13,8 @@ exports.validateAccessToken = function (accessToken = '', userId = '') {
                     reject(_.assign(response, {
                         success: false
                     }));
+                    log.debug(`Facebook Auth Error occured 0x1`);
+                    log.writeData(response);
                 }else if(!!userId === false ){
                     resolve(_.assign(response, {
                         success: true,
@@ -27,6 +30,8 @@ exports.validateAccessToken = function (accessToken = '', userId = '') {
                         success: false,
                         uidMatched : false
                     }));
+                    log.debug(`Facebook Auth Error occured 0x3`);
+                    log.writeData(response);
                 }
             });
 

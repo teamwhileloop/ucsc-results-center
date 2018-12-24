@@ -256,6 +256,8 @@ router.post('/reset/:fbId', function (req, res) {
 });
 
 router.post('/role', function (req, res) {
+    log.debug(`Role change request received from ${req.facebookVerification.name}`);
+    log.writeData(req.body);
     let targetId = req.body.id || '-1';
     let newPower = parseInt(req.body.power) || 0;
 

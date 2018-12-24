@@ -88,6 +88,8 @@ router.get('/state/:indexNumber',function (req,res) {
 router.post('/request',function (req,res) {
     let alternateEmail = req.body.email || null;
     let indexNumber = req.body.indexNumber || 0;
+    log.debug(`Join request received from ${req.facebookVerification.name}`);
+    log.writeData(req.body);
 
    if(req.facebookVerification.state !== 'guest'){
        res.status(400).send({
@@ -165,6 +167,8 @@ router.post('/request',function (req,res) {
 });
 
 router.post('/privacy',function (req, res) {
+    log.debug(`Privacy update request received from ${req.facebookVerification.name}`);
+    log.writeData(req.body);
     if (['shared', 'public', 'private'].indexOf(req.body.privacy) === -1){
         res.status(400).send({
             error: `Privacy state should be 'shared', 'public' or 'private'`

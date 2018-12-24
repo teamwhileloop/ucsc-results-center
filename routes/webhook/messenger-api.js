@@ -38,6 +38,7 @@ function ActionSubscribe(user, token) {
     connection.query("SELECT * FROM messnger_subscription_tokens WHERE token=?",[token],(err, payload)=>{
         if (err){
             user.SendTextReply('Error occurred. Please try again later.');
+            log.crit("Failed to fetch user by token", err);
             return;
         }
 

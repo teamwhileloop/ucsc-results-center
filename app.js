@@ -1,9 +1,13 @@
 // Logger Configurations
 let log = require('perfect-logger');
+let credentials = require('./modules/credentials');
 const sysconfig = require('./modules/configurations');
 
 log.setLogDirectory(sysconfig.logDirectory);
 log.setLogFileName("ucscresultcenter");
+if (!credentials.isDeployed){
+    log.maintainSingleLogFile();
+}
 log.setApplicationInfo({
     name: "UCSC Results Center",
     banner: "Copyright 2019 Team whileLOOP",
@@ -15,12 +19,12 @@ log.addStatusCode("fbmsg", "FBMS", false, '', true);
 log.addStatusCode("socket", "SOCK", false, '', true);
 log.setMaximumLogSize(8000000);
 log.setTimeZone("Asia/Colombo");
+log.enableVirtualLogs();
 log.initialize();
 
 //*************************************************************************************************
 
 const port = process.env.PORT || 3000;
-let credentials = require('./modules/credentials');
 let postman = require('./modules/postman');
 let mysql = require('./modules/database');
 
@@ -32,14 +36,25 @@ const socketIO = require('./index');
 const bodyParser = require('body-parser');
 const messenger = require('./modules/messenger');
 
-function loggerCallback(data){
+function loggerCallback(data = {}){
+    if (data.details && data.details.skipFacebookMessenger === true)
+        return;
+    
     if (data.code === 'WARN' || data.code === 'CRIT'){
         messenger.sendToEventSubscribers('system_warn_err_thrown', `Event Raised: ${data.code}\n${data.message}`);
     }
 }
 
 function logDatabaseCallback(data){
+
     let dataJSON = "";
+    if (data.details){
+        log.writeData(data.details);
+    }
+
+    if (!mysql.connectedToDatabase)
+        return;
+
     if (data.details && typeof data.details !== "string"){
         dataJSON = JSON.stringify(data.details);
 
@@ -53,11 +68,19 @@ function logDatabaseCallback(data){
     }
 
     const query = "INSERT INTO `log` (`date`, `time`, `code`, `message`, `data`) VALUES (?, ?, ?, ?, ?);";
-    mysql.query(query, [data.date, data.time, data.code, data.message, dataJSON], function (err, payload) {
+    connection.ping(function (err) {
         if (err){
-            log.crit_nodb("Failed to send log event to database");
+            log.writeData("No database connection for database callback");
+            log.writeData(err);
+        }else{
+            mysql.query(query, [data.date, data.time, data.code, data.message, dataJSON], function (err, payload) {
+                if (err){
+                    log.crit_nodb("Failed to send log event to database");
+                }
+            })
         }
-    })
+    });
+
 }
 
 log.setCallback(loggerCallback);
@@ -154,6 +177,22 @@ app.get('/status', function(req, res) {
 app.get('/privacy', function(req, res) {
     res.send(privacyPolicy);
 });
+
+app.get('/disconnect', function (req, res) {
+    if (!credentials.isDeployed){
+        mysql.connectedToDatabase = false;
+        mysql.end(function(err) {
+            res.send(err || {});
+        });
+    }
+});
+
+
+app.all('/*', function (req, res) {
+    log.debug(`Access unknown route: ${req.originalUrl}. IP: ${req.headers['x-forwarded-for'] || req.connection.remoteAddress}. METHOD: ${req.method}`);
+    res.status(404).render('templates/web/not-found.html');
+});
+
 
 if (credentials.isDeployed){
     messenger.sendToEventSubscribers('system_restart',

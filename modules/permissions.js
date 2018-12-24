@@ -100,6 +100,7 @@ module.exports = function() {
                                 error: err
                             }
                         });
+                        log.crit_nodb('Unable to fetch Facebook user', err);
                     }
                 })
             }else {
@@ -119,7 +120,8 @@ module.exports = function() {
                     accessToken: accessToken
                 }
             });
-            log.debug(`Denied access to ${req.originalUrl}. Facebook credentials missing`);
+            log.debug(`Denied access to ${req.originalUrl}. Facebook credentials missing. IP: ${req.headers['x-forwarded-for'] || req.connection.remoteAddress}`);
+            log.writeData(req.headers);
             return;
         }
 
@@ -165,6 +167,7 @@ module.exports = function() {
                                 }
                             });
                             log.debug(`Denied access to ${req.originalUrl} for ${req.facebookVerification.name}`);
+                            log.writeData(req.headers);
                         }else{
                             next()
                         }

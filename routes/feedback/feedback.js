@@ -6,6 +6,8 @@ let log = require('perfect-logger');
 let mysql = require('../../modules/database');
 
 router.post('/submit', function (req, res) {
+    log.debug(`User feedback received from ${req.facebookVerification.name}`);
+    log.writeData(req.body);
     if (!req.body.text){
         res.status(400).send("No content");
         return;

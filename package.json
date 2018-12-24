@@ -25,10 +25,10 @@
     "angular": "^1.6.6",
     "angular-animate": "^1.6.7",
     "angular-aria": "^1.6.7",
-    "angular-material": "^1.1.5",
+    "angular-material": "^1.1.11",
     "angular-route": "^1.6.7",
     "body-parser": "^1.18.2",
-    "bootstrap": "^4.0.0-beta.2",
+    "bootstrap": "^4.2.1",
     "ejs": "^2.5.7",
     "express": "^4.16.2",
     "fb": "^2.0.0",
@@ -38,10 +38,10 @@
     "lodash": "^4.17.4",
     "mysql": "^2.15.0",
     "ngstorage": "^0.3.11",
-    "nodemailer": "^4.4.0",
-    "perfect-logger": "^1.4.1",
-    "popper.js": "^1.12.9",
-    "socket.io": "^2.0.4",
-    "socket.io-client": "^2.0.4"
+    "nodemailer": "^4.7.0",
+    "perfect-logger": "^1.4.6",
+    "popper.js": "^1.14.6",
+    "socket.io": "^2.2.0",
+    "socket.io-client": "^2.2.0"
   }
 }

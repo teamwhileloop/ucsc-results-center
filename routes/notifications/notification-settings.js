@@ -65,6 +65,7 @@ router.get('/status', function (req, res) {
             }
         } else{
             res.status(500).send({success:false,error:err});
+            log.crit(`Unable to fetch PSID for ${req.facebookVerification.name}`, err);
         }
     });
 });
@@ -89,6 +90,10 @@ router.post('/settings', function (req, res) {
         configObject.system_restart = parseInt(req.body.system_restart) === 1 ? 1 : 0;
     }
 
+
+    log.debug(`updating notification settings of ${req.facebookVerification.name}`);
+    log.writeData(configObject);
+
     let query = 'INSERT INTO `event_subscriptions` (`fbid`, `event`, `value`)' +
         ' VALUES (?, "my_result_published", ?), ' +
         ' (?, "my_gpa_rank_updated", ?), ' +
@@ -108,6 +113,7 @@ router.post('/settings', function (req, res) {
     ],function (err, payload) {
         if (err){
             res.status(500).send(err);
+            log.crit(`Unable save notification settings for ${req.facebookVerification.name}`, err);
         }else{
             res.send(payload);
         }
@@ -120,6 +126,7 @@ router.get('/settings', function (req, res) {
     mysql.query(query, [req.facebookVerification.id], function (err, payload) {
         if (err){
             res.status(500).send(err);
+            log.crit(`Unable fetch notification settings for ${req.facebookVerification.name}`, err);
         }else{
             let configObject = {
                 'my_result_published': 0,
@@ -135,11 +142,6 @@ router.get('/settings', function (req, res) {
             res.send(configObject);
         }
     })
-});
-
-router.get('/test',function (req, res) {
-    messenger.sendToEventSubscribers(`system_restart`,1,1);
-    res.send({});
 });
 
 

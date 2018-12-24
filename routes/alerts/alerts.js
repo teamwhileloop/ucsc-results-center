@@ -12,6 +12,7 @@ router.get('/status', function (req, res) {
             res.send(payload);
         } else{
             res.status(500).send({success:false,error:err});
+            log.crit(`Unable to fetch alert status for ${req.facebookVerification.name}`, err)
         }
     });
 });
