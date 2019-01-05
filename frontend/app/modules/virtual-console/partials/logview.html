@@ -14,6 +14,22 @@
                 <div class="info-text">Loading</div>
             </div>
 
+            <nav aria-label="Page navigation example" ng-if="maxPages">
+                <ul class="pagination">
+                    <li class="page-item" ng-class="{ 'disabled' : curPage === 1}">
+                        <a class="page-link"  ng-click="loadFile(curPage-1)">Previous</a>
+                    </li>
+                    <li class="page-item"
+                        ng-class="{'active' : curPage == n+1}"
+                        ng-repeat="n in [] | range:maxPages">
+                        <a class="page-link" ng-click="loadFile(n+1)" >{{ n + 1 }}</a>
+                    </li>
+                    <li class="page-item" ng-class="{ 'disabled' : curPage === maxPages}">
+                        <a class="page-link" ng-click="loadFile(curPage+1)">Next</a>
+                    </li>
+                </ul>
+            </nav>
+
             <pre>{{ logText }}</pre>
         </md-dialog-content>
     </form>

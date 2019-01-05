@@ -54,8 +54,24 @@ router.get('/generate/:count/:type',function (req,res) {
 });
 
 router.get('/download', function (req, res) {
-    res.download(log.getLogFileName());
-    log.debug(`Web system log sent as requested by ${req.facebookVerification.name}`);
+    const allLogs = log.getAllLogFileNames();
+    log.debug(`Web system log requested by ${req.query.page || 'cur'}`);
+    if (req.query.page){
+        let logNumb = parseInt(req.query.page);
+        if (logNumb > allLogs.length || logNumb < 1){
+            res.set('total-pages', allLogs.length);
+            res.set('cur-page', logNumb);
+            res.status(404).send({})
+        }else {
+            res.set('total-pages', allLogs.length);
+            res.set('cur-page', logNumb);
+            res.download(allLogs[logNumb - 1]);
+        }
+    }else{
+        res.download(log.getLogFileName());
+        res.set('total-pages', allLogs.length);
+        res.set('cur-page', allLogs.length);
+    }
 });
 
 module.exports = router;
