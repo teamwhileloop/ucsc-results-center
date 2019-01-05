@@ -10,8 +10,8 @@ app.service('VirtualConsoleService',function ($rootScope,FacebookService, apiCli
         clearConsoleLogs: function () {
             return apiClient.delete(`/admin/console/clear`);
         },
-        viewFile: function () {
-            return apiClient.get('/admin/console/download')
+        viewFile: function (page = null) {
+            return apiClient.get(`/admin/console/download?${page === null ? '' : 'page='+page}`)
         }
     };
 });
