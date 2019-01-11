@@ -12,6 +12,7 @@ app.controller('PageHeaderController',function ($scope,
     $scope.navigationIndicatorVisibility = false;
     $scope.navigationInfoBox = {};
     $scope.mainSearchEnabled = false;
+    $scope.showMobileSearch = false;
     $scope.userDetails = false;
     this.userRegistered = false;
 
@@ -46,6 +47,7 @@ app.controller('PageHeaderController',function ($scope,
     };
 
     $scope.searchConfirm = (item)=> {
+        $scope.showMobileSearch = false;
         if (item !== undefined){
             this.searchText = '';
             $location.path("/profile/"+item.indexNumber);
@@ -72,6 +74,14 @@ app.controller('PageHeaderController',function ($scope,
 
     $scope.closeSideBar = function () {
         $mdSidenav('sidebar').close();
+    };
+
+    $scope.displayMobileSearch = function () {
+        $scope.showMobileSearch = true;
+    };
+
+    $scope.hideMobileSearch = function () {
+        $scope.showMobileSearch = false;
     };
 
     socket.on('statistics', function(response){

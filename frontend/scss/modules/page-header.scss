@@ -38,9 +38,38 @@
 
     .page-header-box-right {
       margin-right: 20px;
+      display: flex;
+      align-items: center;
 
-      .more-button {
+      .side-button {
         background-color: #434e59;
+
+        &:first-of-type {
+          border-top-left-radius: 100%;
+          border-bottom-left-radius: 100%;
+        }
+
+        &:last-of-type {
+          border-top-right-radius: 100%;
+          border-bottom-right-radius: 100%;
+        }
+
+        &:only-of-type {
+          border-radius: 100%;
+        }
+
+        button{
+          margin: 0;
+        }
+      }
+
+      .side-button.mobile-search{
+        display: none;
+      }
+
+      .side-button.menu-button{
+        border-top-left-radius: 100%;
+        border-bottom-left-radius: 100%;
       }
     }
 

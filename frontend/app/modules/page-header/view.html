@@ -16,19 +16,33 @@
         </div>
 
         <div class="page-header-box-right">
-            <div class="md-toolbar-tools">
-                <md-button class="md-icon-button more-button" aria-label="More" ng-click="toggleSideBar()">
+            <div class="side-button mobile-search" id="mobile-search">
+                <md-button class="md-icon-button" aria-label="Search" ng-click="displayMobileSearch()">
+                    <md-icon class="material-icons md-light md-48">search</md-icon>
+                </md-button>
+            </div>
+            <div class="side-button menu-button" id="menu-button">
+                <md-button class="md-icon-button" aria-label="More" ng-click="toggleSideBar()">
                     <md-icon class="material-icons md-light md-48">menu</md-icon>
                 </md-button>
             </div>
         </div>
 
-        <div class='mainsearch' ng-include="'public/html/modules/page-header/partials/main-search.html'" ng-if="mainSearchEnabled"></div>
+        <div class='mainsearch'
+             ng-include="'public/html/modules/page-header/partials/main-search.html'"
+             ng-if="mainSearchEnabled"></div>
 
     </md-toolbar>
     <div class="navigation-indicator"
          ng-include="'public/html/modules/page-header/partials/navigation-indicator.html'"
          ng-class="navigationIndicatorVisibility ? 'animation-fade-in' : 'animation-fade-out'"></div>
+</div>
+<div class="mobile-search-box backdrop"
+     ng-click="hideMobileSearch()"
+     ng-if="mainSearchEnabled && showMobileSearch"></div>
+<div class="mobile-search-box"
+     ng-if="mainSearchEnabled && showMobileSearch"
+     ng-include="'public/html/modules/page-header/partials/mobile-search.html'">
 </div>
 <div class="dialog-root" id="dialog-root"></div>
 
