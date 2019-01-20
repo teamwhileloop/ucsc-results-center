@@ -1,0 +1,26 @@
+.login {
+  margin: 45px 0 0 0;
+
+  p{
+    font-size: 0.8em;
+    color: #666;
+  }
+
+  .form-group{
+
+    input{
+      font-size: 0.8em;
+
+      &:first-of-type{
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+
+      &:last-of-type{
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        border-top: 0 ;
+      }
+    }
+  }
+}

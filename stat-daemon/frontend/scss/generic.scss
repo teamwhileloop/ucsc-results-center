@@ -1,0 +1,17 @@
+body{
+  background-image: url('/public/img/background.svg');
+  background-repeat: repeat;
+  background-size: cover;
+}
+
+.card{
+  border: 1px solid #ccc;
+  padding: 10px 10px;
+  border-radius: 5px;
+  background-color: white;
+
+  & > h4{
+    color: #666;
+    font-size: 1.2em;
+  }
+}
