@@ -1,4 +1,11 @@
-app.controller('PrivacyController',function ($scope, LoadingMaskService, loggedInUser, ApplicationService, ProfileService) {
+app.controller('PrivacyController',function (
+    $scope,
+    LoadingMaskService,
+    loggedInUser,
+    ApplicationService,
+    ProfileService,
+    $location
+) {
     $scope.loadingData = true;
     $scope.saved = false;
     if (loggedInUser.state !== 'verified'){
@@ -32,5 +39,28 @@ app.controller('PrivacyController',function ($scope, LoadingMaskService, loggedI
             reloadData(true);
             $scope.savingData = false;
         })
+    };
+
+    $scope.deleteAccount = function(){
+       ProfileService.deleteAccount()
+           .then(function(data){
+               if(data.status===200){
+                   ApplicationService.pushNotification({
+                       title: 'Account Deleted',
+                       text : 'Your UCSC Results Center account has been deleted.',
+                       template : 'success',
+                       autoDismiss : false
+                   });
+                   $location.path('/login');
+               }else{
+                   ApplicationService.pushNotification({
+                       title: 'Failed to Delete Account',
+                       text : 'Unable to delete your account.',
+                       template : 'error',
+                       autoDismiss : false
+                   });
+               }
+
+           })
     }
 });
