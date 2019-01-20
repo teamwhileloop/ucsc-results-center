@@ -258,6 +258,28 @@ router.get('/admins', function (req, res) {
     })
 });
 
+router.delete('/delete', function (req, res) {
+    const query = "DELETE FROM facebook WHERE id=?";
+    mysql.query(query,[req.facebookVerification.id], function(err,payload){
+        if(!err){
+            if(payload.affectedRows === 0) {
+                res.status(404).send({});
+            }else{
+                res.send(payload);
+                log.info(req.facebookVerification.name +" profile deleted as requested.");
+            }
+        }else{
+            log.crit(err.sqlMessage, _.assignIn(err,{
+                meta: req.facebookVerification,
+                env: req.headers.host,
+                }));
+            res.status(500).send({error:err});
+        }
+
+    });
+
+});
+
 router.use('/feedback', feedback);
 
 module.exports = router;
