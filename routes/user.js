@@ -264,9 +264,10 @@ router.delete('/delete', function (req, res) {
         if(!err){
             if(payload.affectedRows === 0) {
                 res.status(404).send({});
+                log.debug(`${req.facebookVerification.name} (@${req.facebookVerification.id}) profile not found for deletion.`);
             }else{
                 res.send(payload);
-                log.info(req.facebookVerification.name +" profile deleted as requested.");
+                log.info(`${req.facebookVerification.name}  profile deleted as requested.`);
             }
         }else{
             log.crit(err.sqlMessage, _.assignIn(err,{
