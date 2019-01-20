@@ -33,4 +33,23 @@
             </md-button>
         </md-card-actions>
     </div>
+    <br/>
+    <div class="card" ng-if="!loadingData">
+        <h2>Permanently delete account</h2>
+        <div class="alert alert-danger" role="alert">
+            Once the UCSC Results Center account deletion is completed, all your data collected from your Facebook account will be deleted from our system. Ths does not include your results, statistics and the privacy settings will be updated to <b>public</b>.
+        </div>
+
+        <button
+                ng-click="deleteAccount()"
+                click-confirm="{
+                    title:'Delete Account',
+                    content:'Are you sure that you want to delete your account.',
+                    confirm:'Yes, Delete my account',
+                    cancel: 'Cancel'
+
+
+                }"
+                type="button" class="btn btn-danger">Delete My Account</button>
+    </div>
 </div>
