@@ -268,6 +268,19 @@ router.delete('/delete', function (req, res) {
             }else{
                 res.send(payload);
                 log.info(`${req.facebookVerification.name}  profile deleted as requested.`);
+                mysql.query(
+                    'UPDATE `undergraduate` SET `privacy` = 'public', `user_showcase` = 0 WHERE `undergraduate`.`indexNumber` = ?',
+                    [req.facebookVerification.indexNumber],
+                    function (error_write, payload_write) {
+                        if (!error_write){
+                            log.debug(`Privacy of index number ${req.facebookVerification.indexNumber} was set to Public as the profile is deleted`);
+                        }else{
+                            log.crit(error_write.sqlMessage, _.assignIn(error_write,{
+                                meta: req.facebookVerification,
+                                env: req.headers.host
+                            }));
+                        }
+                    });
             }
         }else{
             log.crit(err.sqlMessage, _.assignIn(err,{
