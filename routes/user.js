@@ -269,7 +269,7 @@ router.delete('/delete', function (req, res) {
                 res.send(payload);
                 log.info(`${req.facebookVerification.name}  profile deleted as requested.`);
                 mysql.query(
-                    'UPDATE `undergraduate` SET `privacy` = 'public', `user_showcase` = 0 WHERE `undergraduate`.`indexNumber` = ?',
+                    'UPDATE `undergraduate` SET `privacy` = \'public\', `user_showcase` = 0 WHERE `undergraduate`.`indexNumber` = ?',
                     [req.facebookVerification.indexNumber],
                     function (error_write, payload_write) {
                         if (!error_write){
