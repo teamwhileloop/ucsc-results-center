@@ -1,0 +1,28 @@
+<div class="container about-page">
+    <img src="/public/img/whileloopbanner.jpg" class="banner"></img>
+    <div class="row">
+        <img src="/public/img/wl_logo_small.png">
+        <p>#wildlifeplanet #wildlifephotography #srilankatravel
+            #srilankawildlife
+            #travelphotography #travelers #animallover #travelandlife #lonelyplanet #ig_wildlife #aroundtheworldpix #earth_deluxe #visualoflife #passionfortravel #wildlife #wildlifelovers #wildlife_shots #naturephotography #nature_perfection #netgeowild #nationalgeographic #birdsofinstagram #birdshots #urbanwildlife #unlimitedplanet #discoverearth #nikonphotography #nikond3400 #nikon_photography</p>
+        <div class="people">
+            <div class="person" ng-repeat="member in team">
+                <img src="{{ member.img }}">
+                <h3>{{ member.name }}</h3>
+                <p>{{ member.desc }}</p>
+                <div class="connections">
+                    <img ng-if="member.linkedin" src="/public/img/ico_linkedin.png" ng-click="open(member.linkedin)">
+                    <img ng-if="member.fb" src="/public/img/ico_fb.png" ng-click="open(member.fb)">
+                    <img ng-if="member.twitter" src="/public/img/ico_twitter.png" ng-click="open(member.twitter)">
+                    <img ng-if="member.git" src="/public/img/ico_git.png" ng-click="open(member.git)">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <h3>Achievements</h3>
+        <ul>
+            <li>wewewe</li>
+        </ul>
+    </div>
+</div>

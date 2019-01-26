@@ -231,4 +231,11 @@ app.config(function($routeProvider) {
                 loggedInUser : applicationAuthenticator
             }
         })
+        .when("/about",{
+            controller: 'AboutController',
+            templateUrl:'public/html/modules/about/view.html',
+            resolve: {
+                loggedInUser : applicationAuthenticator
+            }
+        })
 });
