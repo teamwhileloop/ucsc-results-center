@@ -146,7 +146,7 @@ app.config(function($routeProvider) {
                 loggedInUser : applicationAuthenticator
             }
         })
-        .when("/privacy",{
+        .when("/account-settings",{
             templateUrl:'public/html/modules/privacy/view.html',
             controller: 'PrivacyController',
             controllerAs: 'ctrlPrivacy',

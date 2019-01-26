@@ -26,7 +26,7 @@ app.controller('PageHeaderController',function ($scope,
     };
 
     $scope.goToProfile = function (indexNumber) {
-        if (indexNumber){
+        if (indexNumber && $scope.userDetails.state === 'verified'){
             $location.path(`/profile/${indexNumber}`)
         }
         $mdSidenav('sidebar').close();
