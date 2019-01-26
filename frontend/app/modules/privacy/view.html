@@ -4,7 +4,7 @@
         <loading-indicator loader-text="loaderText"></loading-indicator>
     </div>
 
-    <div class="card" ng-if="!loadingData">
+    <div class="card" ng-if="!loadingData && verfiedUser">
         <h2>Privacy Settings</h2>
         <br>
         <div class="alert alert-success" role="alert" ng-if="saved">
@@ -15,7 +15,10 @@
             <md-radio-button value="shared" class="md-primary">Shared - Only your batch mates can view your profile</md-radio-button>
             <md-radio-button value="private" class="md-primary">Private - Only you can view your profile</md-radio-button>
         </md-radio-group>
-        <br>
+        <div class="alert alert-warning" role="alert">
+            <b>Important Notice!</b> Regardless of what your Privacy setting is set to, System Administrators and Analytic Users can view your complete profile.
+            If you are not okay with this you are given the opportunity to delete your account and disassociate your Facebook profile from you index number.
+        </div>
         <h5>Show who you are</h5>
         <md-checkbox ng-model="data.showCase" aria-label="Show user information">
             Show my information on my profile page
@@ -37,17 +40,41 @@
     <div class="card" ng-if="!loadingData">
         <h2>Permanently delete account</h2>
         <div class="alert alert-danger" role="alert">
-            Once the UCSC Results Center account deletion is completed, all your data collected from your Facebook account will be deleted from our system. Ths does not include your results, statistics and the privacy settings will be updated to <b>public</b>.
+            By deleting your account you can delete all the data collected by the system from your Facebook account. If there is any index number associated with your Facebook account it will be freed, and it's privacy will be set to <b>Public</b>
+            This deletion does not delete your examination results from the system. And It will take upto 1 month to discard all your data in our backups.
+            <br>
+            <br>
+            <b>Whats deleted:</b>
+            <ul>
+                <li>Data Collected from your Facebook account</li>
+            </ul>
+            <b>Whats NOT deleted:</b>
+            <ul>
+                <li>Your examination results</li>
+            </ul>
         </div>
 
-        <button
-                ng-click="deleteAccount()"
-                click-confirm="{
-                    title:'Delete Account',
-                    content:'Are you sure that you want to delete your account.',
-                    confirm:'Yes, Delete my account',
-                    cancel: 'Cancel'
-                }"
-                type="button" class="btn btn-danger">Delete My Account</button>
+        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteAccountConfirmation">
+            Delete My Account
+        </button>
+    </div>
+    <div class="modal fade" id="deleteAccountConfirmation" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Account Deletion Confirmation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    You are about to delete your account. No other confirmations will be requested beyond this point. Are you sure that you want to delete your account from the system?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" ng-click="deleteAccount()" data-dismiss="modal">Yes, Delete my account</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

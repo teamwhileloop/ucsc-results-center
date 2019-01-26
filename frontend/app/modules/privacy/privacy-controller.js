@@ -7,20 +7,21 @@ app.controller('PrivacyController',function (
     $location
 ) {
     $scope.loadingData = true;
-    $scope.saved = false;
-    if (loggedInUser.state !== 'verified'){
-        $location.path('access-denied');
-    }else{
-        LoadingMaskService.deactivate();
-        ApplicationService.hideNavigationIndicator();
-        ApplicationService.displayPageHeader({ search: true});
-        ApplicationService.updatePageHeader(loggedInUser);
-    }
+    LoadingMaskService.deactivate();
+    ApplicationService.hideNavigationIndicator();
+    ApplicationService.displayPageHeader({ search: true});
+    ApplicationService.updatePageHeader(loggedInUser);
+
+    $scope.verfiedUser = loggedInUser.state === 'verified';
 
     reloadData();
 
     function reloadData(displaySavedBanner = false) {
         $scope.loadingData = true;
+        if (!$scope.verfiedUser){
+            $scope.loadingData = false;
+            return;
+        }
         ProfileService.getPrivacy()
         .then((response)=>{
             $scope.data = {
@@ -47,7 +48,7 @@ app.controller('PrivacyController',function (
                if(data.status===200){
                    ApplicationService.pushNotification({
                        title: 'Account Deleted',
-                       text : 'Your UCSC Results Center account has been deleted.',
+                       text : 'Your UCSC Results Center account has been deleted. If you logged in again the data will be collected again.',
                        template : 'success',
                        autoDismiss : false
                    });
