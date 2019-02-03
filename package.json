@@ -6,21 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "team whileLOOP",
+  "author": "Team whileLOOP",
   "license": "MIT",
-  "devDependencies": {
-    "gulp": "^3.9.1",
-    "gulp-clean": "^0.3.2",
-    "gulp-concat": "^2.6.1",
-    "gulp-rename": "^1.2.2",
-    "gulp-sass": "^3.1.0",
-    "gulp-uglify": "^3.0.0",
-    "gulp-uglify-es": "^0.1.8",
-    "gulp-uglifycss": "^1.0.8",
-    "gulp-util": "^3.0.8",
-    "gulp-watch": "^4.3.11",
-    "run-sequence": "^2.2.0"
-  },
   "dependencies": {
     "angular": "^1.6.6",
     "angular-animate": "^1.6.7",
@@ -42,6 +29,17 @@
     "perfect-logger": "^1.5.2",
     "popper.js": "^1.14.6",
     "socket.io": "^2.2.0",
-    "socket.io-client": "^2.2.0"
+    "socket.io-client": "^2.2.0",
+    "gulp": "^3.9.1",
+    "gulp-clean": "^0.3.2",
+    "gulp-concat": "^2.6.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^3.1.0",
+    "gulp-uglify": "^3.0.0",
+    "gulp-uglify-es": "^0.1.8",
+    "gulp-uglifycss": "^1.0.8",
+    "gulp-util": "^3.0.8",
+    "gulp-watch": "^4.3.11",
+    "run-sequence": "^2.2.0"
   }
 }
