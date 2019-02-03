@@ -32,9 +32,9 @@ def manualRun(logger, subjectCheckSums, pdfUrl):
         logger.crit("Already automatically processed.")
         return
 
-    logger.info("Processoing: " + subjectCode)
+    logger.info("Processing: " + subjectCode)
     try:
-        xmlData = downloader.getXML(pdfUrl)
+        xmlData = downloader.getXML(pdfUrl, True)
         jsonData = converter.jsonGenerator(xmlData, pdfUrl, subjectCode)
         logger.info("Ready to commit dataset")
         validInp = False
@@ -47,7 +47,7 @@ def manualRun(logger, subjectCheckSums, pdfUrl):
                 logger.info("Commiting dataset")
                 validInp = True
             elif prompt == 'n':
-                logger.info("Aborting")
+                logger.info("Aborted! Dataset was not committed")
                 exit(0)
             else:
                 logger.warn("Invalid user input")

@@ -93,8 +93,11 @@ def fetchFromDB(map):
 logger.info("Starting Monitoring Client")
 manualMode = False
 if (len(sys.argv) == 1):
+    logger.announceLogFile(True)
     resultcenter.ping("Starting")
 else:
+    logger.announceLogFile(False)
+    logger.info('Starting in manual mode')
     manualMode = True
 
 connection = pymysql.connect(host=os.environ['AWS_RDB_HOST'],
@@ -110,7 +113,8 @@ logger.info("Connected to database")
 subjectCheckSums = {}
 fetchFromDB(subjectCheckSums)
 waitTime = os.environ['MONIT_WAIT_TIME']
-logger.info("Wait time is: " + waitTime)
+if (manualMode == False):
+    logger.info("Wait time is: " + waitTime)
 unknownSubjects = []
 itterationNumber = 1
 if manualMode:

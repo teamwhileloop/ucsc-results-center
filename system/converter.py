@@ -49,6 +49,8 @@ def brain(txt):
             if item != None:
                 comp.update(item)
         return comp
+    elif (txt.lower().startswith('wh')):    # Results Withheld
+        return {'grade': 'F'}
     else:
         return None
 
