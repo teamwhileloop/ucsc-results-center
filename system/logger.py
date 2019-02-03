@@ -28,6 +28,9 @@ def logAndWrite(timestamp, code, message):
     f.write(timestamp + code + message + '\n')
     f.close()
 
+def announceLogFile(sendReport = True):
+    info("Logging to: " + logFileName, sendReport)
+
 logDir = "logs"
 
 if not os.path.exists(logDir):
@@ -35,4 +38,3 @@ if not os.path.exists(logDir):
 
 logFileName = "ucscresults.monitor." + strftime("%Y%m%d.%H%M%S", gmtime()) + ".log"
 logFile = logDir + '/' + logFileName
-info("Logging to: " + logFileName, True)

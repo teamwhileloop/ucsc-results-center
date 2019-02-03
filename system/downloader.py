@@ -12,8 +12,9 @@ def id_generator(size=12, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size)).lower()
 
 
-def getXML(url):
-    resultcenter.ping("Processing result sheet")
+def getXML(url, manualMode = False):
+    if not manualMode:
+        resultcenter.ping("Processing result sheet")
     logger.info("Resolving: " + url)
     session = requests.Session()
 
@@ -46,7 +47,8 @@ def getXML(url):
         "output_format":"xml",
         "progress_key":progressKey,
         }
-    resultcenter.ping("Processing result sheet")
+    if not manualMode:
+        resultcenter.ping("Processing result sheet")
     xmlRequest = session.post('https://www.freefileconvert.com/file/url', data=payload, headers=headers)
     parsedJSON = json.loads("" + xmlRequest.content.strip().decode('utf-8'))
     if (parsedJSON['status'] == "success"):
@@ -54,11 +56,11 @@ def getXML(url):
         logger.info("Reading XML: " + fileURL)
         logger.info("Waiting for the PDF -> XML conversion to finish")
         while True:
-            resultcenter.ping("Processing result sheet")
+            if not manualMode:
+                resultcenter.ping("Processing result sheet")
             statusResp = session.get("https://www.freefileconvert.com/file/"+parsedJSON['id']+"/status", headers=headers)
             if "Success" in statusResp.content.strip().decode('utf-8'):
                 break
-                logger.info(statusResp.content)
             time.sleep(1)
         logger.info("Fetching XML translation")
         xml = session.get(fileURL, headers=headers)
