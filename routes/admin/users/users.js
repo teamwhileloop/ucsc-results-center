@@ -190,7 +190,8 @@ router.post('/reject/:fbId', function (req, res) {
             '`facebook` ' +
         'SET `state` = ?, ' +
             '`power` = IF(`power` > 10, `power`, 0), ' +
-            '`handle` = ? ' +
+            '`handle` = ?, ' +
+            '`index_number` = NULL' +
         'WHERE `id` = ? AND `state` = \'pending\';',
         ['blocked', req.facebookVerification.id || -1, fbId],
         function (err, payload) {
