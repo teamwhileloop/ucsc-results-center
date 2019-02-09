@@ -19,7 +19,7 @@ def submitDataSet(datasetJSON):
     resp = requests.post(domain + '/admin/result/dataset', data=datasetJSON, headers=headers)
     if (resp.status_code == 200):
         logger.info("Dataset submitted. " + resp.text)
-        return True
+        return int(resp.headers['datasetId'])
     logger.crit("Dataset submission failed: " + resp.text)
     return False
 

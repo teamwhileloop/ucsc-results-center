@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
-
 const log = require('perfect-logger');
+
 const mysql = require('../../../modules/database');
 const postman = require('../../../modules/postman');
+const sysconfig = require('../../../modules/configurations');
 const _ = require('lodash');
 
 function reportError(req, res, error, sendResponse = false) {
@@ -172,7 +173,8 @@ router.post('/approve/:fbId', function (req, res) {
                             'Request Accepted',
                             'templates/emails/request-approved.ejs',
                             {
-                                firstName: response[0].short_name
+                                firstName: response[0].short_name,
+                                domainName: `https://${sysconfig.domain}`
                             }
                         );
                     });
@@ -190,7 +192,8 @@ router.post('/reject/:fbId', function (req, res) {
             '`facebook` ' +
         'SET `state` = ?, ' +
             '`power` = IF(`power` > 10, `power`, 0), ' +
-            '`handle` = ? ' +
+            '`handle` = ?, ' +
+            '`index_number` = NULL' +
         'WHERE `id` = ? AND `state` = \'pending\';',
         ['blocked', req.facebookVerification.id || -1, fbId],
         function (err, payload) {
@@ -212,7 +215,8 @@ router.post('/reject/:fbId', function (req, res) {
                             'Request Rejected',
                             'templates/emails/request-rejected.ejs',
                             {
-                                firstName: response[0].short_name
+                                firstName: response[0].short_name,
+                                domainName: `https://${sysconfig.domain}`
                             }
                         );
                     });

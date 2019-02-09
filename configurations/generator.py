@@ -14,6 +14,8 @@ export AWS_RDB_DATABASE='{AWS_RDB_DATABASE}'
 echo "Exporting Server Configurations"
 export DEV_ENV='{DEV_ENV}'
 export PORT={PORT}
+export INT_DOMAIN={INT_DOMAIN}
+export FB_APPID={FB_APPID}
 export UCSC_RESULTS_CENTER_ACCESSTOKEN='{UCSC_RESULTS_CENTER_ACCESSTOKEN}'
 
 # Mailman configurations
@@ -55,6 +57,8 @@ template = template.replace('{AWS_RDB_DATABASE}', raw_input('Database Name > '))
 
 template = template.replace('{DEV_ENV}', raw_input('Setup as Development Environment > ') or 'true')
 template = template.replace('{PORT}', raw_input('HTTP Web Port > '))
+template = template.replace('{INT_DOMAIN}', raw_input('Domain Name > '))
+template = template.replace('{FB_APPID}', raw_input('Facebook App ID > '))
 template = template.replace('{UCSC_RESULTS_CENTER_ACCESSTOKEN}', raw_input('API Access Token > '))
 
 template = template.replace('{MAILMAN_EMAIL}', raw_input('Mailman Email Address > '))

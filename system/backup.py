@@ -14,7 +14,7 @@ def runBackup():
     filename = time.strftime("backup.%Y%m%d%H%M%S", time.gmtime())
     with open(filename + '.sql', 'w') as out:
         subprocess.call(
-            'mysqldump -u {username} -p{passwd} -h {host} --all-databases'.format(
+            'mysqldump -u {username} -p{passwd} -h {host} --single-transaction=TRUE --databases results resultsdev'.format(
                 username=os.environ['AWS_RDB_USERNAME'],
                 passwd=os.environ['AWS_RDB_PASSWORD'],
                 host=os.environ['AWS_RDB_HOST']

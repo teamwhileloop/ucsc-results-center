@@ -30,6 +30,7 @@ let postman = require('./modules/postman');
 
 const express = require('express');
 const path = require('path');
+const os = require('os');
 const app = express();
 const fs = require('fs');
 const socketIO = require('./index');
@@ -112,10 +113,11 @@ if (credentials.isDeployed){
     privateKey  = fs.readFileSync(credentials.ssl.key, 'utf8');
     certificate = fs.readFileSync(credentials.ssl.cert, 'utf8');
     httpsCredentials = {key: privateKey, cert: certificate};
-    log.info("Server initializing in Production Mode")
+    log.info(`Server initializing in Production Mode. Domain: ${sysconfig.domain}`)
 }else{
     log.info("Server initializing in Development Mode")
 }
+log.debug(`Hostname: ${os.hostname()}`);
 
 privacyPolicy  = fs.readFileSync('privacy.txt', 'utf8');
 
@@ -154,9 +156,9 @@ app.use('/cdn',express.static(path.join(__dirname, 'node_modules')));
 // Routing
 app.get('/', function(req, res) {
     // Redirect HTTPS traffic to HTTPS on production environment
-    if (credentials.isDeployed && (!req.secure || req.headers.host !== 'www.ucscresult.club')){
+    if (credentials.isDeployed && (!req.secure || req.headers.host !== sysconfig.domain)){
         res.writeHead(302, {
-            'Location': 'https://www.ucscresult.club/'
+            'Location': `https://${sysconfig.domain}/`
         });
         res.end();
         return;
@@ -193,7 +195,6 @@ app.get('/disconnect', function (req, res) {
 
 
 app.all('/*', function (req, res) {
-    log.debug(`Access unknown route: ${req.originalUrl}. IP: ${req.headers['x-forwarded-for'] || req.connection.remoteAddress}. METHOD: ${req.method}`);
     res.status(404).render('templates/web/not-found.html');
 });
 

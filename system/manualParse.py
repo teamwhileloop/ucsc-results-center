@@ -6,8 +6,23 @@ import traceback
 import requests
 from urllib.parse import unquote
 import resultcenter
+import time
 
-def manualRun(logger, subjectCheckSums, pdfUrl):
+def IsPreviouslyProcessed(connection, subject, checksum):
+    with connection.cursor() as cursor:
+        sql = "SELECT `subject` from `mc_files` WHERE `checksum`=%s AND `subject` = %s;"
+        cursor.execute(sql, (checksum, subject))
+        return len(cursor.fetchall()) > 0
+
+
+def AddAsProcessedFile(connection, subject, checksum, dataset):
+    with connection.cursor() as cursor:
+        sql = "INSERT INTO `mc_files` (`subject`, `checksum`, `timestamp`, `dataset`) VALUES (%s, %s, %s, %s);"
+        cursor.execute(sql, (subject, checksum, str(time.time()), int(dataset)))
+        connection.commit()
+
+
+def manualRun(logger, subjectCheckSums, pdfUrl, connection):
     logger.info("Manually parsing " + pdfUrl)
     subjectCode = os.path.basename(unquote(pdfUrl)).split(".")[0].replace(" ", "")
     logger.info("Checking subject: " + subjectCode)
@@ -22,6 +37,25 @@ def manualRun(logger, subjectCheckSums, pdfUrl):
 
     hashInput = str(pdfhead.headers['Last-Modified'])
     hash = (hashlib.sha256(hashInput.encode('utf-8')).hexdigest())
+
+    hashInput = str(pdfhead.headers['content-length'] + '_' + subjectCode)
+    fileHash = (hashlib.sha256(hashInput.encode('utf-8')).hexdigest())
+
+    if (IsPreviouslyProcessed(connection, subjectCode, fileHash)):
+        logger.crit("Previously processed file.")
+        validInp = False
+        while not validInp:
+            print ('')
+            prompt = input(">>> Previously processed file detected. Continue ? [Y\\N]: ")
+            prompt = prompt.lower()
+            print ('')
+            if prompt == 'y':
+                validInp = True
+            elif prompt == 'n':
+                logger.info("Aborted!")
+                exit(0)
+            else:
+                logger.warn("Invalid user input")
 
     if subjectCode not in subjectCheckSums:
         logger.warn("Unknown subject: " + subjectCode)
@@ -51,8 +85,10 @@ def manualRun(logger, subjectCheckSums, pdfUrl):
                 exit(0)
             else:
                 logger.warn("Invalid user input")
-        if resultcenter.submitDataSet(jsonData):
-            logger.info("Dataset Committed")
+        dataSetId = resultcenter.submitDataSet(jsonData)
+        if dataSetId:
+            AddAsProcessedFile(connection, subjectCode, fileHash, dataSetId)
+            logger.info("Dataset Committed (@id:{id})".format(id=dataSetId))
         else:
             logger.crit("Failed to commit dataset")
             exit(1)
