@@ -48,6 +48,7 @@ function reportError(req, res, error, sendResponse = false) {
     if (sendResponse){
         res.status(500).send({ error: error });
     }
+    console.trace(error)
 }
 
 function reportBadRequest(res, code, message) {
@@ -57,7 +58,7 @@ function reportBadRequest(res, code, message) {
             message: message
         }
     });
-    log.debug(`Bad Results encpoint call: ${message}`);
+    log.debug(`Bad Results endpoint call: ${message}`);
 }
 
 function validateResult(index, grade) {
@@ -128,6 +129,7 @@ router.post('/dataset',function (req,res) {
                         mysql.query(query,function (error_insertion, payload_insertion) {
                             if (!error_insertion){
                                 log.info(`Dataset for ${subjectCode} examination year ${examYear} processing completed. ${failedTasks.length} indexes failed.`);
+                                res.header('datasetId' , datasetId );
                                 res.send({
                                     success: true,
                                     failed: failedTasks,

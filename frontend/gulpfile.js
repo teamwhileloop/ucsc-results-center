@@ -8,13 +8,15 @@ let watch = require('gulp-watch');
 let gutil = require('gulp-util');
 let rename = require("gulp-rename");
 let clean = require('gulp-clean');
+var replace = require('gulp-token-replace');
+const os = require('os');
 
 gulp.task('default', function() {
     runSequence('styles','javascript','templates')
 });
 
 gulp.task('release', function() {
-    runSequence('clean','styles-production','javascript-production','templates')
+    runSequence('clean','styles-production','javascript-production','templates', 'token-replace')
 });
 
 gulp.task('clean', function() {
@@ -81,4 +83,16 @@ gulp.task('clean-css',function () {
 gulp.task('clean-html',function () {
     return gulp.src('../public/html/', {read: false})
         .pipe(clean({force: true}));
+});
+
+gulp.task('token-replace', function(){
+    var config = {
+        system: {
+            domain: process.env.INT_DOMAIN,
+            fbappid: process.env.FB_APPID
+        }
+    };
+    return gulp.src(['../public/js/application.js'])
+        .pipe(replace({global: config}))
+        .pipe(gulp.dest('../public/js'))
 });

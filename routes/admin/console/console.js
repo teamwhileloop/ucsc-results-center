@@ -55,7 +55,7 @@ router.get('/generate/:count/:type',function (req,res) {
 
 router.get('/download', function (req, res) {
     const allLogs = log.getAllLogFileNames();
-    log.debug(`Web system log requested by ${req.query.page || 'cur'}`);
+    log.debug(`Web system log page(@${req.query.page || 'current'}) requested by ${req.facebookVerification.name}`);
     if (req.query.page){
         let logNumb = parseInt(req.query.page);
         if (logNumb > allLogs.length || logNumb < 1){
