@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.7.24, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.25, for Linux (x86_64)
 --
--- Host: 167.99.28.58    Database: results
+-- Host: ucscresult.club    Database: results
 -- ------------------------------------------------------
--- Server version	5.7.25-0ubuntu0.16.04.2
+-- Server version	5.7.25-0ubuntu0.18.04.2
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -40,7 +40,7 @@ CREATE TABLE `alerts` (
   `showAlways` int(11) DEFAULT '0',
   `deprication` varchar(50) DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -56,7 +56,7 @@ CREATE TABLE `dataset` (
   `description` varchar(45) DEFAULT NULL,
   `date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=343 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=393 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -117,7 +117,7 @@ CREATE TABLE `feedback` (
   `text` varchar(3000) CHARACTER SET utf8 NOT NULL,
   `state` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`feedback_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -135,7 +135,24 @@ CREATE TABLE `log` (
   `message` varchar(1500) CHARACTER SET utf8 NOT NULL DEFAULT '',
   `data` varchar(3000) CHARACTER SET utf8 DEFAULT NULL,
   PRIMARY KEY (`logid`)
-) ENGINE=InnoDB AUTO_INCREMENT=742 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=111 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `mc_files`
+--
+
+DROP TABLE IF EXISTS `mc_files`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `mc_files` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `subject` varchar(45) DEFAULT NULL,
+  `checksum` varchar(72) DEFAULT NULL,
+  `timestamp` varchar(45) DEFAULT NULL,
+  `dataset` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=124 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -174,7 +191,7 @@ CREATE TABLE `result` (
   KEY `FK_RES_TO_SUB_idx` (`subject`),
   CONSTRAINT `FK_RES_TO_DS` FOREIGN KEY (`dataset`) REFERENCES `dataset` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_RES_TO_SUB` FOREIGN KEY (`subject`) REFERENCES `subject` (`code`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=35522 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=40995 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -298,7 +315,7 @@ CREATE TABLE `undergraduate` (
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`sysadmin`@`%`*/ /*!50003 TRIGGER `updateOverallGPA`
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `updateOverallGPA`
     BEFORE UPDATE ON `undergraduate`
     FOR EACH ROW
 BEGIN
@@ -379,14 +396,14 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`sysadmin`@`%` FUNCTION `accessControl`(requestorIndex INT, requesteeIndex INT) RETURNS int(11)
+CREATE DEFINER=`root`@`localhost` FUNCTION `accessControl`(requestorIndex INT, requesteeIndex INT) RETURNS int(11)
 BEGIN
 	DECLARE privacyCode VARCHAR(20);
     
-    -- Assign variables
+    
     SELECT `privacy` INTO privacyCode FROM `undergraduate` WHERE `indexNumber`=requesteeIndex;
     
-    -- Check 
+    
     CASE privacyCode
 		WHEN 'public' THEN RETURN 1;
 		WHEN 'private' THEN
@@ -424,7 +441,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`sysadmin`@`%` FUNCTION `isBest`( resultId INT) RETURNS int(11)
+CREATE DEFINER=`root`@`localhost` FUNCTION `isBest`( resultId INT) RETURNS int(11)
 BEGIN
 	DECLARE userIndexNumber INT;
 	DECLARE subjectCode VARCHAR(20);
@@ -432,10 +449,10 @@ BEGIN
 	DECLARE currentExamYear INT;
     DECLARE perfectMatch INT;
     
-    -- Assign variables
+    
     SELECT `index`, `subject`, `grade`, `examYear` INTO userIndexNumber, subjectCode, currentGrade, currentExamYear FROM `result` WHERE `id`=resultId;
     
-    -- Matching
+    
     SELECT `grade` = currentGrade AND `examYear` = currentExamYear INTO perfectMatch
     FROM `result` WHERE `index` = userIndexNumber AND `subject` = subjectCode order by case 
 		WHEN `grade`='A+' THEN 4.25  
@@ -478,7 +495,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`sysadmin`@`%` PROCEDURE `ranker`(IN con VARCHAR(20))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ranker`(IN con VARCHAR(20))
 BEGIN
   SELECT con FROM undergraduate WHERE indexNumber LIKE '1400%';
 END ;;
@@ -497,7 +514,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`sulochanak`@`%` PROCEDURE `subjectwise_stat`(IN subjectCode VARCHAR(12), IN pattern VARCHAR(2))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `subjectwise_stat`(IN subjectCode VARCHAR(12), IN pattern VARCHAR(2))
 BEGIN
 	DECLARE total INT;
 	DECLARE total_all INT;
@@ -558,7 +575,7 @@ CREATE TABLE `dataset` (
   `description` varchar(45) DEFAULT NULL,
   `date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=323 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=325 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -641,6 +658,23 @@ CREATE TABLE `log` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `mc_files`
+--
+
+DROP TABLE IF EXISTS `mc_files`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `mc_files` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `subject` varchar(45) DEFAULT NULL,
+  `checksum` varchar(72) DEFAULT NULL,
+  `timestamp` varchar(45) DEFAULT NULL,
+  `dataset` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `messnger_subscription_tokens`
 --
 
@@ -676,7 +710,7 @@ CREATE TABLE `result` (
   KEY `FK_RES_TO_SUB_idx` (`subject`),
   CONSTRAINT `FK_RES_TO_DS` FOREIGN KEY (`dataset`) REFERENCES `dataset` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_RES_TO_SUB` FOREIGN KEY (`subject`) REFERENCES `subject` (`code`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=34336 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=34338 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -779,7 +813,7 @@ CREATE TABLE `undergraduate` (
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`sysadmin`@`%`*/ /*!50003 TRIGGER `updateOverallGPA`
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `updateOverallGPA`
     BEFORE UPDATE ON `undergraduate`
     FOR EACH ROW
 BEGIN
@@ -860,14 +894,14 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`sysadmin`@`%` FUNCTION `accessControl`(requestorIndex INT, requesteeIndex INT) RETURNS int(11)
+CREATE DEFINER=`root`@`localhost` FUNCTION `accessControl`(requestorIndex INT, requesteeIndex INT) RETURNS int(11)
 BEGIN
 	DECLARE privacyCode VARCHAR(20);
     
-    -- Assign variables
+    
     SELECT `privacy` INTO privacyCode FROM `undergraduate` WHERE `indexNumber`=requesteeIndex;
     
-    -- Check 
+    
     CASE privacyCode
 		WHEN 'public' THEN RETURN 1;
 		WHEN 'private' THEN
@@ -905,7 +939,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`sysadmin`@`%` FUNCTION `isBest`( resultId INT) RETURNS int(11)
+CREATE DEFINER=`root`@`localhost` FUNCTION `isBest`( resultId INT) RETURNS int(11)
 BEGIN
 	DECLARE userIndexNumber INT;
 	DECLARE subjectCode VARCHAR(20);
@@ -913,10 +947,10 @@ BEGIN
 	DECLARE currentExamYear INT;
     DECLARE perfectMatch INT;
     
-    -- Assign variables
+    
     SELECT `index`, `subject`, `grade`, `examYear` INTO userIndexNumber, subjectCode, currentGrade, currentExamYear FROM `result` WHERE `id`=resultId;
     
-    -- Matching
+    
     SELECT `grade` = currentGrade AND `examYear` = currentExamYear INTO perfectMatch
     FROM `result` WHERE `index` = userIndexNumber AND `subject` = subjectCode order by case 
 		WHEN `grade`='A+' THEN 4.25  
@@ -959,7 +993,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`sysadmin`@`%` PROCEDURE `ranker`(IN con VARCHAR(20))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ranker`(IN con VARCHAR(20))
 BEGIN
   SELECT con FROM undergraduate WHERE indexNumber LIKE '1400%';
 END ;;
@@ -978,7 +1012,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`sulochanak`@`%` PROCEDURE `subjectwise_stat`(IN subjectCode VARCHAR(12), IN pattern VARCHAR(2))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `subjectwise_stat`(IN subjectCode VARCHAR(12), IN pattern VARCHAR(2))
 BEGIN
 	DECLARE total INT;
 	DECLARE total_all INT;
@@ -1007,4 +1041,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-01-26 21:10:45
+-- Dump completed on 2019-02-10  2:12:46

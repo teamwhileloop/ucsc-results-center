@@ -1,3 +1,6 @@
+import random
+import string
+
 template = '''
 echo "Team whileLOOP"
 echo "UCSC Results Center Configuration File"
@@ -46,6 +49,7 @@ export MESSENGER_INTERGRATIONS='{MESSENGER_INTERGRATIONS}'
 # Backup Manager
 echo "Backup Manager Configurations"
 export SQL_BACKUP_DIR='{SQL_BACKUP_DIR}'
+export CHALLENGE_CODE='{CHALLENGE_CODE}'
 
 
 echo "Done"'''
@@ -76,6 +80,8 @@ template = template.replace('{ENABLE_EMAILS}', raw_input('Enable Emails > '))
 template = template.replace('{MESSENGER_INTERGRATIONS}', raw_input('Enable Messenger Intergrations > '))
 
 template = template.replace('{SQL_BACKUP_DIR}', raw_input('Database backup location > '))
+template = template.replace('{CHALLENGE_CODE}', ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(256)))
+
 
 f = open("config.sh", "w")
 f.write(template)
