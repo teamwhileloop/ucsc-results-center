@@ -40,6 +40,7 @@ function reconnect(recon = false) {
         if (err){
             connection.connectedToDatabase = false;
             log.crit_nodb('Unable to connect to the database after ' + utilities.timeSpent(databaseConnectionTime));
+            console.log(err);
             log.writeData(err);
             exponentialBackOff();
         }else{

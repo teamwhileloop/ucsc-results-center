@@ -12,6 +12,7 @@ let permissionModules = {
             '/result/dataset' : 100,
             '/console/generate/[0-9]{1,}' : 100,
             '/monitoring/*' : 100,
+            '/run-backup/*' : 100,
             '/calculate/pattern/[0-9]{1,}' : 100
         }
     },
