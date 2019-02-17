@@ -1,19 +1,23 @@
-app.controller('NotificationCenterController',function (
+app.controller('SystemController',function (
     $scope,
     $rootScope,
     LoadingMaskService,
-    AdminService,
+    ApplicationService,
     loggedInUser,
-    $location,
     $mdDialog,
-    ApplicationService)
-{
+    AdminService
+) {
     $scope.isLoading = true;
     $scope.notificationList = [];
+    $scope.tabRec = {
+        running: false,
+        pattern: ''
+    };
 
-    if (loggedInUser.state !== 'verified' || loggedInUser.power <= 10){
+    if (loggedInUser.power !== 100){
         $location.path('access-denied');
     }else{
+        $scope.loggedInUser = loggedInUser;
         LoadingMaskService.deactivate();
         ApplicationService.hideNavigationIndicator();
         ApplicationService.displayPageHeader({ search: true});
@@ -40,10 +44,10 @@ app.controller('NotificationCenterController',function (
         $scope.isLoading = true;
         $scope.notificationList = [];
         AdminService.getNotificationList()
-        .then((response)=>{
-            $scope.isLoading = false;
-            $scope.notificationList = response.data;
-        });
+            .then((response)=>{
+                $scope.isLoading = false;
+                $scope.notificationList = response.data;
+            });
     }
 
     $scope.newNotification = function(){
@@ -78,25 +82,25 @@ app.controller('NotificationCenterController',function (
                 text: 'Deleting notification'
             });
             AdminService.deleteNotification(remoteId)
-            .then((response)=>{
-                ApplicationService.hideNavigationIndicator();
-                ApplicationService.pushNotification({
-                    title: 'Success',
-                    text : "Notification deleted",
-                    template : 'success',
-                    autoDismiss : true
+                .then((response)=>{
+                    ApplicationService.hideNavigationIndicator();
+                    ApplicationService.pushNotification({
+                        title: 'Success',
+                        text : "Notification deleted",
+                        template : 'success',
+                        autoDismiss : true
+                    });
+                    reloadNotificationList();
+                })
+                .catch(()=>{
+                    ApplicationService.hideNavigationIndicator();
+                    ApplicationService.pushNotification({
+                        title: 'Failed',
+                        text : "Failed to delete notification.",
+                        template : 'error',
+                        autoDismiss : true
+                    });
                 });
-                reloadNotificationList();
-            })
-            .catch(()=>{
-                ApplicationService.hideNavigationIndicator();
-                ApplicationService.pushNotification({
-                    title: 'Failed',
-                    text : "Failed to delete notification.",
-                    template : 'error',
-                    autoDismiss : true
-                });
-            });
         }, function() {
             return 0;
         });
@@ -106,25 +110,55 @@ app.controller('NotificationCenterController',function (
         reloadNotificationList();
     };
 
+    $scope.recalibrate = function (pattern) {
+        if (!new RegExp('^[0-9]{2}(00|02)$','gm').test(pattern)){
+            ApplicationService.pushNotification({
+                title: 'Recalibration Failed',
+                text : `Recalibration pattern is not valid`,
+                template : 'error',
+                autoDismiss : false
+            });
+            return;
+        }
+        $scope.tabRec.running = true;
+        ApplicationService.pushNotification({
+            title: 'Recalibration Started',
+            text : `Recalibration for pattern ${pattern} started. This may take up to few minutes`,
+            template : 'info',
+            autoDismiss : false
+        });
+        AdminService.recalibrate(pattern)
+            .then((data)=>{
+                console.log(data);
+                $scope.tabRec.running = false;
+                ApplicationService.pushNotification({
+                    title: 'Recalibration Completed',
+                    text : `Recalibration for pattern ${pattern} completed after a total time of ${data.data.timeSpent}.`,
+                    template : 'success',
+                    autoDismiss : false
+                });
+            })
+    };
+
     function add(object){
         AdminService.addNotification(object)
-        .then((response)=>{
-            ApplicationService.pushNotification({
-                title: 'Success',
-                text : "New notification submitted",
-                template : 'success',
-                autoDismiss : true
+            .then((response)=>{
+                ApplicationService.pushNotification({
+                    title: 'Success',
+                    text : "New notification submitted",
+                    template : 'success',
+                    autoDismiss : true
+                });
+                reloadNotificationList();
+            })
+            .catch(()=>{
+                ApplicationService.pushNotification({
+                    title: 'Failed',
+                    text : "New notification submition failed.",
+                    template : 'error',
+                    autoDismiss : true
+                });
             });
-            reloadNotificationList();
-        })
-        .catch(()=>{
-            ApplicationService.pushNotification({
-                title: 'Failed',
-                text : "New notification submition failed.",
-                template : 'error',
-                autoDismiss : true
-            });
-        });
     }
 
     function update(object){
@@ -132,5 +166,4 @@ app.controller('NotificationCenterController',function (
     }
 
     reloadNotificationList()
-
 });

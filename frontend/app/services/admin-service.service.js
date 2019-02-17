@@ -34,6 +34,9 @@ app.service('AdminService',function ($rootScope, FacebookService, $http, apiClie
         },
         getUserFeedbacks: function () {
             return apiClient.get('/user/feedback/get')
+        },
+        recalibrate: function (pattern = '00') {
+            return apiClient.post(`/admin/calculate/pattern/${pattern.substr(0,4)}`)
         }
     };
 });
