@@ -58,6 +58,9 @@ app.service('AdminService',function ($rootScope, FacebookService, $http, apiClie
                 status: enabled === true,
                 activationCode: activationCode.toString(),
                 message: message.toString() })
+        },
+        runCustomBackup: function (name = 'custombackup') {
+            return apiClient.get(`/admin/system/run-backup/${name}`)
         }
     };
 });

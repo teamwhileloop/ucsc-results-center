@@ -49,11 +49,16 @@ router.get('/run-backup/:name', function (req, res) {
     log.debug(`On demand database backup(@${req.params['name']}) requested by ${req.facebookVerification.name}`);
     request(options, function (err, resp) {
         if (err || resp.statusCode !== 200){
-            res.status(500).send(err || resp);
+            res.send({
+                success: false,
+                err: err || resp
+            });
             log.crit(`On demand database backup(@${req.params['name']}) request by ${req.facebookVerification.name} failed.`, err || resp);
         }else {
             log.info(`On demand database backup(@${req.params['name']}) request by ${req.facebookVerification.name} completed.`);
-            res.send({});
+            res.send({
+                success: true
+            });
         }
     });
 });

@@ -280,6 +280,53 @@ app.controller('SystemController',function (
             });
     };
 
+    $scope.runCustomBackup = function () {
+        var confirm = $mdDialog.prompt()
+            .title('Custom Database Backup')
+            .textContent('Enter a name for your custom database backup')
+            .placeholder('Custom backup name')
+            .required(true)
+            .ok('Run Backup')
+            .cancel('Cancel');
+
+        $mdDialog.show(confirm).then(function(name) {
+            ApplicationService.pushNotification({
+                title: 'Custom Backup Requested',
+                text : `Custom Database backup with the name ${name} requested`,
+                template : 'info',
+                autoDismiss : true
+            });
+            AdminService.runCustomBackup(name)
+                .then((resp)=>{
+                    if (resp.data.success){
+                        ApplicationService.pushNotification({
+                            title: 'Custom Backup Requested',
+                            text : `Custom database backup request with the name ${name} completed`,
+                            template : 'success',
+                            autoDismiss : true
+                        });
+                    }else{
+                        console.error(resp);
+                        ApplicationService.pushNotification({
+                            title: 'Custom Backup Failed',
+                            text : "Failed to perform custom backup.",
+                            template : 'error',
+                            autoDismiss : true
+                        });
+                    }
+                })
+                .catch((err)=>{
+                    console.error(err);
+                    ApplicationService.pushNotification({
+                        title: 'Custom Backup Failed',
+                        text : "Failed to perform custom backup. Internal Error",
+                        template : 'error',
+                        autoDismiss : true
+                    });
+                })
+        }, function() {});
+    };
+
     function add(object){
         AdminService.addNotification(object)
             .then((response)=>{
