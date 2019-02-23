@@ -6,40 +6,49 @@
         <input type="text"
                class="form-control"
                ng-disabled="tabRec.running"
-               placeholder="pattern" ng-model="tabRec.pattern">
+               placeholder="Example Pattern: 1402" ng-model="tabRec.pattern">
     </div>
     <button class="btn btn-primary mb-2"
             ng-click="recalibrate(tabRec.pattern)"
             ng-disabled="tabRec.running">{{ tabRec.running ? 'Running' : 'Run Calibration' }}</button>
 </form>
 <hr>
-<table class="table">
-    <thead>
-    <tr>
-        <th scope="col">Dataset #</th>
-        <th scope="col">Subject</th>
-        <th scope="col">Date</th>
-        <th scope="col">Time</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <th scope="row">1</th>
-        <td>Mark</td>
-        <td>Otto</td>
-        <td>@mdo</td>
-    </tr>
-    <tr>
-        <th scope="row">2</th>
-        <td>Jacob</td>
-        <td>Thornton</td>
-        <td>@fat</td>
-    </tr>
-    <tr>
-        <th scope="row">3</th>
-        <td>Larry</td>
-        <td>the Bird</td>
-        <td>@twitter</td>
-    </tr>
-    </tbody>
-</table>
+<div>
+    <form class="form-inline">
+        <div class="form-group mb-2">
+            <label for="subjectList" >Find Dataset by subject code: </label>
+            <select class="form-control"
+                    ng-change="fetchDataSets()"
+                    ng-model="tabRec.selectedSubject"
+                    id="subjectList"
+                    style="margin-right: 1rem; margin-left: 1rem">
+                <option ng-repeat="subject in tabRec.subjectList" ng-value="subject.code">{{ subject.code }} - {{ subject.name }}</option>
+            </select>
+        </div>
+        <button class="btn btn-primary mb-2"
+                ng-click="fetchLastDataSets()"
+                ng-disabled="tabRec.running">Get Last 20 Datasets</button>
+    </form>
+    <table class="table table-bordered" ng-if="tabRec.dataSets.length">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Subject</th>
+            <th scope="col">Description</th>
+            <th scope="col">Timestamp</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="dataset in tabRec.dataSets">
+            <td>{{ dataset.id }}</td>
+            <td>{{ dataset.subject }}</td>
+            <td>{{ dataset.description }}</td>
+            <td>{{ dateBeautify(dataset.date) }}</td>
+            <td><button type="button" class="btn btn-danger btn-sm clear" style="margin: 0 10px 0 0;display: flex;cursor: pointer;align-items: center;" ng-click="deteleDataSet( dataset.id,  dataset.subject)">
+                <i class="material-icons">delete</i>Delete Dataset</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

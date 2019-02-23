@@ -9,9 +9,13 @@ app.controller('SystemController',function (
 ) {
     $scope.isLoading = true;
     $scope.notificationList = [];
+    lastDatasetFunction = null;
     $scope.tabRec = {
         running: false,
-        pattern: ''
+        pattern: '',
+        subjectList: [],
+        selectedSubject: undefined,
+        dataSets: []
     };
 
     if (loggedInUser.power !== 100){
@@ -140,6 +144,83 @@ app.controller('SystemController',function (
             })
     };
 
+    $scope.fetchDataSets = function () {
+        lastDatasetFunction = $scope.fetchDataSets;
+        ApplicationService.showNavigationIndicator({
+            icon: 'swap_horiz',
+            enabled: true,
+            text: `Fetching datasets for ${$scope.tabRec.selectedSubject}`
+        });
+        AdminService.getDataSets($scope.tabRec.selectedSubject)
+            .then((resp)=>{
+                $scope.tabRec.dataSets = resp.data;
+                ApplicationService.hideNavigationIndicator();
+            })
+            .catch((err)=>{
+                console.error(err);
+                ApplicationService.hideNavigationIndicator();
+            })
+    };
+
+    $scope.fetchLastDataSets = function () {
+        lastDatasetFunction = $scope.fetchLastDataSets;
+        ApplicationService.showNavigationIndicator({
+            icon: 'swap_horiz',
+            enabled: true,
+            text: `Last 20 Datasets`
+        });
+        AdminService.getLastDataSets(20)
+            .then((resp)=>{
+                $scope.tabRec.dataSets = resp.data;
+                ApplicationService.hideNavigationIndicator();
+            })
+            .catch((err)=>{
+                console.error(err);
+                ApplicationService.hideNavigationIndicator();
+            })
+    };
+
+    $scope.dateBeautify = function (date) {
+        return (new Date(date)).toString()
+    };
+
+    $scope.deteleDataSet = function(id, subject){
+        $scope.modalActivated = true;
+        var confirm = $mdDialog.confirm()
+            .title(`Delete Dataset #${id}`)
+            .parent()
+            .textContent(`Are you sure that you want to delete the dataset #${id} of ${subject}`)
+            .ok('Delete Dataset')
+            .cancel('Cancel');
+
+        confirm._options.parent =  angular.element(document.getElementById('modalPromptBg'));
+
+        $mdDialog.show(confirm).then(function() {
+            AdminService.deleteDataset(id)
+                .then((response)=>{
+                    console.log(response);
+                    if (lastDatasetFunction != null){
+                        lastDatasetFunction();
+                    }
+                    if (response.data.success){
+                        ApplicationService.pushNotification({
+                            title: 'Dataset Deleted',
+                            text : `Dataset #${id} of ${subject} deleted. Following patterns are affected: ${response.data.afftectedPatterns.toString()}`,
+                            template : 'success',
+                            autoDismiss : false
+                        });
+                    }else{
+                        ApplicationService.pushNotification({
+                            title: 'Failed to Delete Dataset',
+                            text : "Failed to delete dataset. It maybe already deleted",
+                            template : 'error',
+                            autoDismiss : false
+                        });
+                    }
+                })
+        }, function() {});
+    };
+
     function add(object){
         AdminService.addNotification(object)
             .then((response)=>{
@@ -165,5 +246,13 @@ app.controller('SystemController',function (
         alert("Feature not implemented.");
     }
 
-    reloadNotificationList()
+    reloadNotificationList();
+
+    AdminService.getAllSubjects()
+        .then((resp)=>{
+            $scope.tabRec.subjectList = resp.data;
+        })
+        .catch((err)=>{
+            console.error(err);
+        })
 });

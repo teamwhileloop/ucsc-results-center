@@ -160,21 +160,65 @@ router.post('/dataset',function (req,res) {
 
 router.delete('/dataset/:id',function (req,res) {
     let datasetId = parseInt(req.params['id']);
-    mysql.query('DELETE FROM `dataset` WHERE `id` = ?', [datasetId], function (error, payload) {
-        if (!error){
-            if (payload.affectedRows !== 0){
-                res.send({
-                    success: true,
-                    payload: payload
-                });
-                log.info(`Result dataset ${datasetId} was deleted as requested by ${req.facebookVerification.name}`);
-            }else{
-                res.status(404).send({
-                    success : false
-                })
-            }
+    mysql.query('SELECT DISTINCT(LEFT(`index` , 4)) as pattern FROM `result` WHERE `dataset` = ? ;', [datasetId], (e,p)=>{
+        if (!e){
+            mysql.query('DELETE FROM `dataset` WHERE `id` = ?', [datasetId], function (error, payload) {
+                if (!error){
+                    if (payload.affectedRows !== 0){
+                        let patterns = [];
+                        _.forEach(p, (item)=>{
+                            patterns.push(item.pattern);
+                        })
+                        res.send({
+                            success: true,
+                            afftectedPatterns: patterns,
+                            payload: payload
+                        });
+                        log.info(`Result dataset ${datasetId} was deleted as requested by ${req.facebookVerification.name}`);
+                    }else{
+                        res.status(404).send({
+                            success : false
+                        })
+                    }
+                }else {
+                    reportError(req, res, error, true);
+                }
+            })
         }else {
             reportError(req, res, error, true);
+        }
+    })
+});
+
+router.get('/subject-list', function (req, res) {
+    mysql.query('SELECT `code`,`name` FROM `subject`;', function (err, payload) {
+        if (!err){
+            res.send(payload);
+        }else {
+            reportError(req, res, err,true);
+        }
+    })
+});
+
+router.get('/datasets/:code', function (req, res) {
+    let code = req.params['code'];
+    mysql.query('SELECT * FROM `dataset` WHERE `subject` = ?;', [code],function (err, payload) {
+        if (!err){
+            res.send(payload);
+        }else {
+            reportError(req, res, err,true);
+        }
+    })
+});
+
+router.get('/last-datasets/:qt', function (req, res) {
+    let quantity = parseInt(req.params['qt']);
+    mysql.query('SELECT * FROM `dataset` ORDER BY `id` DESC LIMIT ?;',
+        [quantity],function (err, payload) {
+        if (!err){
+            res.send(payload);
+        }else {
+            reportError(req, res, err,true);
         }
     })
 });

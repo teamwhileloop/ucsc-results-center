@@ -37,6 +37,18 @@ app.service('AdminService',function ($rootScope, FacebookService, $http, apiClie
         },
         recalibrate: function (pattern = '00') {
             return apiClient.post(`/admin/calculate/pattern/${pattern.substr(0,4)}`)
+        },
+        getAllSubjects: function () {
+            return apiClient.get('/admin/result/subject-list');
+        },
+        getDataSets: function (code) {
+            return apiClient.get(`/admin/result/datasets/${code}`);
+        },
+        getLastDataSets: function (number = 10) {
+            return apiClient.get(`/admin/result/last-datasets/${number}`);
+        },
+        deleteDataset: function (dataset) {
+            return apiClient.delete('/admin/result/dataset/' + dataset);
         }
     };
 });
