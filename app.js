@@ -97,7 +97,9 @@ global.maintananceMode = {
     event: 'Server maintenance mode',
     status: false,
     message: 'System under maintenance',
-    adminName: 'Administrator'
+    adminName: 'Administrator',
+    activationCode: '',
+    time: null
 };
 
 global.monitoring = {
@@ -190,6 +192,36 @@ app.get('/disconnect', function (req, res) {
         });
     }else{
         res.status(400).send("Cannot disconnect in production mode");
+    }
+});
+
+app.get('/activate', function (req, res) {
+    if (global.maintananceMode.status){
+        res.render('templates/web/activation.html');
+    }else{
+        res.writeHead(302, {
+            'Location': `https://${sysconfig.domain}/`
+        });
+        res.end();
+    }
+});
+
+app.unlock('/activate/:code', function (req, res) {
+    if (global.maintananceMode.status){
+        if (global.maintananceMode.activationCode === req.params['code']){
+            log.warn(`Server brought online via activation portal`);
+            global.maintananceMode = Object.assign({
+                event: 'Server maintenance mode',
+                status: false,
+                time: Date().toLocaleString(),
+                activationCode: ''
+            }, req.body);
+            res.send({})
+        }else {
+            res.status(401).send({})
+        }
+    }else{
+        res.status(400).send({});
     }
 });
 

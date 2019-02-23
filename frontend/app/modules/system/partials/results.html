@@ -27,7 +27,7 @@
         </div>
         <button class="btn btn-primary mb-2"
                 ng-click="fetchLastDataSets()"
-                ng-disabled="tabRec.running">Get Last 20 Datasets</button>
+                ng-disabled="tabRec.running">Get Last 20 data sets</button>
     </form>
     <table class="table table-bordered" ng-if="tabRec.dataSets.length">
         <thead>
@@ -45,7 +45,7 @@
             <td>{{ dataset.subject }}</td>
             <td>{{ dataset.description }}</td>
             <td>{{ dateBeautify(dataset.date) }}</td>
-            <td><button type="button" class="btn btn-danger btn-sm clear" style="margin: 0 10px 0 0;display: flex;cursor: pointer;align-items: center;" ng-click="deteleDataSet( dataset.id,  dataset.subject)">
+            <td><button type="button" class="btn btn-danger btn-sm clear" style="margin: 0 10px 0 0;display: flex;cursor: pointer;align-items: center;width: 100%;text-align: center;justify-content: center;" ng-click="deteleDataSet( dataset.id,  dataset.subject)">
                 <i class="material-icons">delete</i>Delete Dataset</button>
             </td>
         </tr>

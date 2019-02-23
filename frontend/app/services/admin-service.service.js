@@ -49,6 +49,15 @@ app.service('AdminService',function ($rootScope, FacebookService, $http, apiClie
         },
         deleteDataset: function (dataset) {
             return apiClient.delete('/admin/result/dataset/' + dataset);
+        },
+        getMaintenanceModeStatus: function () {
+            return apiClient.get(`/admin/system/maintenance`);
+        },
+        setMaintenanceMode: function (enabled, message = "", activationCode = "") {
+            return apiClient.post('/admin/system/maintenance', {
+                status: enabled === true,
+                activationCode: activationCode.toString(),
+                message: message.toString() })
         }
     };
 });

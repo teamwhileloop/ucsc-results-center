@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<p id="status"></p>
+
+<script>
+    var txt;
+    var activationCode = prompt("Please the activation code", "");
+    if (activationCode == null || activationCode === "") {
+        txt = "User cancelled the activation.";
+    } else {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.status === 200) {
+                document.getElementById("status").innerHTML = "Success"
+            }else{
+                document.getElementById("status").innerHTML = "Failed"
+            }
+        };
+        xhttp.open("UNLOCK", "/activate/" + activationCode, true);
+        xhttp.send();
+    }
+    document.getElementById("status").innerHTML = txt;
+</script>
+
+</body>
+</html>

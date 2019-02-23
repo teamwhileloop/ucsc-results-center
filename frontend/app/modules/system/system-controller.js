@@ -8,6 +8,7 @@ app.controller('SystemController',function (
     AdminService
 ) {
     $scope.isLoading = true;
+    $scope.hostname = window.location.host;
     $scope.notificationList = [];
     lastDatasetFunction = null;
     $scope.tabRec = {
@@ -17,6 +18,8 @@ app.controller('SystemController',function (
         selectedSubject: undefined,
         dataSets: []
     };
+
+    $scope.tabSystem = undefined;
 
     if (loggedInUser.power !== 100){
         $location.path('access-denied');
@@ -221,6 +224,62 @@ app.controller('SystemController',function (
         }, function() {});
     };
 
+    $scope.activateMaintenanceMode = function () {
+        ApplicationService.showNavigationIndicator({
+            icon: 'swap_horiz',
+            enabled: true,
+            text: `Updating System Status`
+        });
+        AdminService.setMaintenanceMode(true, $scope.tabSystem.message, $scope.tabSystem.activationCode)
+            .then((resp)=>{
+                ApplicationService.pushNotification({
+                    title: 'Success',
+                    text : "System is now in maintenance mode",
+                    template : 'success',
+                    autoDismiss : true
+                });
+                ApplicationService.hideNavigationIndicator();
+                reloadSystemStatus();
+            })
+            .catch(()=>{
+                ApplicationService.pushNotification({
+                    title: 'Maintenance Mode Failed',
+                    text : "Failed to put system into maintenance mode",
+                    template : 'error',
+                    autoDismiss : true
+                });
+                ApplicationService.hideNavigationIndicator();
+            });
+    };
+
+    $scope.dectivateMaintenanceMode = function () {
+        ApplicationService.showNavigationIndicator({
+            icon: 'swap_horiz',
+            enabled: true,
+            text: `Updating System Status`
+        });
+        AdminService.setMaintenanceMode(false, $scope.tabSystem.message, $scope.tabSystem.activationCode)
+            .then((resp)=>{
+                ApplicationService.pushNotification({
+                    title: 'Success',
+                    text : "System is now back online",
+                    template : 'success',
+                    autoDismiss : true
+                });
+                ApplicationService.hideNavigationIndicator();
+                reloadSystemStatus();
+            })
+            .catch(()=>{
+                ApplicationService.pushNotification({
+                    title: 'Maintenance Mode Failed',
+                    text : "Failed to move system out of maintenance mode",
+                    template : 'error',
+                    autoDismiss : true
+                });
+                ApplicationService.hideNavigationIndicator();
+            });
+    };
+
     function add(object){
         AdminService.addNotification(object)
             .then((response)=>{
@@ -246,7 +305,18 @@ app.controller('SystemController',function (
         alert("Feature not implemented.");
     }
 
+    function reloadSystemStatus(){
+        AdminService.getMaintenanceModeStatus()
+            .then((response)=>{
+                $scope.tabSystem = response.data;
+            })
+            .catch((err)=>{
+                console.error(err);
+            });
+    }
+
     reloadNotificationList();
+    reloadSystemStatus();
 
     AdminService.getAllSubjects()
         .then((resp)=>{
@@ -254,5 +324,7 @@ app.controller('SystemController',function (
         })
         .catch((err)=>{
             console.error(err);
-        })
+        });
+
+
 });

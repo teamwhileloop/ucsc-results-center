@@ -9,7 +9,9 @@ router.post('/maintenance',function (req,res) {
     global.maintananceMode = Object.assign({
         event: 'Server maintenance mode',
         status: true,
-        message: 'System under maintenance'
+        message: 'System under maintenance',
+        time: Date().toLocaleString(),
+        activationCode: ''
     }, req.body);
     let adminName = 'Administrator';
     if (req.facebookVerification.name){
@@ -22,6 +24,10 @@ router.post('/maintenance',function (req,res) {
         log.warn(`Server brought online by ${adminName}`);
     }
     log.writeData(global.maintananceMode);
+    res.send(global.maintananceMode);
+});
+
+router.get('/maintenance',function (req,res) {
     res.send(global.maintananceMode);
 });
 

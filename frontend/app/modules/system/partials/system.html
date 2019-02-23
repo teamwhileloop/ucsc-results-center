@@ -1,0 +1,32 @@
+<div ng-if="tabSystem.status == false">
+    <form>
+        <div class="form-group">
+            <label for="message">Maintenance Message</label>
+            <input type="text"
+                   class="form-control"
+                   id="message"
+                   ng-model="tabSystem.message"
+                   placeholder="Message to display on maintenance page">
+        </div>
+        <div class="form-group">
+            <label for="passcode">Activation Code</label>
+            <input type="text"
+                   class="form-control"
+                   id="passcode"
+                   ng-model="tabSystem.activationCode"
+                   placeholder="Activation Code">
+            <small id="emailHelp" class="form-text text-muted">Use this activation code on https://{{ hostname }}/activate to turn off the maintenance mode</small>
+        </div>
+        <button ng-click="activateMaintenanceMode()"
+                ng-disabled="tabSystem.activationCode.length === 0"
+                class="btn btn-danger">Activate Maintenance Mode</button>
+    </form>
+</div>
+<div ng-if="tabSystem.status == true">
+    <div class="alert alert-danger" role="alert">
+        The system was put to maintenance mode by {{ tabSystem.adminName }} at {{ tabSystem.time }} with the message: {{ tabSystem.message }}<br>
+        <hr>
+        Activation Code : <b>{{ tabSystem.activationCode }}</b>
+    </div>
+    <button ng-click="dectivateMaintenanceMode()" class="btn btn-danger">Deactivate Maintenance Mode</button>
+</div>
