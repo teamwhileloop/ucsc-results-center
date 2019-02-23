@@ -5,7 +5,7 @@ import json
 
 #domain = "https://www.ucscresult.com"
 domain = "http://127.0.0.1"
-if 'DEV_MODE' in os.environ:
+if 'DEV_ENV' in os.environ:
     logger.info("Developer Testing Environment detected")
     domain = "http://127.0.0.1:3000"
 

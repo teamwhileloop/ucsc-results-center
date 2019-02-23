@@ -34,7 +34,7 @@ def getPDFList():
     vlePage = requests.get("http://ugvle.ucsc.cmb.ac.lk/")
     pdfs = []
     lineRegEx = re.findall(
-        r'(http:\/\/ugvle.ucsc.cmb.ac.lk\/pluginfiles.php\/35915\/block_html\/content\/)(SCS|IS)(%20)?([1-4][0-9]{3})(\.pdf)',
+        r'(http:\/\/ugvle.ucsc.cmb.ac.lk\/pluginfile.php\/35915\/block_html\/content\/)(SCS|IS)(%20)?([1-4][0-9]{3})(\.pdf)',
         vlePage.text)
     for tup in lineRegEx:
         pdfs.append("".join(list(tup)))

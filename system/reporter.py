@@ -3,7 +3,7 @@ import os
 import json
 
 domain = "http://127.0.0.1"
-if 'DEV_MODE' in os.environ:
+if 'DEV_ENV' in os.environ:
     domain = "http://127.0.0.1:3000"
 
 
@@ -21,6 +21,7 @@ def report(type, text, toolName = 'Monitoring Client'):
         if (resp.status_code != 200):
             print ("Failed to submit report. [Bad Response]")
         return resp.text
-    except:
+    except Exception as e:
+        print(e)
         print ("Failed to submit report. [Connection Error]")
         return None
