@@ -23,6 +23,9 @@ app.service('AdminService',function ($rootScope, FacebookService, $http, apiClie
         addNotification: function (notifiaction) {
             return apiClient.post('/admin/alerts/add', notifiaction)
         },
+        editNotification: function (notifiaction) {
+            return apiClient.post('/admin/alerts/edit', notifiaction)
+        },
         deleteNotification: function (remoteId) {
             return apiClient.delete('/admin/alerts/delete/' + remoteId);
         },
@@ -34,6 +37,34 @@ app.service('AdminService',function ($rootScope, FacebookService, $http, apiClie
         },
         getUserFeedbacks: function () {
             return apiClient.get('/user/feedback/get')
+        },
+        recalibrate: function (pattern = '00') {
+            return apiClient.post(`/admin/calculate/pattern/${pattern.substr(0,4)}`)
+        },
+        getAllSubjects: function () {
+            return apiClient.get('/admin/result/subject-list');
+        },
+        getDataSets: function (code) {
+            return apiClient.get(`/admin/result/datasets/${code}`);
+        },
+        getLastDataSets: function (number = 10) {
+            return apiClient.get(`/admin/result/last-datasets/${number}`);
+        },
+        deleteDataset: function (dataset) {
+            return apiClient.delete('/admin/result/dataset/' + dataset);
+        },
+        getMaintenanceModeStatus: function () {
+            return apiClient.get(`/admin/system/maintenance`);
+        },
+        setMaintenanceMode: function (enabled, message = "", activationCode = "") {
+            return apiClient.post('/admin/system/maintenance', {
+                status: enabled === true,
+                activationCode: activationCode.toString(),
+                message: message.toString()
+            })
+        },
+        runCustomBackup: function (name = 'custombackup') {
+            return apiClient.get(`/admin/system/run-backup/${name}`)
         }
     };
 });

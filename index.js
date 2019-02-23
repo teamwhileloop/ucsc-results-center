@@ -24,13 +24,13 @@ setInterval(function () {
     });
 
     let curTime = + new Date();
-    if ((curTime - global.monitoring.lastPing) > 60*1000){
+    if ((curTime - global.monitoring.lastPing) > 100*1000){
         if (global.monitoring.online){
             global.monitoring.online = false;
             log.warn("Monitoring client went offline.", global.monitoring);
         }
         global.monitoring.status = "Offline [" + new Date(global.monitoring.lastPing).toLocaleString('en-US', { timeZone: 'Asia/Colombo' }) + ']';
-    }else if((curTime - global.monitoring.lastPing) > 15*1000){
+    }else if((curTime - global.monitoring.lastPing) > 30*1000){
         if (global.monitoring.online && !global.monitoring.notResponding){
             log.warn("Monitoring client is not responding. Last known status: " + global.monitoring.status, global.monitoring);
             global.monitoring.notResponding = true;

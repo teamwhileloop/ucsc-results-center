@@ -1,17 +1,24 @@
 import time
-import reporter
 import subprocess
 import os
 import datetime
+import threading
+from httpserver import BackupServerWeb
+import reporter
+from http.server import BaseHTTPRequestHandler, HTTPServer
 
 backupLocation = os.environ['SQL_BACKUP_DIR']
 
 def report(type, msg):
     reporter.report(type, msg, 'Backup Manager')
 
-def runBackup():
+def runBackup(customName = ''):
     global backupLocation
-    filename = time.strftime("backup.%Y%m%d%H%M%S", time.gmtime())
+    if customName:
+        customName = "".join([c for c in customName if c.isalpha() or c.isdigit() or c==' ']).rstrip()
+        filename = time.strftime("custom-backup-{name}.%Y%m%d%H%M%S".format(name=customName), time.gmtime())
+    else:
+        filename = time.strftime("backup.%Y%m%d%H%M%S", time.gmtime())
     with open(filename + '.sql', 'w') as out:
         subprocess.call(
             'mysqldump -u {username} -p{passwd} -h {host} --single-transaction=TRUE --databases results resultsdev'.format(
@@ -37,23 +44,42 @@ def secure_delete(path, passes=1):
     os.remove(path)
 
 
-report('info', 'Service started. Exporting to: ' + backupLocation)
-day = None
-while True:
-    filename = None
-    now = datetime.datetime.now()
-    if day != now.day:
-        print('Running daily backup')
-        try:
-            filename = runBackup()
-            report('info', 'Daily backup successful [{fn}]'.format(fn=filename))
-            print('Daily backup successful [{fn}]'.format(fn=filename))
-            day = now.day
-        except:
-            report('warn', 'Failed to backup database')
-        finally:
-            if filename is not None:
-                secure_delete(filename + '.sql', 3)
-                print('Secure deletion successful [{fn}]'.format(fn=filename))
-        print('Done')
-    time.sleep(3600)
+def schedule():
+    global backupLocation
+    day = None
+    report('info', 'Service started. Exporting to: ' + backupLocation)
+    while True:
+        filename = None
+        now = datetime.datetime.now()
+        if day != now.day:
+            print('Running daily backup')
+            try:
+                filename = runBackup()
+                report('info', 'Daily backup successful [{fn}]'.format(fn=filename))
+                print('Daily backup successful [{fn}]'.format(fn=filename))
+                day = now.day
+            except:
+                report('warn', 'Failed to backup database')
+            finally:
+                if filename is not None:
+                    secure_delete(filename + '.sql', 3)
+                    print('Secure deletion successful [{fn}]'.format(fn=filename))
+            print('Done')
+        time.sleep(3600)
+
+
+sheduleThread = threading.Thread(target=schedule)
+sheduleThread.daemon = True
+# sheduleThread.start()
+
+server_class = HTTPServer
+BackupServerWeb.backupFunction = runBackup
+BackupServerWeb.secureDeleteFunction = secure_delete
+
+httpd = server_class(('', 8888), BackupServerWeb)
+
+try:
+    httpd.serve_forever()
+except KeyboardInterrupt:
+    pass
+httpd.server_close()

@@ -74,3 +74,7 @@ button.iconed{
 md-dialog-content{
   padding: 20px;
 }
+
+body > div.md-dialog-container.ng-scope{
+  height: 100vh !important;
+}

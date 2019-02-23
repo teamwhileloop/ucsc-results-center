@@ -34,7 +34,7 @@ def getPDFList():
     vlePage = requests.get("http://ugvle.ucsc.cmb.ac.lk/")
     pdfs = []
     lineRegEx = re.findall(
-        r'(http:\/\/ugvle.ucsc.cmb.ac.lk\/pluginfile.php\/8988\/block_html\/content\/)(SCS|IS)(%20)?([1-4][0-9]{3})(\.pdf)',
+        r'(http:\/\/ugvle.ucsc.cmb.ac.lk\/pluginfiles.php\/35915\/block_html\/content\/)(SCS|IS)(%20)?([1-4][0-9]{3})(\.pdf)',
         vlePage.text)
     for tup in lineRegEx:
         pdfs.append("".join(list(tup)))
@@ -83,9 +83,15 @@ def stabilizeDatabase(pdfUrlList):
 
 
 def detectAndApplyChanges(pdfUrlList):
-    global unknownSubjects
+    global unknownSubjects, zeroSheets
     tmpmap = {}
     connection.ping(True)
+    if len(pdfUrlList) == 0:
+        logger.warn("There are no result sheets in the UGVLE", zeroSheets == False)
+        zeroSheets = True
+        return
+
+    zeroSheets = False
     for pdfUrl in pdfUrlList:
         subjectCode = os.path.basename(unquote(pdfUrl)).split(".")[0].replace(" ", "")
         logger.info("Checking subject: " + subjectCode)
@@ -150,6 +156,7 @@ def fetchFromDB(map):
 
 logger.info("Starting Monitoring Client")
 manualMode = False
+zeroSheets = False
 stabilizeMode = False
 if (len(sys.argv) == 1):
     logger.announceLogFile(True)

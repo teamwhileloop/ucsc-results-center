@@ -1,0 +1,27 @@
+<div class="container admin-members" style="margin-top: 50px">
+    <md-card>
+        <md-tabs md-dynamic-height md-border-bottom>
+            <md-tab label="notification center">
+                <md-content class="md-padding"
+                            ng-include="'public/html/modules/sample/partials/notification-center.html'">
+                </md-content>
+            </md-tab>
+            <md-tab label="results management">
+                <md-content class="md-padding"
+                            ng-include="'public/html/modules/system/partials/results.html'">
+                </md-content>
+            </md-tab>
+            <md-tab label="system management" ng-if="tabSystem">
+                <md-content class="md-padding"
+                            ng-include="'public/html/modules/system/partials/system.html'">
+                </md-content>
+            </md-tab>
+            <md-tab label="database">
+                <md-content class="md-padding"
+                            ng-include="'public/html/modules/system/partials/backup.html'">
+                </md-content>
+            </md-tab>
+        </md-tabs>
+    </md-card>
+
+</div>

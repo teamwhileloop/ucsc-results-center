@@ -2,17 +2,14 @@ const _ = require('lodash');
 
 let permissionModules = {
     'admin': {
-        base: 50,
+        base: 100,
         routes: {
-            '/console/clear' : 100,
-            '/console/download' : 100,
-            '/users/role' : 100,
-            '/system/maintenance' : 100,
-            '/system/forcescan' : 50,
-            '/result/dataset' : 100,
-            '/console/generate/[0-9]{1,}' : 100,
-            '/monitoring/*' : 100,
-            '/calculate/pattern/[0-9]{1,}' : 100
+            '/console(\\?){1}(.){1,}' : 50,
+            '/users(\\?){1}(.){1,}' : 50,
+            '/users/approve/([0-9]){1,}' : 50,
+            '/users/reject/([0-9]){1,}' : 50,
+            '/users/reset/([0-9]){1,}' : 50,
+            '/system/forcescan' : 50
         }
     },
 
