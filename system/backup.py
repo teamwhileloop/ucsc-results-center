@@ -70,7 +70,7 @@ def schedule():
 
 sheduleThread = threading.Thread(target=schedule)
 sheduleThread.daemon = True
-# sheduleThread.start()
+sheduleThread.start()
 
 server_class = HTTPServer
 BackupServerWeb.backupFunction = runBackup
