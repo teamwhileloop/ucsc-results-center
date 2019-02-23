@@ -18,7 +18,7 @@
             View Log File
         </button>
 
-        <button type="button" class="btn btn-warning clear" ng-click="ctrlVirtCons.clearLogs()">
+        <button type="button" class="btn btn-warning clear" ng-click="ctrlVirtCons.clearLogs()"  ng-if="loggedInUser.power === 100">
             <i class="material-icons">delete</i>
             Clear Events
         </button>

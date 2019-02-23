@@ -349,7 +349,24 @@ app.controller('SystemController',function (
     }
 
     function update(object){
-        alert("Feature not implemented.");
+        AdminService.editNotification(object)
+            .then((response)=>{
+                ApplicationService.pushNotification({
+                    title: 'Success',
+                    text : "Notification updated",
+                    template : 'success',
+                    autoDismiss : true
+                });
+                reloadNotificationList();
+            })
+            .catch(()=>{
+                ApplicationService.pushNotification({
+                    title: 'Failed',
+                    text : "Failed to update notification",
+                    template : 'error',
+                    autoDismiss : true
+                });
+            });
     }
 
     function reloadSystemStatus(){

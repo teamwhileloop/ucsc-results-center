@@ -23,6 +23,9 @@ app.service('AdminService',function ($rootScope, FacebookService, $http, apiClie
         addNotification: function (notifiaction) {
             return apiClient.post('/admin/alerts/add', notifiaction)
         },
+        editNotification: function (notifiaction) {
+            return apiClient.post('/admin/alerts/edit', notifiaction)
+        },
         deleteNotification: function (remoteId) {
             return apiClient.delete('/admin/alerts/delete/' + remoteId);
         },
