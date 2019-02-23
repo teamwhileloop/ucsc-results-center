@@ -13,6 +13,10 @@ let permissionModules = {
             '/console/generate/[0-9]{1,}' : 100,
             '/monitoring/*' : 100,
             '/run-backup/*' : 100,
+            '/subject-list' : 100,
+            '/datasets/*' : 100,
+            '/last-datasets/*' : 100,
+            '/maintenance' : 100,
             '/calculate/pattern/[0-9]{1,}' : 100
         }
     },

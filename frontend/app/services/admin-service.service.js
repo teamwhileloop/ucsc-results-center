@@ -57,7 +57,8 @@ app.service('AdminService',function ($rootScope, FacebookService, $http, apiClie
             return apiClient.post('/admin/system/maintenance', {
                 status: enabled === true,
                 activationCode: activationCode.toString(),
-                message: message.toString() })
+                message: message.toString()
+            })
         },
         runCustomBackup: function (name = 'custombackup') {
             return apiClient.get(`/admin/system/run-backup/${name}`)

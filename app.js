@@ -210,12 +210,12 @@ app.unlock('/activate/:code', function (req, res) {
     if (global.maintananceMode.status){
         if (global.maintananceMode.activationCode === req.params['code']){
             log.warn(`Server brought online via activation portal`);
-            global.maintananceMode = Object.assign({
+            global.maintananceMode = {
                 event: 'Server maintenance mode',
                 status: false,
                 time: Date().toLocaleString(),
                 activationCode: ''
-            }, req.body);
+            };
             res.send({})
         }else {
             res.status(401).send({})
