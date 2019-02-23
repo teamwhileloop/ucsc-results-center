@@ -3,7 +3,7 @@ import os
 import json
 
 domain = "http://127.0.0.1"
-if 'DEV_ENV' in os.environ:
+if 'DEV_ENV' in os.environ and os.environ['DEV_ENV'].lower() == 'true':
     domain = "http://127.0.0.1:3000"
 
 
