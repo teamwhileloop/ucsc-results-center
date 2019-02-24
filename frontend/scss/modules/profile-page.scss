@@ -379,3 +379,16 @@ div.profile-page.container{
   }
 }
 
+.stat-view{
+  md-tabs{
+    background-color: white;
+
+    md-content{
+      background-color: white;
+
+      form{
+        overflow: hidden;
+      }
+    }
+  }
+}
