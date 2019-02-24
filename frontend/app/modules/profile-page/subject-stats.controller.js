@@ -6,6 +6,7 @@ app.controller('SubjectStatsController',function (
     $scope)
 {
     $scope.subjectdata = undefined;
+    $scope.subjectdatanumb = undefined;
     $scope.subject = subject;
     $scope.pageTitle = '';
 
@@ -136,6 +137,71 @@ app.controller('SubjectStatsController',function (
                 }]
             };
     });
+
+    ProfileService.getSubjectWiseAnalysisBatchNumber(subject, pattern)
+        .then((response)=>{
+            $scope.subjectdatanumb = {
+                title: {
+                    text: ""
+                },
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: "pie",
+                    inverted: false
+                },
+                tooltip: {
+                    pointFormat: "Percentage: <b>{point.percentage:.1f}%</b>"
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: "pointer",
+                        dataLabels: {
+                            enabled: true,
+                            format: "<b>{point.name}</b>: {point.y}",
+                            style: {
+                                color: "black"
+                            }
+                        }
+                    },
+                    series: {
+                        animation: false,
+                        dataLabels: {}
+                    }
+                },
+                series: [{
+                    data: response.data
+
+                }],
+                yAxis: {
+                    categories: [
+                        'A+',
+                        'A',
+                        'A-',
+                        'B+',
+                        'B',
+                        'B-',
+                        'C+',
+                        'C',
+                        'C-',
+                        'D+',
+                        'D',
+                        'D-',
+                        'E',
+                        'MC'
+                    ]
+                },
+                xAxis: {
+                    title: {},
+                    labels: {}
+                },
+                credits: {
+                    enabled: false
+                }
+            }
+        });
 
     $scope.cancel = function() {
         $mdDialog.cancel();

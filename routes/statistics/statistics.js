@@ -48,4 +48,20 @@ router.post('/subject', function (req, res) {
     })
 });
 
+router.get('/subject/batch/numbers/:subject/:pattern', function (req, res) {
+    const subject = req.params['subject'];
+    const pattern = req.params['pattern'];
+    mysql.query(
+        "SELECT count(`grade`) as `y`, `grade` as `name` FROM `result` WHERE `subject` = ? and `index` like concat(?, '%') group by `grade`;",
+        [subject, pattern],
+        function (err, payload) {
+            if (!err){
+                res.send(payload);
+            }else {
+                res.status(500).send({success:false,error: err});
+                log.crit(`Failed to fetch subject (batch/number) statistics for subject '${req.body.subject}'`, err);
+            }
+    })
+});
+
 module.exports = router;

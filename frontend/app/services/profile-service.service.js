@@ -49,6 +49,9 @@ app.service('ProfileService',function ($rootScope, FacebookService, $http, apiCl
         getSubjectWiseAnalysis: function (subject, pattern) {
             return apiClient.post('v1.0/statistics/subject', {subject: subject, pattern: pattern})
         },
+        getSubjectWiseAnalysisBatchNumber: function (subject, pattern) {
+            return apiClient.get(`/v1.0/statistics/subject/batch/numbers/${subject}/${pattern}`)
+        },
         deleteAccount: function () {
             return apiClient.delete('/user/delete');
         }
