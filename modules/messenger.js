@@ -66,7 +66,10 @@ exports.sendToEventSubscribers = function(event, message, messageTypeTag = 'APPL
         "FROM `event_subscriptions` " +
         "JOIN `facebook` " +
         "ON `event_subscriptions`.`event` = ? " +
-        "AND `facebook`.`id` = `event_subscriptions`.`fbid`;";
+        "AND `facebook`.`id` = `event_subscriptions`.`fbid` " +
+        "AND `event_subscriptions`.`value` = 1 AND `facebook`.`psid` != '0';";
+
+
     mysql.query(query, [event], function (err, payload) {
         if (err){
             err.skipFacebookMessenger = true;
