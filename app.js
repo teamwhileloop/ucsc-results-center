@@ -40,7 +40,7 @@ const messenger = require('./modules/messenger');
 function loggerCallback(data = {}){
     if (data.details && data.details.skipFacebookMessenger === true)
         return;
-    
+
     if (data.code === 'WARN' || data.code === 'CRIT'){
         messenger.sendToEventSubscribers('system_warn_err_thrown', `Event Raised: ${data.code}\n${data.message}`);
     }
@@ -57,6 +57,7 @@ function logDatabaseCallback(data){
         return;
 
     if (data.details && typeof data.details !== "string"){
+        data.details.stackTrace = new Error().stack;
         dataJSON = JSON.stringify(data.details);
 
     }else{

@@ -166,11 +166,15 @@ function calculateUndergraduateSemesterGPA(indexNumber, semesterInfo) {
                     gpa += getGradePoint(result.grade) * result.credits;
                     progress++;
                     if (progress === filteredCollection.length){
+                        gpaval = 0;
+                        if (credits !== 0){
+                            gpaval = gpa/credits;
+                        }
                         resolve({
                             indexNumber: indexNumber,
                             semester: semesterInfo.semester,
                             year: semesterInfo.year,
-                            gpa: gpa/credits,
+                            gpa: gpaval,
                             credits: credits,
                             nonGpaCredits: nonGpaCredits,
                             results: resultsCollection

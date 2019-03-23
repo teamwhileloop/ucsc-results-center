@@ -69,7 +69,7 @@ function validateResult(index, grade) {
             indexNumber: index,
             reason: 'Invalid index number'
         }
-    }else if(['A+','A','A-','B+','B','B-','C+','C','C-','D+','D','D-','E','F','MC'].indexOf(grade) === -1){
+    }else if(['A+','A','A-','B+','B','B-','C+','C','C-','D+','D','D-','E','F','MC','CM','NC'].indexOf(grade) === -1){
         return {
             success: false,
             grade: grade,

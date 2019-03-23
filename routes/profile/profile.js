@@ -49,7 +49,8 @@ function getCompletedSemesters(pattern) {
     return new Promise(function (resolve, reject) {
         mysql.query("SELECT DISTINCT `year`, `semester`  FROM " +
             "(SELECT DISTINCT `subject` from `result` WHERE `index` LIKE ?) as dst " +
-            "JOIN subject ON `dst`.`subject` = `subject`.`code`",
+            "JOIN subject ON `dst`.`subject` = `subject`.`code` " +
+            " ORDER BY (`year` * 10 + `semester`) ASC;",
             [`${pattern}%`],
             function (error, payload) {
                 if(!error){
