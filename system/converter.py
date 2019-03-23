@@ -36,7 +36,7 @@ def brain(txt):
             return 0
 
     txt = txt.strip()
-    grades = ['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'E', 'F']
+    grades = ['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'E', 'F', 'CM', 'NC']
     if (len(txt) == 8 and safeCast(txt, int, 0) > 0):
         return {'index': txt}
     elif (txt in grades):
