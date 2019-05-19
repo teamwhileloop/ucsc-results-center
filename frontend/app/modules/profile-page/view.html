@@ -142,7 +142,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">System Administrators and Analytic Users</h5>
+                    <h5 class="modal-title">Profile Visibility</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -150,6 +150,7 @@
                 <div class="modal-body">
                     <div class="list-group">
                         <p class="text"> {{ privacyText(profileOwnerInfo.privacy, profileOwnerInfo.user_showcase,indexNumber) }}</p>
+                        <p class="text" onclick="$('#systemAdministrators').modal('hide')">Goto <a href="/#!/account-settings">Account Settings</a> to change the visibility of your profile and name</p>
                         <a ng-repeat="admin in admins"
                            class="list-group-item list-group-item-action flex-column align-items-start"
                            style="padding: 0.5rem 1rem;"
