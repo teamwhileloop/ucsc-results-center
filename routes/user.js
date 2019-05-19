@@ -260,7 +260,7 @@ router.get('/admins', function (req, res) {
 
 router.get('/admins/:power', function (req, res) {
     let power = parseInt(req.params['power']) || 100;
-    const query = "SELECT `name`,`picture`,`power` FROM `facebook` WHERE `power` >= ? ORDER BY `power` DESC";
+    const query = "SELECT `name`,`picture`,`power` FROM `facebook` WHERE `power` >= ? ORDER BY `power` DESC, `id` ASC";
     mysql.query(query, [power], function (err, payload) {
         if (!err){
             res.send(payload);
