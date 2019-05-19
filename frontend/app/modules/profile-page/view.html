@@ -26,7 +26,18 @@
                                  onerror="this.src='../../../../public/img/default_user.png'"
                                  ng-src="{{ profileOwnerInfo.picture }}">
                             <div class="text">
-                                <h4 class="card-title">Overview of {{ profileOwnerInfo.name || indexNumber }}</h4>
+                                <h4 class="card-title">{{ profileOwnerInfo.name || 'Overview of ' + indexNumber }}
+                                    <i class="material-icons"
+                                       data-toggle="modal" data-target="#systemAdministrators"
+                                       ng-if="myIndexNumber == indexNumber || loggedInUser.power >= 60"
+                                       ng-class="{
+                                        'public': profileOwnerInfo.privacy == 'public',
+                                        'shared': profileOwnerInfo.privacy == 'shared',
+                                        'private': profileOwnerInfo.privacy == 'private'
+                                    }">lock
+                                        <md-tooltip md-direction="right">{{ privacyText(profileOwnerInfo.privacy, profileOwnerInfo.user_showcase,indexNumber) }}</md-tooltip>
+                                    </i>
+                                </h4>
                                 <h6 class="card-subtitle mb-2">{{ profileOwnerInfo.indexNumber ? "Index Number: " + profileOwnerInfo.indexNumber + " | Last updated : "  : "Last updated : "}}{{ lastUpdate }}</h6>
                             </div>
                         </div>
@@ -126,4 +137,46 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="systemAdministrators" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">System Administrators and Analytic Users</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="list-group">
+                        <p class="text"> {{ privacyText(profileOwnerInfo.privacy, profileOwnerInfo.user_showcase,indexNumber) }}</p>
+                        <a ng-repeat="admin in admins"
+                           class="list-group-item list-group-item-action flex-column align-items-start"
+                           style="padding: 0.5rem 1rem;"
+                        >
+                            <div class="admin-box">
+                                <div class="avatar-box">
+                                    <img alt="{{ admin.name }}"
+                                         ng-src="{{ admin.picture }}"
+                                         onerror="this.src='../../../../public/img/default_user.png'"
+                                         class="admin-avatar" />
+                                </div>
+                                <div class="detail-box">
+                                    <div class="name">{{ admin.name }}</div>
+                                    <div class="">
+                    <span class="badge" ng-class="{
+                        'badge-success': admin.power == 100,
+                        'badge-primary': admin.power == 60,
+                        'badge-info': admin.power == 50
+                    }">{{ getRankName(admin.power) }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+

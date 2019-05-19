@@ -3,11 +3,17 @@ const io = require('socket.io')(http);
 const log = require('perfect-logger');
 
 let onlineUsers = {};
+let dailyUsers = [];
+let today = -1;
 
 io.on('connection', function(socket){
     socket.on('usr-auth', function (data) {
         onlineUsers[socket.id] = data.name;
         log.socket("User " + data.name + " connected from " +  socket.handshake.address);
+
+        if (dailyUsers.indexOf(data.name) === -1) {
+            dailyUsers.push(data.name);
+        }
     });
 
     socket.on('disconnect', function () {
@@ -24,6 +30,13 @@ setInterval(function () {
     });
 
     let curTime = + new Date();
+    let todayDate = new Date().getDate();
+    if (todayDate !== today)
+    {
+        log.debug("Resetting statistics for new day. " + new Date().toUTCString() + " -> " + dailyUsers.length);
+        today = todayDate;
+        dailyUsers = [];
+    }
     if ((curTime - global.monitoring.lastPing) > 100*1000){
         if (global.monitoring.online){
             global.monitoring.online = false;
@@ -41,6 +54,7 @@ setInterval(function () {
     io.emit('statistics',{
         hits: global.APIhits,
         users: global.users,
+        dailyUsersCount: dailyUsers.length,
         records: global.records,
         online: uniqueUsers.length,
         onlineUsers: uniqueUsers,

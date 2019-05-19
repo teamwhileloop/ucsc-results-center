@@ -10,7 +10,10 @@
                     ng-if="feedbacks.length == 0"
                     class="md-no-sticky">No user feedback received</md-subheader>
             <md-list-item class="md-3-line md-long-text" ng-repeat="feedback in feedbacks">
-                <img ng-src="{{ feedback.picture }}" class="md-avatar" alt="{{ feedback.name }}" />
+                <img alt="{{ feedback.name }}"
+                     ng-src="{{ feedback.picture }}"
+                     onerror="this.src='../../../../public/img/default_user.png'"
+                     class="md-avatar" />
                 <div class="md-list-item-text">
                     <h3>{{ feedback.name }}</h3>
                     <p>{{ feedback.text }}</p>
