@@ -273,10 +273,10 @@ app.controller('ProfilePageController',function (
                 break;
         }
         if (selfview){
-            nameVisibilityScope += "Name is visible to " + (showcase == '1' ? profileVisibilityScope : 'only to you, Analytic Users and System Administrators');
+            nameVisibilityScope += "Name is visible to " + (showcase == '1' ? profileVisibilityScope : 'you, Analytic Users and System Administrators');
         }
         return `Profile is visible to ${profileVisibilityScope}. ${nameVisibilityScope}`;
-    }
+    };
 
     ProfileService.getAdminsWithPower(60)
         .then((data)=>{
