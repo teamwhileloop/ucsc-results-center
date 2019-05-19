@@ -23,6 +23,7 @@ app.controller('ProfilePageController',function (
     let indexNumber = $routeParams.indexNumber;
 
     //Default values
+    $scope.loggedInUser = loggedInUser;
     $scope.loadingData = true;
     $scope.indexNumber = indexNumber;
     $scope.myIndexNumber = loggedInUser.indexNumber;
@@ -255,6 +256,32 @@ app.controller('ProfilePageController',function (
             pattern: args[1],
         });
     });
+    
+    $scope.privacyText = function (privacy, showcase, indexNumber) {
+        const selfview = indexNumber == loggedInUser.indexNumber;
+        let profileVisibilityScope = "";
+        let nameVisibilityScope = "";
+        switch (privacy) {
+            case 'public':
+                profileVisibilityScope = "Everyone registered in the system";
+                break;
+            case 'shared':
+                profileVisibilityScope = "your Batch-mates, Analytic Users and System Administrators";
+                break;
+            case 'private':
+                profileVisibilityScope = ( selfview ? 'you' : 'profile owner') + ", Analytic Users and System Administrators";
+                break;
+        }
+        if (selfview){
+            nameVisibilityScope += "Name is visible to " + (showcase == '1' ? profileVisibilityScope : 'only to you, Analytic Users and System Administrators');
+        }
+        return `Profile is visible to ${profileVisibilityScope}. ${nameVisibilityScope}`;
+    }
+
+    ProfileService.getAdminsWithPower(60)
+        .then((data)=>{
+            $scope.admins = data.data;
+        })
 
 
 

@@ -182,13 +182,13 @@ function getGpaVariation(indexNumber) {
     });
 }
 
-function getOwnerInfo(indexNumber, userPower = 0) {
+function getOwnerInfo(reqUser, indexNumber, userPower = 0) {
     return new Promise((resolve, reject)=>{
-        let query = "SELECT `facebook`.`name`, `facebook`.`picture`, `facebook`.`index_number` as indexNumber " +
+        let query = "SELECT `facebook`.`name`, `facebook`.`picture`, `facebook`.`index_number` as indexNumber, `undergraduate`.`user_showcase`, `undergraduate`.`privacy`" +
             "FROM `undergraduate` JOIN `facebook` " +
             "ON `undergraduate`.`indexNumber` = `facebook`.`index_number` " +
                 "AND `undergraduate`.`indexNumber` = ? ";
-        if (userPower < 60){
+        if (userPower < 60 && reqUser.indexNumber !== indexNumber){
             query += "AND `undergraduate`.`user_showcase` = 1";
         }
         query += ";";
@@ -386,7 +386,7 @@ router.get('/:indexNumber',function (req,res) {
                         getProfileGraphs(indexNumber)
                         .then((graphData)=>{
                             profileSummary.graphs = graphData;
-                            getOwnerInfo(indexNumber, req.facebookVerification.power || 0)
+                            getOwnerInfo(req.facebookVerification, indexNumber, req.facebookVerification.power || 0)
                                 .then((ownerInfo)=>{
                                     profileSummary.ownerInfo = ownerInfo;
                                     res.send(profileSummary);

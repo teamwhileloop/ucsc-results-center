@@ -258,6 +258,22 @@ router.get('/admins', function (req, res) {
     })
 });
 
+router.get('/admins/:power', function (req, res) {
+    let power = parseInt(req.params['power']) || 100;
+    const query = "SELECT `name`,`picture`,`power` FROM `facebook` WHERE `power` >= ? ORDER BY `power` DESC";
+    mysql.query(query, [power], function (err, payload) {
+        if (!err){
+            res.send(payload);
+        }else {
+            log.crit(err.sqlMessage, _.assignIn(err,{
+                meta: req.facebookVerification,
+                env: req.headers.host
+            }));
+            res.status(500).send({ error: err });
+        }
+    })
+});
+
 router.delete('/delete', function (req, res) {
     const query = "DELETE FROM facebook WHERE id=?";
     mysql.query(query,[req.facebookVerification.id], function(err,payload){

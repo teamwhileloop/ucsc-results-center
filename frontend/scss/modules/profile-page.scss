@@ -1,4 +1,30 @@
 div.profile-page.container{
+
+  .admin-box{
+    display: flex;
+    flex-direction: row;
+
+    .avatar-box{
+      padding: 0;
+      .admin-avatar{
+        height: 50px;
+        margin-right: 10px;
+        border-radius: 2px;
+        border: 1px solid #999;
+      }
+    }
+    .detail-box{
+      .name{
+        font-size: 16px;
+        line-height: 1.3rem;
+      }
+      .data{
+        font-size: 10px;
+        color: #666;
+      }
+    }
+  }
+
   padding-top: 20px;
 
   .privacy-info-box{
@@ -160,6 +186,27 @@ div.profile-page.container{
       h4.card-title {
         color: #5c5c5c;
         margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+
+        i {
+          margin-left: 5px;
+          font-size: 20px;
+
+          &.public {
+            color: $bootstrap-color-success;
+          }
+
+          &.shared {
+            color: $bootstrap-color-primary;
+          }
+
+          &.private {
+            color: $bootstrap-color-danger;
+          }
+
+
+        }
       }
 
       div.data-card-group {
