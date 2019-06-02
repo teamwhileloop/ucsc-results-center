@@ -146,11 +146,13 @@ app.use(bodyParser.json());
 const user = require('./routes/user');
 const admin = require('./routes/admin/admin');
 const apiV1 = require('./routes/api-v1');
+const publicAPI = require('./routes/public');
 const statistics = require('./routes/statistics');
 const webhook = require('./routes/webhook/fb-webhook');
 app.use('/user', user);
 app.use('/admin', admin);
 app.use('/v1.0', apiV1);
+app.use('/v1.1', publicAPI);
 app.use('/statistics', statistics);
 app.use('/webhook', webhook);
 

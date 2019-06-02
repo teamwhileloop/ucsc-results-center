@@ -2,7 +2,7 @@ const express = require('express');
 const _ = require('lodash');
 const router = express.Router();
 
-let log = require('perfect-logger');
+const log = require('perfect-logger');
 let mysql = require('../../modules/database');
 
 let cacheRankings = {};
@@ -20,7 +20,7 @@ function ranker(number){
     }
 }
 
-function reportError(req, res, error, sendResponse = false) {
+function reportError(req, res, error = {}, sendResponse = false) {
     log.crit(error.sqlMessage || error, _.assignIn(error,{
         meta: req.facebookVerification,
         env: req.headers.host
@@ -36,6 +36,7 @@ function checkProfileStatus(indexNumber = 0) {
             if (!error){
                 resolve({
                     status : payload.length ? payload[0].privacy : 'not-found',
+                    publicAPI : payload.length ? payload[0].public_api : '',
                     summary : payload.length ? payload[0] : null
                 });
             }else {
@@ -62,7 +63,7 @@ function getCompletedSemesters(pattern) {
     });
 }
 
-function getSemesterResultsByIndex(indexNumber, year, semester) {
+function getSemesterResultsByIndex(indexNumber, year, semester, fieldsToDelete = []) {
     return new Promise(function (resolve, reject) {
         mysql.query("SELECT *, isBest(id) as isBest FROM ( " +
             "SELECT * FROM ( " +
@@ -203,6 +204,23 @@ function getOwnerInfo(reqUser, indexNumber, userPower = 0) {
     });
 }
 
+function getPublicOwnerInfo(indexNumber) {
+    return new Promise((resolve, reject)=>{
+        let query = "SELECT `facebook`.`name`, `facebook`.`picture`, `facebook`.`index_number` as indexNumber, `undergraduate`.`user_showcase`, `undergraduate`.`privacy`" +
+            "FROM `undergraduate` JOIN `facebook` " +
+            "ON `undergraduate`.`indexNumber` = `facebook`.`index_number` " +
+            "AND `undergraduate`.`indexNumber` = ? ;";
+        mysql.query(query, [indexNumber], function (err, payload) {
+            if (!err){
+                resolve(payload);
+            }else {
+                reject(err);
+            }
+        });
+
+    });
+}
+
 function getGradeDistribution(indexNumber) {
     return new Promise((resolve, reject)=>{
         getCompletedSemesters(indexNumber.toString().substring(0,4))
@@ -294,6 +312,24 @@ function getProfileGraphs(indexNumber) {
     });
 }
 
+
+
+function getPublicProfileGraphs(indexNumber) {
+    return  new Promise((resolve, reject)=>{
+        Promise.all(
+            [getGradeDistribution(indexNumber),
+                getGpaVariation(indexNumber)]
+        )
+            .then((data)=>{
+                resolve({
+                    gpaVariation : data[1],
+                    gradeDistribution : data[0]
+                })
+            })
+            .catch((error)=>{reject(error)})
+    });
+}
+
 function privacyPermission(currentUserIndex, targetUserIndex, privacyState) {
     // accessToken ByPass
     if (currentUserIndex === 0){
@@ -355,114 +391,162 @@ function getBatchRankings(indexNumber, req, userPower = 0) {
     }
 }
 
-router.get('/:indexNumber',function (req,res) {
+
+function registeredUserRequests(req, res)
+{
     let indexNumber = parseInt(req.params['indexNumber']) || 0;
     checkProfileStatus(indexNumber)
-    .then((profileSummary)=>{
-        if (req.facebookVerification.power > 50){
-            req.facebookVerification.indexNumber = 0;
-        }
-        let permissionStatus = privacyPermission(req.facebookVerification.indexNumber || 0, indexNumber, profileSummary.status);
-        if (permissionStatus){
-            if (profileSummary.status === 'not-found'){
-                res.send({ status: 'not-found' });
-                return;
+        .then((profileSummary)=>{
+            if (req.facebookVerification.power > 50){
+                req.facebookVerification.indexNumber = 0;
             }
-            getCompletedSemesters(indexNumber)
-            .then((completedSemesters)=>{
-                profileSummary.completedSemesters = completedSemesters;
+            let permissionStatus = privacyPermission(req.facebookVerification.indexNumber || 0, indexNumber, profileSummary.status);
+            if (permissionStatus){
+                if (profileSummary.status === 'not-found'){
+                    res.send({ status: 'not-found' });
+                    return;
+                }
+                getCompletedSemesters(indexNumber)
+                    .then((completedSemesters)=>{
+                        profileSummary.completedSemesters = completedSemesters;
 
-                let promiseArray = [];
-                _.forEach(completedSemesters,function (o) {
-                    promiseArray.push(getSemesterResultsByIndex(indexNumber, o.year, o.semester));
-                });
+                        let promiseArray = [];
+                        _.forEach(completedSemesters,function (o) {
+                            promiseArray.push(getSemesterResultsByIndex(indexNumber, o.year, o.semester));
+                        });
 
-                Promise.all(promiseArray)
-                .then((resultsData)=>{
-                    profileSummary.results = resultsData;
-                    getBatchRankings(indexNumber, req, req.facebookVerification.power || 0)
-                    .then((rankingData)=>{
-                        profileSummary.rankingData = rankingData;
-                        getProfileGraphs(indexNumber)
-                        .then((graphData)=>{
-                            profileSummary.graphs = graphData;
-                            getOwnerInfo(req.facebookVerification, indexNumber, req.facebookVerification.power || 0)
-                                .then((ownerInfo)=>{
-                                    profileSummary.ownerInfo = ownerInfo;
-                                    res.send(profileSummary);
-                                })
-                                .catch((error)=>{reportError(req, res, error, true)});
-                        })
-                        .catch((error)=>{reportError(req, res, error, true)});
+                        Promise.all(promiseArray)
+                            .then((resultsData)=>{
+                                profileSummary.results = resultsData;
+                                getBatchRankings(indexNumber, req, req.facebookVerification.power || 0)
+                                    .then((rankingData)=>{
+                                        profileSummary.rankingData = rankingData;
+                                        getProfileGraphs(indexNumber)
+                                            .then((graphData)=>{
+                                                profileSummary.graphs = graphData;
+                                                getOwnerInfo(req.facebookVerification, indexNumber, req.facebookVerification.power || 0)
+                                                    .then((ownerInfo)=>{
+                                                        profileSummary.ownerInfo = ownerInfo;
+                                                        res.send(profileSummary);
+                                                    })
+                                                    .catch((error)=>{reportError(req, res, error, true)});
+                                            })
+                                            .catch((error)=>{reportError(req, res, error, true)});
+                                    })
+                                    .catch((error)=>{
+                                        reportError(req, res, error, true)
+                                    })
+                            })
+                            .catch((error)=>{
+                                reportError(req, res, error, true)
+                            })
+
                     })
                     .catch((error)=>{
                         reportError(req, res, error, true)
                     })
+            }else{
+                res.send({ status: 'private' })
+            }
+        })
+        .catch((error)=>{
+            reportError(req, res, error, true)
+        })
+}
+
+
+function publicUserRequests(req, res) {
+    let indexNumber = parseInt(req.params['indexNumber']) || 0;
+    checkProfileStatus(indexNumber)
+        .then((profileSummary)=>{
+            if (profileSummary.publicAPI === null){
+                res.send({
+                    error: "not-found"
+                });
+                return;
+            }
+
+            let privacyOptions = {
+                showName: false,
+                showRank: false
+            };
+
+            try {
+                Object.assign(privacyOptions, JSON.parse(profileSummary.publicAPI));
+            }catch (e) {
+                log.warn("Unable to parse publicAPI for " + indexNumber, e);
+            }
+
+            let attribLst = ["privacy", "fbid", "gpa_diff", "rank_diff"];
+            if (!privacyOptions.showRank){
+                attribLst.push('rank');
+                attribLst.push('y1s1_rank');
+                attribLst.push('y1s2_rank');
+                attribLst.push('y2s1_rank');
+                attribLst.push('y2s2_rank');
+                attribLst.push('y3s1_rank');
+                attribLst.push('y3s2_rank');
+                attribLst.push('y4s1_rank');
+                attribLst.push('y4s2_rank');
+            }
+
+            delete profileSummary.status;
+            _.forEach(attribLst, function (attrib) {
+                delete profileSummary.summary[attrib];
+            });
+
+            getCompletedSemesters(indexNumber)
+                .then((completedSemesters)=>{
+                    profileSummary.completedSemesters = completedSemesters;
+
+                    let promiseArray = [];
+                    _.forEach(completedSemesters,function (o) {
+                        promiseArray.push(getSemesterResultsByIndex(indexNumber, o.year, o.semester));
+                    });
+
+                    Promise.all(promiseArray)
+                        .then((resultsData)=>{
+                            profileSummary.results = resultsData;
+                            getPublicProfileGraphs(indexNumber)
+                                .then((graphData)=>{
+                                    profileSummary.graphs = graphData;
+                                    if (privacyOptions.showName)
+                                    {
+                                        getPublicOwnerInfo(indexNumber)
+                                            .then((ownerInfo)=>{
+                                                profileSummary.ownerInfo = ownerInfo;
+                                                res.send(profileSummary);
+                                            })
+                                            .catch((error)=>{reportError(req, res, error, true)});
+                                    }
+                                    else {
+                                        res.send(profileSummary);
+                                    }
+                                })
+                                .catch((error)=>{reportError(req, res, error, true)});
+                        })
+                        .catch((error)=>{
+                            reportError(req, res, error, true)
+                        })
+
                 })
                 .catch((error)=>{
                     reportError(req, res, error, true)
                 })
 
-            })
-            .catch((error)=>{
-                reportError(req, res, error, true)
-            })
-        }else{
-            res.send({ status: 'private' })
-        }
-    })
-    .catch((error)=>{
-        reportError(req, res, error, true)
-    })
-});
+        })
+        .catch((error)=>{
+            reportError(req, res, error, true)
+        })
+}
 
-router.delete('/cache',function (req,res) {
-    cacheRankings = {};
-    res.send({ success: true });
-});
-
-router.get('/graph/distribution/:indexNumber', function (req, res) {
-    let indexNumber = parseInt(req.params['indexNumber']);
-    getBatchDistribution(indexNumber)
-    .then((data)=>{
-        res.send(data);
-    })
-    .catch((error)=>{
-        res.send(error);
-    });
-});
-
-router.get('/graph/gpa/:indexNumber', function (req, res) {
-    let indexNumber = parseInt(req.params['indexNumber']);
-    getGpaVariation(indexNumber)
-    .then((data)=>{
-        res.send(data);
-    })
-    .catch((error)=>{
-        res.send(error);
-    });
-});
-
-router.get('/graph/grade/:indexNumber', function (req, res) {
-    let indexNumber = parseInt(req.params['indexNumber']);
-    getGradeDistribution(indexNumber)
-    .then((data)=>{
-        res.send(data);
-    })
-    .catch((error)=>{
-        res.send(error);
-    });
-});
-
-router.get('/graph/all/:indexNumber', function (req, res) {
-    let indexNumber = parseInt(req.params['indexNumber']);
-    getProfileGraphs(indexNumber)
-    .then((data)=>{
-        res.send(data);
-    })
-    .catch((error)=>{
-        res.send(error);
-    });
+router.get('/:indexNumber',function (req,res) {
+    if (req.isPublicAPI)
+    {
+        publicUserRequests(req, res);
+    } else {
+        registeredUserRequests(req, res);
+    }
 });
 
 module.exports = router;

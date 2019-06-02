@@ -1,0 +1,137 @@
+<div class="container public-profile-page">
+    <div class="card loader" ng-if="loadingData">
+        <loading-indicator loader-text="loaderText"></loading-indicator>
+    </div>
+    <div ng-if="!loadingData && visibility === 'not-found'">
+        <div class="card privacy-info-box">
+            <img src="../../../../public/img/not_found.png">
+            <div class="title">The index number '{{ indexNumber }}' does not exits</div>
+            <div class="description">We don't have any records associated with the index number ({{ indexNumber }}) you are looking for. </div>
+        </div>
+    </div>
+    <div ng-if="!loadingData && visibility === 'visible'">
+        <div class="row results-section">
+            <div class="col-lg-6">
+                <semester semester-data="resultSemester" summary="summary" ng-repeat="resultSemester in resultSets" hide-options="true"></semester>
+            </div>
+            <div class="col-lg-6 standard-card">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="user-data">
+                            <img ng-if="profileOwnerInfo.picture"
+                                 onerror="this.src='../../../../public/img/default_user.png'"
+                                 ng-src="{{ profileOwnerInfo.picture }}">
+                            <div class="text">
+                                <h4 class="card-title">{{ profileOwnerInfo.name || 'Overview of ' + indexNumber }}</h4>
+                                <h6 class="card-subtitle mb-2">{{ profileOwnerInfo.indexNumber ? "Index Number: " + profileOwnerInfo.indexNumber + " | Last updated : "  : "Last updated : "}}{{ lastUpdate }}</h6>
+                            </div>
+                        </div>
+                        <div class="row data-card-group">
+                            <div class="col-lg-4 data-card">
+                                <div class="data-card-data">{{ gpa | number:3 }}</div>
+                                <div class="data-card-title">
+                                    Current GPA
+                                </div>
+                            </div>
+                            <div class="col-lg-4 data-card" ng-if="rank">
+                                <div class="data-card-data">#{{ rank }}</div>
+                                <div class="data-card-title">
+                                    Current Rank
+                                </div>
+                            </div>
+                            <div class="col-lg-4 data-card">
+                                <div class="data-card-data">{{ total_credits }}</div>
+                                <div class="data-card-title">
+                                    Total Credits
+                                </div>
+                            </div>
+                        </div>
+                        <h6 class="description">
+                            A grade point of 4.25 is used to calculate the GPA and the Rank instead of using 4.0 for both the grades A and A+. Total credits includes the Non-GPA Enhancement subjects. If there are multiple attempts on a single subject the highest grade will be obtained. If the obtained grade is above C+ and is not the first legit attempt on the subject, a grade point of 2.25 will be awarded for the subject.
+                        </h6>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Semester GPA Variation</h4>
+                        <highchart style="height: 300px;" hc-options="gpaVariation"></highchart>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Contribution to GPA by Grade</h4>
+                        <h6 class="card-subtitle mb-2">Click on the legends to toggle it's visibility</h6>
+                        <highchart hc-options="gradeDistribution"></highchart>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="systemAdministrators" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Profile Visibility</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="list-group">
+                        <p class="text"> {{ privacyText(profileOwnerInfo.privacy, profileOwnerInfo.user_showcase,indexNumber) }}</p>
+                        <p class="text" onclick="$('#systemAdministrators').modal('hide')">Goto <a href="/#!/account-settings">Account Settings</a> to change the visibility of your profile and name</p>
+                        <a ng-repeat="admin in admins"
+                           class="list-group-item list-group-item-action flex-column align-items-start"
+                           style="padding: 0.5rem 1rem;"
+                        >
+                            <div class="admin-box">
+                                <div class="avatar-box">
+                                    <img alt="{{ admin.name }}"
+                                         ng-src="{{ admin.picture }}"
+                                         onerror="this.src='../../../../public/img/default_user.png'"
+                                         class="admin-avatar" />
+                                </div>
+                                <div class="detail-box">
+                                    <div class="name">{{ admin.name }}</div>
+                                    <div class="">
+                    <span class="badge" ng-class="{
+                        'badge-success': admin.power == 100,
+                        'badge-primary': admin.power == 60,
+                        'badge-info': admin.power == 50
+                    }">{{ getRankName(admin.power) }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="publicNotice" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Important Notice</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="font-size: 12px;text-align: justify;">
+                This site is neither affiliated with the Examination Branch of University of Colombo School of Computing nor the University of Colombo School of Computing itself. The formulas and methodologies
+                used by this system may not be the same the formulas and methodologies used to calculate you GPA, Rank and your class by the Examination Department of University of Colombo School of Computing. Therefore, the data and the methodologies used
+                by this system can be wrong, and the administrator or any attached partners of the system is not responsible for any kind of result/loss occurred by using the information generated by this system.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal">I understood</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#publicNotice').modal({})
+</script>

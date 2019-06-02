@@ -7,7 +7,7 @@
                 <i class="material-icons">show_chart</i>
                 Analytics</button>
         </div>
-        <md-menu md-position-mode="target-right target" >
+        <md-menu md-position-mode="target-right target" ng-if="!semesterCtrl.hideOptions">
             <md-button aria-label="Options" class="md-icon-button" ng-click="$mdMenu.open($event)">
                 <i class="material-icons" style="color: #fff">more_vert</i>
             </md-button>
@@ -24,7 +24,7 @@
             <div class="semester-data">{{ semesterCtrl.summary['y'+ semesterCtrl.semesterData.year +'s'+ semesterCtrl.semesterData.semester +'_gpa'] }}</div>
             <div class="semester-data-label">Semester GPA</div>
         </div>
-        <div class="semester-data-box">
+        <div class="semester-data-box" ng-if="semesterCtrl.summary['y'+ semesterCtrl.semesterData.year +'s'+ semesterCtrl.semesterData.semester +'_rank']">
             <div class="semester-data">#{{ semesterCtrl.summary['y'+ semesterCtrl.semesterData.year +'s'+ semesterCtrl.semesterData.semester +'_rank'] }}</div>
             <div class="semester-data-label">Semester Rank</div>
         </div>

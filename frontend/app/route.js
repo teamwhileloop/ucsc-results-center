@@ -146,6 +146,10 @@ app.config(function($routeProvider) {
                 loggedInUser : applicationAuthenticator
             }
         })
+        .when("/public-profile/:indexNumber",{
+            controller: 'PublicProfilePageController',
+            templateUrl:'public/html/modules/public-profile/view.html'
+        })
         .when("/account-settings",{
             templateUrl:'public/html/modules/privacy/view.html',
             controller: 'PrivacyController',

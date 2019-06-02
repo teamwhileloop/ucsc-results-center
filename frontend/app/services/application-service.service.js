@@ -6,6 +6,9 @@ app.service('ApplicationService',function ($rootScope) {
         closeSideBar: function () {
             $rootScope.$broadcast('sidebar.close');
         },
+        publicMode: function () {
+            $rootScope.$broadcast('pageHeader.publicMode');
+        },
         displayPageHeader: function (options = {}) {
             $rootScope.$broadcast('pageHeader.show',options);
         },

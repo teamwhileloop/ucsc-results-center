@@ -1,0 +1,45 @@
+<md-dialog style="width: 700px" class="stat-view">
+    <div class="md-toolbar-tools" ng-if="pageTitle.length">
+        <h2>{{ pageTitle }}</h2>
+        <span flex></span>
+        <md-icon class="md-secondary material-icons md-light md-48" style="cursor: pointer"
+                 ng-click="cancel()"
+                 aria-label="Delete">close</md-icon>
+        </md-button>
+    </div>
+    <div ng-cloak>
+        <md-content>
+            <md-tabs md-dynamic-height md-border-bottom>
+                <md-tab label="overall">
+                    <md-content class="md-padding">
+                        <form ng-cloak style="overflow: hidden;background-color: white;">
+                            <md-dialog-content>
+                                <div layout="column" layout-align="center center" class="loading-indicator-cmp" ng-if="subjectdata === undefined">
+                                    <md-progress-circular md-mode="indeterminate" md-diameter="40px"></md-progress-circular>
+                                    <div class="info-text">Loading statistics</div>
+                                </div>
+
+                                <highchart hc-options="subjectdata" ng-if="subjectdata != undefined"></highchart>
+                            </md-dialog-content>
+                        </form>
+                    </md-content>
+                </md-tab>
+                <md-tab label="count">
+                    <md-content class="md-padding">
+                        <form ng-cloak style="overflow: hidden;background-color: white;">
+                            <md-dialog-content>
+                                <div layout="column" layout-align="center center" class="loading-indicator-cmp" ng-if="subjectdata === undefined">
+                                    <md-progress-circular md-mode="indeterminate" md-diameter="40px"></md-progress-circular>
+                                    <div class="info-text">Loading statistics</div>
+                                </div>
+
+                                <highchart hc-options="subjectdatanumb" ng-if="subjectdatanumb != undefined"></highchart>
+                            </md-dialog-content>
+                        </form>
+                    </md-content>
+                </md-tab>
+            </md-tabs>
+        </md-content>
+    </div>
+</md-dialog>
+

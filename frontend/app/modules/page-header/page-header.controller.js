@@ -14,6 +14,7 @@ app.controller('PageHeaderController',function ($scope,
     $scope.mainSearchEnabled = false;
     $scope.showMobileSearch = false;
     $scope.userDetails = false;
+    $scope.publicMode = false;
     this.userRegistered = false;
 
     this.selectedItem = {};
@@ -128,6 +129,10 @@ app.controller('PageHeaderController',function ($scope,
 
     $scope.$on('navigationIndicator.hide', (_event, _args)=> {
         $scope.navigationIndicatorVisibility = false;
+    });
+
+    $scope.$on('pageHeader.publicMode', (_event, _args)=> {
+        $scope.publicMode = true;
     });
 
     function userDataUpdate()

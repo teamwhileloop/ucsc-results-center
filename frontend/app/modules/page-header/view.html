@@ -7,7 +7,7 @@
             </div>
         </div>
         <div class="page-header-box-middle"></div>
-        <div class="page-header-user-root" ng-click="goToProfile(userDetails.indexNumber)">
+        <div class="page-header-user-root" ng-click="goToProfile(userDetails.indexNumber)" ng-if="!publicMode">
             <img src="{{ userDetails.picture.data.url }}">
             <div class="user-data-box" id="userdatabox">
                 <div class="user-data-name">{{ userDetails.name || 'Unknown User' }}</div>
@@ -15,7 +15,7 @@
             </div>
         </div>
 
-        <div class="page-header-box-right">
+        <div class="page-header-box-right" ng-if="!publicMode">
             <div class="side-button mobile-search" id="mobile-search">
                 <md-button class="md-icon-button" aria-label="Search" ng-click="displayMobileSearch()">
                     <md-icon class="material-icons md-light md-48">search</md-icon>
