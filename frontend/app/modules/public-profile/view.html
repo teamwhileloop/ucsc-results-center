@@ -1,43 +1,28 @@
-<div class="container profile-page">
+<div class="container public-profile-page">
     <div class="card loader" ng-if="loadingData">
         <loading-indicator loader-text="loaderText"></loading-indicator>
-    </div>
-    <div ng-if="!loadingData && visibility === 'private'">
-        <div class="card privacy-info-box">
-            <img src="../../../../public/img/lock.png">
-            <div class="title">This profile is private</div>
-            <div class="description">Privacy settings of this profile owner is restricting you from viewing it. Learn more about profile privacy from the <a href="/#!/privacy">Profile Privacy Settings Page</a></div>
-        </div>
     </div>
     <div ng-if="!loadingData && visibility === 'not-found'">
         <div class="card privacy-info-box">
             <img src="../../../../public/img/not_found.png">
             <div class="title">The index number '{{ indexNumber }}' does not exists</div>
-            <div class="description">We don't have any records associated with the index number ({{ indexNumber }}) you are looking for. Please use the search to navigate through profiles.</div>
+            <div class="description">We don't have any records associated with the index number ({{ indexNumber }}) you are looking for. </div>
         </div>
     </div>
     <div ng-if="!loadingData && visibility === 'visible'">
-        <div class="row summary-row">
-            <div class="col-lg-8">
-                <div class="card result-summary-card">
+        <div class="row results-section">
+            <div class="col-lg-6">
+                <semester semester-data="resultSemester" summary="summary" ng-repeat="resultSemester in resultSets" hide-options="true"></semester>
+            </div>
+            <div class="col-lg-6 standard-card">
+                <div class="card">
                     <div class="card-body">
                         <div class="user-data">
                             <img ng-if="profileOwnerInfo.picture"
                                  onerror="this.src='../../../../public/img/default_user.png'"
                                  ng-src="{{ profileOwnerInfo.picture }}">
                             <div class="text">
-                                <h4 class="card-title">{{ profileOwnerInfo.name || 'Overview of ' + indexNumber }}
-                                    <i class="material-icons"
-                                       data-toggle="modal" data-target="#systemAdministrators"
-                                       ng-if="myIndexNumber == indexNumber || loggedInUser.power >= 60"
-                                       ng-class="{
-                                        'public': profileOwnerInfo.privacy == 'public',
-                                        'shared': profileOwnerInfo.privacy == 'shared',
-                                        'private': profileOwnerInfo.privacy == 'private'
-                                    }">lock
-                                        <md-tooltip md-direction="right">{{ privacyText(profileOwnerInfo.privacy, profileOwnerInfo.user_showcase,indexNumber) }}</md-tooltip>
-                                    </i>
-                                </h4>
+                                <h4 class="card-title">{{ profileOwnerInfo.name || 'Overview of ' + indexNumber }}</h4>
                                 <h6 class="card-subtitle mb-2">{{ profileOwnerInfo.indexNumber ? "Index Number: " + profileOwnerInfo.indexNumber + " | Last updated : "  : "Last updated : "}}{{ lastUpdate }}</h6>
                             </div>
                         </div>
@@ -47,17 +32,11 @@
                                 <div class="data-card-title">
                                     Current GPA
                                 </div>
-                                <div class="data-card-diff">
-                                    <i class="material-icons {{ gpaDiffIcon }}">{{ gpaDiffIcon }}</i> {{ gpa_diff | number:3 }} Points
-                                </div>
                             </div>
-                            <div class="col-lg-4 data-card">
+                            <div class="col-lg-4 data-card" ng-if="rank">
                                 <div class="data-card-data">#{{ rank }}</div>
                                 <div class="data-card-title">
                                     Current Rank
-                                </div>
-                                <div class="data-card-diff">
-                                    <i class="material-icons {{ rankDiffIcon }}">{{ rankDiffIcon }}</i> {{ rank_diff }} Position(s)
                                 </div>
                             </div>
                             <div class="col-lg-4 data-card">
@@ -72,37 +51,6 @@
                         </h6>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="card result-summary-card {{ classColor }}">
-                    <div class="card-body">
-                        <h4 class="card-title">Degree Information</h4>
-                        <div class="col-sm-12 degree-data-box">
-                            <div class="degree-name">
-                                {{ degreeCode }}
-                            </div>
-                        </div>
-                        <h6 class="description code-names">
-                            Code names for the classes are as follow, FC for First Class degree, SU for Second Upper degree, SL for Second Lower degree, NM for Normal degree and -- indicates that your GPA is insufficient to complete the degree.
-                        </h6>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row standard-card">
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title">GPA Distribution</h4>
-                    <h6 class="card-subtitle mb-2">Your GPA will be rounded to the first decimal point.</h6>
-                    <highchart hc-options="batchDistribution"></highchart>
-                </div>
-            </div>
-        </div>
-        <div class="row results-section">
-            <div class="col-lg-6">
-                <semester semester-data="resultSemester" summary="summary" ng-repeat="resultSemester in resultSets"></semester>
-            </div>
-            <div class="col-lg-6 standard-card">
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Semester GPA Variation</h4>
@@ -114,24 +62,6 @@
                         <h4 class="card-title">Contribution to GPA by Grade</h4>
                         <h6 class="card-subtitle mb-2">Click on the legends to toggle it's visibility</h6>
                         <highchart hc-options="gradeDistribution"></highchart>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title">Batch Ranking</h4>
-                        <h6 class="card-subtitle mb-2">Last updated : {{ lastUpdate }}</h6>
-                        <div>
-                            <ul class="list-group">
-                                <li ng-repeat="person in rankList"
-                                    ng-click="goToProfile(person.indexNumber)"
-                                    class="list-group-item ranking-item {{ myIndexNumber.toString() === person.indexNumber.toString() ? 'active' : 'nope' }}">
-                                    <div ng-if="person.gpa !== undefined" class="rank">#{{ person.rank }}</div>
-                                    <div ng-if="person.gpa !== undefined" class="name">{{ person.name || person.indexNumber }}</div>
-                                    <div ng-if="person.gpa !== undefined" class="gpa">{{ person.gpa | number:4 }}</div>
-                                    <div ng-if="person.gpa === undefined" class="private">Private Account</div>
-                                </li>
-                            </ul>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -181,3 +111,27 @@
     </div>
 </div>
 
+<div class="modal fade" id="publicNotice" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Important Notice</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="font-size: 12px;text-align: justify;">
+                This site is neither affiliated with the Examination Branch of University of Colombo School of Computing nor the University of Colombo School of Computing itself. The formulas and methodologies
+                used by this system may not be the same the formulas and methodologies used to calculate you GPA, Rank and your class by the Examination Department of University of Colombo School of Computing. Therefore, the data and the methodologies used
+                by this system can be wrong, and the administrator or any attached partners of the system is not responsible for any kind of result/loss occurred by using the information generated by this system.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal">I understood</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#publicNotice').modal({})
+</script>

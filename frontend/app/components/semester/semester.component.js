@@ -2,7 +2,8 @@ app.component('semester', {
     templateUrl: 'public/html/components/semester/view.html',
     bindings: {
         semesterData: '=',
-        summary: '='
+        summary: '=',
+        hideOptions: '='
     },
     controller: function semsterController($scope, $localStorage, $rootScope){
         this.ranker = (number) => {
@@ -19,6 +20,7 @@ app.component('semester', {
         };
 
         this.check = $rootScope.onlyBest;
+        $scope.hideOptions = this.hideOptions;
 
         $scope.getSemesterTitle = () =>{
             return this.ranker(this.semesterData.year) + ' Year ' + this.ranker(this.semesterData.semester) + ' Semester'
