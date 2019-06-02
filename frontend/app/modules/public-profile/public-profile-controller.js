@@ -173,7 +173,7 @@ app.controller('PublicProfilePageController',function (
 
                 $scope.summary = data.data.summary;
                 $scope.resultSets = data.data.results.reverse();
-                $scope.profileOwnerInfo = data.data.ownerInfo[0] || {};
+                $scope.profileOwnerInfo = data.data.ownerInfo ? data.data.ownerInfo[0] || {} : {};
 
                 $scope.total_credits = data.data.summary.credits;
             }

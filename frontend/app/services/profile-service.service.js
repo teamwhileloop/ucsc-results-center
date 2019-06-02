@@ -60,6 +60,12 @@ app.service('ProfileService',function ($rootScope, FacebookService, $http, apiCl
         },
         deleteAccount: function () {
             return apiClient.delete('/user/delete');
+        },
+        getPublicProfileSettings: function () {
+            return apiClient.get('/user/public-profile');
+        },
+        setPublicProfileSettings: function (settings = {}) {
+            return apiClient.post('/user/public-profile', settings);
         }
     };
 });

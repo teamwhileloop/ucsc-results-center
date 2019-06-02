@@ -165,6 +165,21 @@ app.config(function($routeProvider) {
                 loggedInUser : applicationAuthenticator
             }
         })
+        .when("/public-profile-settings",{
+            templateUrl:'public/html/modules/public-profile-setup/view.html',
+            controller: 'PublicProfileSetupController',
+            controllerAs: 'ctrlPubliProfileCtrl',
+            resolve : {
+                navText : function (ApplicationService, $routeParams, $location) {
+                    ApplicationService.showNavigationIndicator({
+                        icon: 'swap_horiz',
+                        enabled: true,
+                        text: 'Navigating to Public Profile Settings'
+                    });
+                },
+                loggedInUser : applicationAuthenticator
+            }
+        })
         .when("/notifications",{
             templateUrl:'public/html/modules/notification-settings/view.html',
             controller: 'NotificationSettingsController',

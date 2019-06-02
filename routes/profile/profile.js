@@ -467,14 +467,23 @@ function publicUserRequests(req, res) {
             }
 
             let privacyOptions = {
+                enabled: false,
                 showName: false,
                 showRank: false
             };
 
             try {
-                Object.assign(privacyOptions, JSON.parse(profileSummary.publicAPI));
+                const parsedData = JSON.parse(profileSummary.publicAPI);
+                Object.assign(privacyOptions, parsedData);
             }catch (e) {
                 log.warn("Unable to parse publicAPI for " + indexNumber, e);
+            }
+
+            if (privacyOptions.enabled === false){
+                res.send({
+                    error: "not-found"
+                });
+                return;
             }
 
             let attribLst = ["privacy", "fbid", "gpa_diff", "rank_diff"];
@@ -510,8 +519,7 @@ function publicUserRequests(req, res) {
                             getPublicProfileGraphs(indexNumber)
                                 .then((graphData)=>{
                                     profileSummary.graphs = graphData;
-                                    if (privacyOptions.showName)
-                                    {
+                                    if (privacyOptions.showName) {
                                         getPublicOwnerInfo(indexNumber)
                                             .then((ownerInfo)=>{
                                                 profileSummary.ownerInfo = ownerInfo;
