@@ -1,0 +1,441 @@
+div.public-profile-page.container{
+
+  .admin-box{
+    display: flex;
+    flex-direction: row;
+
+    .avatar-box{
+      padding: 0;
+      .admin-avatar{
+        height: 50px;
+        margin-right: 10px;
+        border-radius: 2px;
+        border: 1px solid #999;
+      }
+    }
+    .detail-box{
+      .name{
+        font-size: 16px;
+        line-height: 1.3rem;
+      }
+      .data{
+        font-size: 10px;
+        color: #666;
+      }
+    }
+  }
+
+  padding-top: 20px;
+
+  .privacy-info-box{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 50px 0 20px 0;
+
+    img{
+      margin-bottom: 20px;
+    }
+
+    .title{
+      font-size: 28px;
+      font-weight: 500;
+      color: #666;
+    }
+
+    .description{
+      font-size: 10px;
+      width: 420px;
+      text-align: center;
+      color: #999;
+      margin: 10px 0 10px 0;
+    }
+  }
+
+  div.card.loader{
+    margin-top: 50px;
+    padding: 40px;
+  }
+
+  .summary-row {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+
+    & > div {
+      padding: 5px;
+    }
+
+    .result-summary-card {
+      background-color: #fff;
+      color: #333;
+      height: 100%;
+
+      &.degree-fc {
+        background-color: $bootstrap-color-primary;
+
+        h4.card-title {
+          color: #ddd;
+          margin-bottom: 10px;
+        }
+
+        .degree-data-box {
+          color: #fff;
+          text-align: center;
+          font-size: 5.5em;
+        }
+      }
+
+      &.degree-su {
+        background-color: #28a745;
+
+        h4.card-title {
+          color: #fff;
+          margin-bottom: 10px;
+        }
+
+        .degree-data-box {
+          color: #fff;
+          text-align: center;
+          font-size: 5.5em;
+        }
+      }
+
+      &.degree-sl {
+        background-color: $bootstrap-color-info;
+
+        h4.card-title {
+          color: #fff;
+          margin-bottom: 10px;
+        }
+
+        .degree-data-box {
+          color: #fff;
+          text-align: center;
+          font-size: 5.5em;
+        }
+      }
+
+      &.degree-na {
+        background-color: $white;
+
+        h4.card-title {
+          color: #333;
+          margin-bottom: 10px;
+        }
+
+        .degree-data-box {
+          color: $black;
+          text-align: center;
+          font-size: 5.5em;
+        }
+
+        h6.description.code-names{
+          color: #666 !important;
+        }
+      }
+
+      &.degree-no {
+        background-color: $bootstrap-color-danger;
+
+        h4.card-title {
+          color: #fff;
+          margin-bottom: 10px;
+        }
+
+        .degree-data-box {
+          color: #fff;
+          text-align: center;
+          font-size: 5.5em;
+        }
+      }
+
+      .card-subtitle {
+        color: #999;
+        font-size: 10px;
+        font-weight: 100;
+        font-family: sans-serif;
+      }
+
+      h6.description {
+        color: #999;
+        font-size: 10px;
+        font-weight: 100;
+        font-family: sans-serif;
+
+        &.code-names{
+          color: #fff;
+        }
+      }
+
+      h4.card-title {
+        color: #5c5c5c;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+
+        i {
+          margin-left: 5px;
+          font-size: 20px;
+          cursor: pointer;
+
+          &.public {
+            color: $bootstrap-color-success;
+          }
+
+          &.shared {
+            color: $bootstrap-color-primary;
+          }
+
+          &.private {
+            color: $bootstrap-color-danger;
+          }
+
+
+        }
+      }
+    }
+  }
+
+  .standard-card {
+    padding: 5px;
+    .card {
+      width: 100%;
+    }
+
+    .card-body{
+      .user-data{
+        display: flex;
+
+        img{
+          height: 50px;
+          width: 50px;
+          border-radius: 5px;
+          margin: 0 14px 0 0;
+        }
+
+        .text{
+          padding-top: 2px;
+        }
+      }
+
+      div.data-card-group {
+        padding: 5px 0 20px 0;
+        justify-content: center;
+
+        .data-card {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+
+          .data-card-data {
+            color: #333;
+            font-size: 3.1em;
+          }
+
+          .data-card-title {
+            color: #999;
+          }
+
+          .data-card-diff{
+            display: flex;
+            flex-direction: row;
+            font-size: 10px;
+            i{
+              font-size: 12px;
+              font-weight: bold;
+              padding: 0 4px;
+
+              &.arrow_upward{
+                color: green;
+              }
+
+              &.arrow_downward{
+                color: red;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .card-subtitle {
+      color: #999;
+      font-size: 10px;
+      font-weight: 100;
+      font-family: sans-serif;
+    }
+
+    h6.description {
+      color: #ccc;
+      font-size: 10px;
+      font-weight: 100;
+    }
+
+    h4.card-title {
+      color: #5c5c5c;
+      margin-bottom: 10px;
+    }
+  }
+
+  .results-section{
+    & > div{
+      padding : 5px;
+    }
+
+    .card{
+      margin-bottom: 20px;
+    }
+
+    .semseter-header{
+      padding-right: 10px;
+      background-color: #2B3A48;
+      height: 60px;
+      display: flex;
+      flex-direction: row;
+
+      span{
+        flex: 1;
+      }
+
+      .heading{
+        display : flex;
+        flex-direction: column;
+        justify-content: center;
+        align-content: center;
+        color: #fff;
+        font-size: 18px;
+      }
+
+      .buttons{
+        display : flex;
+        flex-direction: column;
+        justify-content: center;
+        align-content: center;
+
+        button{
+          background-color: #2B3A48;
+          padding: 5px 10px 5px 5px;
+          display: flex;
+          flex-direction: row;
+          border: 1px solid #2B3A48;
+          border-radius: 5px;
+          color: #fff;
+          cursor: pointer;
+          transition: all 0.2s linear;
+
+          &:hover{
+            border: 1px solid #a8d2ff;
+          }
+
+          i{
+            margin: 0 5px;
+          }
+        }
+      }
+    }
+
+    .result-item{
+      display: flex;
+      padding: 5px 20px;
+      flex-direction: row;
+      transition: all 0.2s linear;
+
+      &.not-best{
+        background-color: #edd;
+      }
+
+      .subject-info{
+        flex: 1;
+
+        .subject-name{
+          color: #333;
+          font-size: 1em;
+          padding: 5px 0 0 0;
+        }
+
+        .subject-meta{
+          color: #999;
+          font-size: 10px;
+        }
+      }
+
+      .subject-grade{
+        display: flex;
+        flex-firection: column;
+        align-content: center;
+        justify-content: start;
+        width: 60px;
+        font-size: 2em;
+        font-weight: bold;
+        color: #333;
+      }
+    }
+
+  }
+
+  text.highcharts-credits{
+    display:none;
+  }
+
+  .ranking-item{
+    cursor: pointer;
+    display : flex;
+    flex-direction: row;
+
+    .name{
+      flex: 1;
+    }
+
+    .rank{
+      width: 40px;
+      text-align: right;
+      margin: 0 25px 0 0;
+    }
+
+    .private{
+      width: 100%;
+      text-align: center;
+      color: #ccc;
+    }
+  }
+
+  .semester-data-row{
+    display: flex;
+    flex-direction: row;
+    margin: 10px 0px;
+
+    .semester-data-box{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      flex: 1;
+
+      .semester-data{
+        font-size: 2em;
+        font-weight: 600;
+        color: #333;
+      }
+
+      .semester-data-label{
+        color: #999;
+        font-size: 0.8em;
+      }
+    }
+  }
+}
+
+.stat-view{
+  md-tabs{
+    background-color: white;
+
+    md-content{
+      background-color: white;
+
+      form{
+        overflow: hidden;
+      }
+    }
+  }
+}

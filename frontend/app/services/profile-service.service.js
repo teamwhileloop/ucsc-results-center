@@ -12,6 +12,9 @@ app.service('ProfileService',function ($rootScope, FacebookService, $http, apiCl
         getProfileResults: function (indexNumber = 0) {
             return apiClient.get(`/v1.0/profile/${indexNumber}`);
         },
+        getPublicProfileResults: function (indexNumber = 0) {
+            return apiClient.get(`/v1.1/profile/${indexNumber}`);
+        },
         searchUndergraduate: function (query = 0) {
             let deferred = $q.defer();
             apiClient.get(`/v1.0/search/undergraduate/${query}`).then((response)=>{
@@ -57,6 +60,12 @@ app.service('ProfileService',function ($rootScope, FacebookService, $http, apiCl
         },
         deleteAccount: function () {
             return apiClient.delete('/user/delete');
+        },
+        getPublicProfileSettings: function () {
+            return apiClient.get('/user/public-profile');
+        },
+        setPublicProfileSettings: function (settings = {}) {
+            return apiClient.post('/user/public-profile', settings);
         }
     };
 });

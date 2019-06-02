@@ -243,6 +243,93 @@ router.get('/privacy',function (req, res) {
         })
 });
 
+router.get('/public-profile',function (req, res) {
+    mysql.query(
+        'SELECT `undergraduate`.`public_api` as `publicAPI`' +
+        'FROM ' +
+        '`facebook` ' +
+        'JOIN `undergraduate` ' +
+        'ON `facebook`.`index_number` = `undergraduate`.`indexNumber` ' +
+        'AND `facebook`.`id` = ? ' +
+        'AND `facebook`.`state` = \'verified\'',
+        [req.facebookVerification.id],
+        function (error, payload) {
+            if (!error){
+                if (payload.length === 1){
+                    let privacyOptions = {
+                        enabled: false,
+                        showName: false,
+                        showRank: false
+                    };
+
+                    try {
+                        const parsedData = JSON.parse(payload[0].publicAPI);
+                        privacyOptions = Object.assign(privacyOptions, parsedData)
+                    }
+                    catch (e) {}
+                    res.send(privacyOptions);
+                }else{
+                    res.status(400).send({ error: 'User must be verified state' });
+                }
+            }else{
+                log.crit(error.sqlMessage, _.assignIn(error,{
+                    meta: req.facebookVerification,
+                    env: req.headers.host
+                }));
+                res.status(500).send({ error: error });
+            }
+        })
+});
+
+router.post('/public-profile',function (req, res) {
+    log.debug(`Public Profile update request received from ${req.facebookVerification.name}`);
+    log.writeData(req.body);
+
+    let privacyOptions = {
+        enabled: req.body.enabled === true,
+        showName: req.body.showName === true,
+        showRank: req.body.showRank === true
+    };
+
+    mysql.query(
+        'SELECT `undergraduate`.`privacy` ' +
+        'FROM ' +
+        '`facebook` ' +
+        'JOIN `undergraduate` ' +
+        'ON `facebook`.`index_number` = `undergraduate`.`indexNumber` ' +
+        'AND `facebook`.`id` = ? ' +
+        'AND `facebook`.`state` = \'verified\'',
+        [req.facebookVerification.id],
+        function (error, payload) {
+            if (!error){
+                if (payload.length === 1){
+                    mysql.query(
+                        'UPDATE `undergraduate` SET `public_api` = ? WHERE `undergraduate`.`indexNumber` = ?',
+                        [JSON.stringify(privacyOptions), req.facebookVerification.indexNumber],
+                        function (error_write, payload_write) {
+                            if (!error_write){
+                                res.send(payload_write);
+                            }else{
+                                log.crit(error_write.sqlMessage, _.assignIn(error_write,{
+                                    meta: req.facebookVerification,
+                                    env: req.headers.host
+                                }));
+                                res.status(500).send({ error: error_write });
+                            }
+                        })
+                }else{
+                    res.status(400).send({ error: 'User must be verified state' });
+                }
+            }else{
+                log.crit(error.sqlMessage, _.assignIn(error,{
+                    meta: req.facebookVerification,
+                    env: req.headers.host
+                }));
+                res.status(500).send({ error: error });
+            }
+        })
+});
+
 router.get('/admins', function (req, res) {
     const query = "SELECT `name`,`picture`,`power`, (`index_number` LIKE ?) as batchRep FROM `facebook` WHERE `power` > 10 ORDER BY `power` DESC";
     mysql.query(query, [(req.facebookVerification.indexNumber || '00').toString().substr(0,2) + '%'], function (err, payload) {
@@ -286,7 +373,7 @@ router.delete('/delete', function (req, res) {
                 log.info(`User profile ${req.facebookVerification.name}(@${req.facebookVerification.state}) deleted as requested.`);
                 if (req.facebookVerification.indexNumber){
                     mysql.query(
-                        'UPDATE `undergraduate` SET `privacy` = \'public\', `user_showcase` = 0 WHERE `undergraduate`.`indexNumber` = ?',
+                        'UPDATE `undergraduate` SET `privacy` = \'public\', `user_showcase` = 0, `public_api` = NULL WHERE `undergraduate`.`indexNumber` = ?',
                         [req.facebookVerification.indexNumber],
                         function (error_write, payload_write) {
                             if (!error_write){

@@ -1,0 +1,29 @@
+<div class="container public-profile-setup-page">
+
+    <div class="card loader" ng-if="loadingData">
+        <loading-indicator loader-text="loaderText"></loading-indicator>
+    </div>
+
+    <div class="card" ng-if="!loadingData && verfiedUser">
+        <h2>Public Academic Profile Settings</h2>
+        <p>Public Academic Profile is a version of your academic profile with a little more control over the content which can be easily accessed without logging into the system.
+            You can include this link your CV to showcase your academic profile</p>
+        <md-switch class="md-primary" name="special" ng-model="settings.enabled"  ng-change="saveChanges()">
+            Enable Public Profile
+        </md-switch>
+        <div class="alert alert-primary" role="alert"  ng-if="settings.enabled">
+            <b>Public Profile Link: </b> <a ng-href="https://{{hostName}}/#!/public-profile/{{indexNumber}}" target="_blank">{{hostName}}/#!/public-profile/{{indexNumber}}</a>
+            <br>
+            Anyone with the above link now can view your Public Profile
+        </div>
+        <md-input-container class="md-block" ng-if="settings.enabled">
+            <md-checkbox name="tos" ng-model="settings.showName" ng-change="saveChanges()">
+                Show my full name
+            </md-checkbox>
+            <br>
+            <md-checkbox name="tos" ng-model="settings.showRank" ng-change="saveChanges()">
+                Show my rank
+            </md-checkbox>
+        </md-input-container>
+    </div>
+</div>

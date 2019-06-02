@@ -92,6 +92,7 @@ messenger.alertDeveloper(`Initializing UCSC Results Center Web Server: ${log.get
 let privateKey;
 let certificate;
 let httpsCredentials;
+let certauth;
 
 // Global Variables
 global.maintananceMode = {
@@ -115,7 +116,8 @@ global.monitoring = {
 if (credentials.isDeployed){
     privateKey  = fs.readFileSync(credentials.ssl.key, 'utf8');
     certificate = fs.readFileSync(credentials.ssl.cert, 'utf8');
-    httpsCredentials = {key: privateKey, cert: certificate};
+    certauth = fs.readFileSync(credentials.ssl.ca, 'utf8');
+    httpsCredentials = {key: privateKey, cert: certificate, ca: certauth};
     log.info(`Server initializing in Production Mode. Domain: ${sysconfig.domain}`)
 }else{
     log.info("Server initializing in Development Mode")
@@ -144,11 +146,13 @@ app.use(bodyParser.json());
 const user = require('./routes/user');
 const admin = require('./routes/admin/admin');
 const apiV1 = require('./routes/api-v1');
+const publicAPI = require('./routes/public');
 const statistics = require('./routes/statistics');
 const webhook = require('./routes/webhook/fb-webhook');
 app.use('/user', user);
 app.use('/admin', admin);
 app.use('/v1.0', apiV1);
+app.use('/v1.1', publicAPI);
 app.use('/statistics', statistics);
 app.use('/webhook', webhook);
 

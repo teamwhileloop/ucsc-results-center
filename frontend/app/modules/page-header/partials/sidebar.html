@@ -28,6 +28,11 @@
             <i class="material-icons">settings</i> Account Settings
         </div>
         <div class="sidebar-button"
+             ng-if="userDetails.state === 'verified'"
+             ng-click="goToPath('/public-profile-settings')">
+            <i class="material-icons">public</i> Public Academic Profile
+        </div>
+        <div class="sidebar-button"
              ng-click="goToPath('/feedback/submit')">
             <i class="material-icons">feedback</i> Send Feedback / Bug Reports
         </div>
