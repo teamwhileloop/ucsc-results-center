@@ -3,6 +3,7 @@ let log = require('perfect-logger');
 let credentials = require('./modules/credentials');
 const sysconfig = require('./modules/configurations');
 let mysql = require('./modules/database');
+const events = require('./modules/events');
 
 log.setLogDirectory(sysconfig.logDirectory);
 log.setLogFileName("ucscresultcenter-web");
