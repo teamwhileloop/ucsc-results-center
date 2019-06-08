@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const _ = require('lodash');
 const request = require('request');
+const fbPage = require('../../../modules/facebook-page');
 
 const log = require('perfect-logger');
 
@@ -61,6 +62,12 @@ router.get('/run-backup/:name', function (req, res) {
             });
         }
     });
+});
+
+router.get('/test-fb', function (req,res) {
+    log.warn("Facebook Test Post was requested by " + req.facebookVerification.name);
+    fbPage.createPost(`This is a test post requested by : ${req.facebookVerification.name} on ${new Date()}`);
+    res.send({});
 });
 
 module.exports = router;

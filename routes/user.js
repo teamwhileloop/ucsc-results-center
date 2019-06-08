@@ -283,7 +283,6 @@ router.get('/public-profile',function (req, res) {
 
 router.post('/public-profile',function (req, res) {
     log.debug(`Public Profile update request received from ${req.facebookVerification.name}`);
-    log.writeData(req.body);
 
     let privacyOptions = {
         enabled: req.body.enabled === true,
