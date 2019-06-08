@@ -23,6 +23,19 @@ def submitDataSet(datasetJSON):
     logger.crit("Dataset submission failed: " + resp.text)
     return False
 
+
+def publishFacebookPost():
+    headers = {
+        'accessToken': os.environ['RESCENT_ACCESS_TOKEN'],
+        'Content-Type': 'application/json'
+    }
+    resp = requests.post(domain + '/admin/result/facebook/publish', data='', headers=headers)
+    if (resp.status_code == 200):
+        logger.info("Facebook Post Published")
+        return True
+    logger.warn("Unbale to publish Facebook Post")
+    return False
+
 def recalculate(pattern):
     headers = {
         'accessToken': os.environ['RESCENT_ACCESS_TOKEN'],

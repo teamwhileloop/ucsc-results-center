@@ -38,12 +38,10 @@ const socketIO = require('./index');
 const bodyParser = require('body-parser');
 const messenger = require('./modules/messenger');
 
-function loggerCallback(data = {}){
-    if (data.details && data.details.skipFacebookMessenger === true)
-        return;
 
+function loggerCallback(data = {}){
     if (data.code === 'WARN' || data.code === 'CRIT'){
-        messenger.sendToEventSubscribers('system_warn_err_thrown', `Event Raised: ${data.code}\n${data.message}`);
+        events.trigger('system_warn_err_thrown', data);
     }
 }
 

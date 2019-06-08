@@ -1,3 +1,5 @@
-module.exports = function f() {
-    console.log(arguments)
+const fbPage = require('../modules/facebook-page');
+
+module.exports = function (body) {
+    fbPage.createPost(body);
 };

@@ -21,11 +21,11 @@ exports.trigger = function(eventName){
         return;
     }
 
-    log.debug(`Triggereing event: ${eventName}`);
+    registeredEvents[eventName].apply(this, Array.prototype.slice.call(arguments, 1));
     try {
-        registeredEvents[eventName].apply(this, Array.prototype.slice.call(arguments, 1));
+
     } catch (e) {
-        log.warn(`Error on event: ${eventName}`, e);
+        log.warn(`Error on event: ${eventName}`);
     }
 
 };
