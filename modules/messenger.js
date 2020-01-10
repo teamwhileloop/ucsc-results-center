@@ -94,7 +94,6 @@ exports.sendToEventSubscribers = function(event, message, messageTypeTag = 'APPL
 
 
             log.debug(`Sending Facebook Messenger message to ${row.psid}`);
-            log.writeData(request_body);
 
             request(Object.assign(basicTemplate, {"json": request_body}), (err, res, body) => {
                 if (err){

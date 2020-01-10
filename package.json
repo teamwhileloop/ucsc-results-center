@@ -37,7 +37,7 @@
     "mysql": "^2.15.0",
     "ngstorage": "^0.3.11",
     "nodemailer": "^4.7.0",
-    "perfect-logger": "^1.5.2",
+    "perfect-logger": "^1.6.1",
     "popper.js": "^1.14.6",
     "run-sequence": "^2.2.0",
     "socket.io": "^2.2.0",

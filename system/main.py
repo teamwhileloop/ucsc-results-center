@@ -232,6 +232,7 @@ while True:
             for pattern in converter.affectedIndexes:
                 logger.info("Recalculating for pattern: " + str(pattern))
                 resultcenter.recalculate(pattern)
+            resultcenter.publishFacebookPost()
         nextScan = int(waitTime)
     else:
         nextScan = 60

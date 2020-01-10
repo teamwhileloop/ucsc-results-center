@@ -15,6 +15,7 @@ exports.postman = {
 
 exports.facebook = {
     pageToken: process.env.FB_PAGE_TOKEN,
+    pagePostToken: process.env.FB_PAGE_POST_TOKEN,
     verifyToken: process.env.FB_VERIFY_TOKEN
 };
 

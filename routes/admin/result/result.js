@@ -5,12 +5,15 @@ const messenger = require('../../../modules/messenger');
 
 const log = require('perfect-logger');
 const mysql = require('../../../modules/database');
+const fbPage = require('../../../modules/facebook-page');
+
+let releasedSubjects = [];
 
 function validateSubject(subjectCode = '') {
     return new Promise(function (resolve,reject) {
-        mysql.query('SELECT COUNT(`code`) as count FROM `subject` WHERE `code` = ?', [subjectCode], function (error, payload) {
+        mysql.query('SELECT * FROM `subject` WHERE `code` = ?', [subjectCode], function (error, payload) {
             if (!error){
-                resolve(payload[0]['count'] === 1);
+                resolve(payload);
             }else {
                 reject(error);
             }
@@ -107,8 +110,8 @@ router.post('/dataset',function (req,res) {
     }
 
     validateSubject(subjectCode)
-    .then((subjectCodeValidity)=>{
-        if (subjectCodeValidity){
+    .then((subjectCodeValidityReport)=>{
+        if (subjectCodeValidityReport.length > 0){
             createNewDatasetEntry(subjectCode, req.facebookVerification.id || 'API Token')
             .then((datasetId)=>{
                 let mainQuery = 'INSERT INTO `result` (`index`, `subject`, `grade`, `examYear`, `dataset`) VALUES ';
@@ -129,6 +132,11 @@ router.post('/dataset',function (req,res) {
                         mysql.query(query,function (error_insertion, payload_insertion) {
                             if (!error_insertion){
                                 log.info(`Dataset for ${subjectCode} examination year ${examYear} processing completed. ${failedTasks.length} indexes failed.`);
+                                releasedSubjects.push({
+                                    subjectCode: subjectCode,
+                                    subjectName: subjectCodeValidityReport[0].name,
+                                    examinationYear: examYear
+                                })
                                 res.header('datasetId' , datasetId );
                                 res.send({
                                     success: true,
@@ -222,5 +230,19 @@ router.get('/last-datasets/:qt', function (req, res) {
         }
     })
 });
+
+router.post('/facebook/publish', function (req, res) {
+    let i = 0;
+    let msg = "New Results Released:\n";
+    for (i = 0; i < releasedSubjects.length; i++)
+    {
+        const subject = releasedSubjects[i];
+        msg += `- ${subject.subjectCode} ${subject.subjectName} [${subject.examinationYear}]\n`
+    }
+    msg += '\nVisit https://www.ucscresult.club to view your results.\nThis is an automated message.'
+    fbPage.createPost(msg);
+    releasedSubjects = [];
+    res.send({});
+})
 
 module.exports = router;
