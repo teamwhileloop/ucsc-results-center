@@ -4,7 +4,8 @@
   "description": "Unofficial Results Center for University of Colombo School of Computing",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "cd frontend; gulp release; cd ..; node index.js"
   },
   "author": "Team whileLOOP",
   "license": "MIT",
