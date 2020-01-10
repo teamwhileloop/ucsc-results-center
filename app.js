@@ -111,16 +111,6 @@ global.monitoring = {
     forceScan: false
 };
 
-// Setup Logger
-if (credentials.isDeployed){
-    privateKey  = fs.readFileSync(credentials.ssl.key, 'utf8');
-    certificate = fs.readFileSync(credentials.ssl.cert, 'utf8');
-    certauth = fs.readFileSync(credentials.ssl.ca, 'utf8');
-    httpsCredentials = {key: privateKey, cert: certificate, ca: certauth};
-    log.info(`Server initializing in Production Mode. Domain: ${sysconfig.domain}`)
-}else{
-    log.info("Server initializing in Development Mode")
-}
 log.debug(`Hostname: ${os.hostname()}`);
 
 privacyPolicy  = fs.readFileSync('privacy.txt', 'utf8');
@@ -133,12 +123,6 @@ app.engine('html', require('ejs').renderFile);
 http.listen(port, function(){
     log.info('Server started and listening on PORT ' + port);
 });
-// Setup HTTPS
-if (credentials.isDeployed){
-    https.listen(443, function(){
-        log.info('Server started and listening on PORT ' + 443);
-    });
-}
 
 // Route Imports and Config
 app.use(bodyParser.json());
