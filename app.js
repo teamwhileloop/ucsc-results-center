@@ -145,14 +145,6 @@ app.use('/cdn',express.static(path.join(__dirname, 'node_modules')));
 
 // Routing
 app.get('/', function(req, res) {
-    // Redirect HTTPS traffic to HTTPS on production environment
-    if (credentials.isDeployed && (!req.secure || req.headers.host !== sysconfig.domain)){
-        res.writeHead(302, {
-            'Location': `https://${sysconfig.domain}/`
-        });
-        res.end();
-        return;
-    }
     if (!global.maintananceMode.status){
         res.render('templates/web/index.html');
     }else {
