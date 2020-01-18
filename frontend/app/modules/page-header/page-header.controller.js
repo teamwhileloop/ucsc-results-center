@@ -85,11 +85,6 @@ app.controller('PageHeaderController',function ($scope,
         $scope.showMobileSearch = false;
     };
 
-    socket.on('statistics', function(response){
-        $scope.statistics = response;
-        $scope.$apply();
-    });
-
     $scope.$on('sidebar.open', (_event, _args)=> {
         $mdSidenav('sidebar').open();
     });
@@ -134,11 +129,6 @@ app.controller('PageHeaderController',function ($scope,
     $scope.$on('pageHeader.publicMode', (_event, _args)=> {
         $scope.publicMode = true;
     });
-
-    function userDataUpdate()
-    {
-        socket.emit('usr-auth', { name: $scope.userDetails ? $scope.userDetails.name : "Facebook User"});
-    }
 
     function showNotifications() {
         ProfileService.getAlerts()

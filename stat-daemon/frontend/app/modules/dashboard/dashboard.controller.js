@@ -1,9 +1,4 @@
 app.controller('DashBoardController',function ($scope,$rootScope) {
-    socket.on('stat-daemon-data', function(response){
-        $scope.data = response;
-        $scope.$apply();
-    });
-
     $scope.smartTime = function (time) {
         const now = new Date();
         console.log(time);
