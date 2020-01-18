@@ -27,7 +27,7 @@ app.controller('ProfilePageController',function (
     $scope.loadingData = true;
     $scope.indexNumber = indexNumber;
     $scope.myIndexNumber = loggedInUser.indexNumber;
-    $scope.loaderText = 'Loading profile data from servers';
+    $scope.loaderText = 'Loading profile data from Heroku Servers';
     $scope.gpa = 'NA';
     $scope.rank = 'NA';
     $scope.summary = {};
@@ -78,21 +78,42 @@ app.controller('ProfilePageController',function (
                     $scope.rankDiffIcon = 'arrow_downward';
                 }
 
-                if (data.data.summary.gpa >= 3.5){
-                    $scope.degreeCode = 'FC';
-                    $scope.classColor = 'degree-fc';
-                }else if (data.data.summary.gpa >= 3.25){
-                    $scope.degreeCode = 'SU';
-                    $scope.classColor = 'degree-su';
-                }else if (data.data.summary.gpa >= 3.0){
-                    $scope.degreeCode = 'SL';
-                    $scope.classColor = 'degree-sl';
-                }else if (data.data.summary.gpa >= 2.0){
-                    $scope.degreeCode = 'NM';
-                    $scope.classColor = 'degree-na';
-                }else{
-                    $scope.degreeCode = '--';
-                    $scope.classColor = 'degree-no';
+                const batch = parseInt(String(indexNumber).substr(0,2));
+
+                if (batch < 17) {
+                    if (data.data.summary.gpa >= 3.5){
+                        $scope.degreeCode = 'FC';
+                        $scope.classColor = 'degree-fc';
+                    }else if (data.data.summary.gpa >= 3.25){
+                        $scope.degreeCode = 'SU';
+                        $scope.classColor = 'degree-su';
+                    }else if (data.data.summary.gpa >= 3.0){
+                        $scope.degreeCode = 'SL';
+                        $scope.classColor = 'degree-sl';
+                    }else if (data.data.summary.gpa >= 2.0){
+                        $scope.degreeCode = 'NM';
+                        $scope.classColor = 'degree-na';
+                    }else{
+                        $scope.degreeCode = '--';
+                        $scope.classColor = 'degree-no';
+                    }
+                } else {
+                    if (data.data.summary.gpa >= 3.7){
+                        $scope.degreeCode = 'FC';
+                        $scope.classColor = 'degree-fc';
+                    }else if (data.data.summary.gpa >= 3.3){
+                        $scope.degreeCode = 'SU';
+                        $scope.classColor = 'degree-su';
+                    }else if (data.data.summary.gpa >= 3.0){
+                        $scope.degreeCode = 'SL';
+                        $scope.classColor = 'degree-sl';
+                    }else if (data.data.summary.gpa >= 2.0){
+                        $scope.degreeCode = 'NM';
+                        $scope.classColor = 'degree-na';
+                    }else{
+                        $scope.degreeCode = '--';
+                        $scope.classColor = 'degree-no';
+                    }
                 }
 
                 let highlightPos = data.data.graphs.batchDistribution.keys.indexOf(data.data.summary.gpa.toFixed(1));

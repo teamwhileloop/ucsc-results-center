@@ -52,7 +52,7 @@ def brain(txt):
     elif (txt.lower().startswith('wh')):    # Results Withheld
         return {'grade': 'F'}
     else:
-        return None
+        return {}
 
 
 def writeToFile(filePath, data):
