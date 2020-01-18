@@ -44,11 +44,6 @@ app.controller('LoginController',function (
         this.authStatus = 'unknown';
     }
 
-    socket.on('statistics', function(response){
-        $scope.statistics = response;
-        $scope.$apply();
-    });
-
     this.userLoggedIn = ()=>{
         FacebookService.reAuthenticate(false).then(() => {
             ProfileService.validateUser()
