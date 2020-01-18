@@ -73,7 +73,6 @@ def jsonGenerator(xmlData, url, forcedSubjectCode = None):
     xmlString = xml.etree.ElementTree.tostring(root, encoding='utf8', method='xml').strip().decode('utf-8')
     fontIndex = getFontResultIndex(xmlString)
     for text in root.findall(".//text[@font='" + fontIndex + "']"):
-        print(text.text)
         result = brain(text.text)
         if 'index' in result:
             indexStack.append(result['index'])
