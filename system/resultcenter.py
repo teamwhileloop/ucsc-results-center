@@ -3,7 +3,7 @@ import os
 import logger
 import json
 
-#domain = "https://www.ucscresult.com"
+#domain = "https://ucscresults.herokuapp.com/"
 domain = "http://127.0.0.1"
 if 'DEV_ENV' in os.environ and os.environ['DEV_ENV'].lower() == 'true':
     logger.info("Developer Testing Environment detected")

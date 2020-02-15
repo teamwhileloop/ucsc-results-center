@@ -31,7 +31,7 @@ function ActionGetResult(user, indexNumber) {
 
 function ActionSubscribe(user, token) {
     if (token === ""){
-        user.SendTextReply("Please use the syntax: SUBSCRIBE <TOKEN>\n\nYou can get your token from www.ucscresult.com");
+        user.SendTextReply("Please use the syntax: SUBSCRIBE <TOKEN>\n\nYou can get your token from https://ucscresults.herokuapp.com/");
         return;
     }
 

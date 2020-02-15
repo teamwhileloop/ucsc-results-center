@@ -239,7 +239,7 @@ router.post('/facebook/publish', function (req, res) {
         const subject = releasedSubjects[i];
         msg += `- ${subject.subjectCode} ${subject.subjectName} [${subject.examinationYear}]\n`
     }
-    msg += '\nVisit https://www.ucscresult.club to view your results.\nThis is an automated message.'
+    msg += '\nVisit https://ucscresults.herokuapp.com/ to view your results.\nThis is an automated message.'
     fbPage.createPost(msg);
     releasedSubjects = [];
     res.send({});

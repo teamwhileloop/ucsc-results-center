@@ -56,7 +56,7 @@ module.exports = function() {
         if (accessToken && crypto.createHash('sha1').update(accessToken).digest('hex') === credentials.accessToken){
             req.accessTokenUsed = true;
             req.facebookVerification = {
-                email: 'administrator@ucscresult.com',
+                email: 'administrator@ucscresults.herokuapp.com',
                 first_name: 'Default',
                 last_name: 'Administrator',
                 gender: 'male',
