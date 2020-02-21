@@ -164,7 +164,7 @@ function setSemesterRankings(pattern, column, updateColumn){
                         mysql.query(`INSERT INTO \`undergraduate\`
                                         (  \`indexNumber\`,\`${updateColumn}\`) 
                                     VALUES ${valuesQuery} 
-                                    ON DUPLICATE KEY UPDATE \`${updateColumn}\` = VALUES(${updateColumn});`,
+                                    ON DUPLICATE KEY UPDATE \`${updateColumn}\` = VALUES(\`${updateColumn}\`);`,
                         function (error_update, payload_update) {
                             if (!error_update){
                                 resolve(payload_update);
