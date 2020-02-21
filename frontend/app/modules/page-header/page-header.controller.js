@@ -92,7 +92,6 @@ app.controller('PageHeaderController',function ($scope,
     $scope.$on('pageHeader.user.update', (_event, args)=> {
         $scope.userDetails = args;
         if (!this.userRegistered){
-            userDataUpdate();
             if($scope.userDetails.power > 0){
                 showNotifications();
             }
