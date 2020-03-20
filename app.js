@@ -112,7 +112,7 @@ global.monitoring = {
 };
 
 
-log.info(`Server initializing in `(credentials.isDeployed ? 'Production' : 'Development')` mode. Domain: ${sysconfig.domain}`);
+log.info(`Server initializing in ${credentials.isDeployed ? 'Production' : 'Development'} mode. Domain: ${sysconfig.domain}`);
 log.debug(`Hostname: ${os.hostname()}`);
 
 privacyPolicy  = fs.readFileSync('privacy.txt', 'utf8');
