@@ -51,8 +51,10 @@ def brain(txt):
         return comp
     elif (txt.lower().startswith('wh')):    # Results Withheld
         return {'grade': 'F'}
+    elif (txt.lower().startswith('w/h')):    # Results Withheld
+        return {'grade': 'F'}
     else:
-        return None
+        return {}
 
 
 def writeToFile(filePath, data):

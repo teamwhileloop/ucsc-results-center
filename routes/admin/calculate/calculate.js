@@ -39,6 +39,41 @@ function getGradePoint(grade){
     }
 }
 
+function getGradePointV2(grade){
+    switch (grade){
+        case "A+":
+            return 4.0;
+        case "A":
+            return 4.0;
+        case "A-":
+            return 3.7;
+        case "B+":
+            return 3.3;
+        case "B":
+            return 3.0;
+        case "B-":
+            return 2.7;
+        case "C+":
+            return 2.3;
+        case "C":
+            return 2.0;
+        case "C-":
+            return 1.7;
+        case "D+":
+            return 1.3;
+        case "D":
+            return 1.0;
+        case "D-":
+            return 0.0;
+        case "E":
+            return 0.0;
+        case "F":
+            return 0.0;
+        default:
+            return 0;
+    }
+}
+
 function reportError(req, res, error, sendResponse = false) {
     log.crit(error.sqlMessage, _.assignIn(error,{
         meta: req.facebookVerification,
@@ -47,6 +82,15 @@ function reportError(req, res, error, sendResponse = false) {
     if (sendResponse){
         res.status(500).send({ error: error });
     }
+}
+
+function getGradePointUsingIndex(indexNumber = '00', grade) {
+    const batch = ( parseInt(String(indexNumber).substr(0,2)));
+    if (batch < 17) {
+        return getGradePoint(grade);
+    }
+
+    return getGradePointV2(grade);
 }
 
 function getUndergraduates(pattern) {
@@ -120,7 +164,7 @@ function setSemesterRankings(pattern, column, updateColumn){
                         mysql.query(`INSERT INTO \`undergraduate\`
                                         (  \`indexNumber\`,\`${updateColumn}\`) 
                                     VALUES ${valuesQuery} 
-                                    ON DUPLICATE KEY UPDATE \`${updateColumn}\` = VALUES(${updateColumn});`,
+                                    ON DUPLICATE KEY UPDATE \`${updateColumn}\` = VALUES(\`${updateColumn}\`);`,
                         function (error_update, payload_update) {
                             if (!error_update){
                                 resolve(payload_update);
@@ -160,10 +204,10 @@ function calculateUndergraduateSemesterGPA(indexNumber, semesterInfo) {
                         results: resultsCollection
                     })
                 }
-                _.forEach(filteredCollection,function (result) {
+                _.forEach(filteredCollection,(result) => {
                     credits += result.credits;
                     nonGpaCredits += result.nonGpaCredits;
-                    gpa += getGradePoint(result.grade) * result.credits;
+                    gpa += getGradePointUsingIndex(indexNumber, result.grade) * result.credits;
                     progress++;
                     if (progress === filteredCollection.length){
                         gpaval = 0;

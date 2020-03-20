@@ -111,34 +111,19 @@ global.monitoring = {
     forceScan: false
 };
 
-// Setup Logger
-if (credentials.isDeployed){
-    privateKey  = fs.readFileSync(credentials.ssl.key, 'utf8');
-    certificate = fs.readFileSync(credentials.ssl.cert, 'utf8');
-    certauth = fs.readFileSync(credentials.ssl.ca, 'utf8');
-    httpsCredentials = {key: privateKey, cert: certificate, ca: certauth};
-    log.info(`Server initializing in Production Mode. Domain: ${sysconfig.domain}`)
-}else{
-    log.info("Server initializing in Development Mode")
-}
+
+log.info(`Server initializing in `(credentials.isDeployed ? 'Production' : 'Development')` mode. Domain: ${sysconfig.domain}`);
 log.debug(`Hostname: ${os.hostname()}`);
 
 privacyPolicy  = fs.readFileSync('privacy.txt', 'utf8');
 
 // Setup Express
 const http = require('http').Server(app);
-const https = require('https').Server(httpsCredentials, app);
 app.set('views', __dirname + '/');
 app.engine('html', require('ejs').renderFile);
 http.listen(port, function(){
     log.info('Server started and listening on PORT ' + port);
 });
-// Setup HTTPS
-if (credentials.isDeployed){
-    https.listen(443, function(){
-        log.info('Server started and listening on PORT ' + 443);
-    });
-}
 
 // Route Imports and Config
 app.use(bodyParser.json());
@@ -161,14 +146,6 @@ app.use('/cdn',express.static(path.join(__dirname, 'node_modules')));
 
 // Routing
 app.get('/', function(req, res) {
-    // Redirect HTTPS traffic to HTTPS on production environment
-    if (credentials.isDeployed && (!req.secure || req.headers.host !== sysconfig.domain)){
-        res.writeHead(302, {
-            'Location': `https://${sysconfig.domain}/`
-        });
-        res.end();
-        return;
-    }
     if (!global.maintananceMode.status){
         res.render('templates/web/index.html');
     }else {
@@ -248,4 +225,4 @@ if (credentials.isDeployed || true){
 }
 
 
-module.exports = credentials.isDeployed ? https : http;
+module.exports = http;
