@@ -242,7 +242,7 @@ if (credentials.isDeployed || true){
 if (process.env.SELF_TERMINATE)
 {
     const timeout = parseInt(process.env.SELF_TERMINATE) * 1000 * 60;
-    log.info(`Starting self termination timer: ${rocess.env.SELF_TERMINATE} min(s)`);
+    log.info(`Starting self termination timer: ${process.env.SELF_TERMINATE} min(s)`);
     setInterval(()=>{
         if (killLock) {
             log.debug('Avoiding self termination due to kill lock');
