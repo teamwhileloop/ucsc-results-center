@@ -86,12 +86,14 @@ function logDatabaseCallback(data){
 
 log.setCallback(loggerCallback);
 log.setDatabaseCallback(logDatabaseCallback);
-messenger.alertDeveloper(`Initializing UCSC Results Center Web Server: ${log.getLogFileName()}`);
+// messenger.alertDeveloper(`Initializing UCSC Results Center Web Server: ${log.getLogFileName()}`);
 
 let privateKey;
 let certificate;
 let httpsCredentials;
 let certauth;
+let apiSessionHits = 0;
+let killLock = false;
 
 // Global Variables
 global.maintananceMode = {
@@ -127,6 +129,19 @@ http.listen(port, function(){
 
 // Route Imports and Config
 app.use(bodyParser.json());
+app.use((req,res,next)=>{
+    if (req.header('kill-lock') !== undefined && parseInt(req.header('kill-lock')) >= 0) {
+        const tmpKillLock = parseInt(req.header('kill-lock')) === 1;
+        if (tmpKillLock !== killLock) {
+            killLock = tmpKillLock;
+            log.debug(`Updating kill-lock to : ${killLock}`);
+        }
+    }
+    else if (req.header('internal') === undefined){
+        apiSessionHits += 1;
+    }
+    next();
+});
 const user = require('./routes/user');
 const admin = require('./routes/admin/admin');
 const apiV1 = require('./routes/api-v1');
@@ -223,6 +238,34 @@ if (credentials.isDeployed || true){
         clearInterval(interval);
     }, 100);
 }
+
+if (process.env.SELF_TERMINATE)
+{
+    const timeout = parseInt(process.env.SELF_TERMINATE) * 1000 * 60;
+    log.info(`Starting self termination timer: ${rocess.env.SELF_TERMINATE} min(s)`);
+    setInterval(()=>{
+        if (killLock) {
+            log.debug('Avoiding self termination due to kill lock');
+            apiSessionHits = 0;
+            return;
+        }
+
+        if (apiSessionHits > 0)
+        {
+            log.debug(`Avoiding self termination due to user activity. ReqCount: ${apiSessionHits}`);
+            apiSessionHits = 0;
+            return;
+        }
+
+        log.info("Self terminating");
+        const exec = require("child_process").exec;
+        exec("shutdown -h now", (error, stdout, stderr) => {
+            log.writeData(error || stdou || stderr);
+        })
+
+    }, timeout)
+}
+
 
 
 module.exports = http;

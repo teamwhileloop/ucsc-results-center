@@ -214,7 +214,7 @@ if stabilizeMode:
 logger.info("Monitoring client Activated.", True)
 while True:
     converter.clearAffectedIndexes()
-    resultcenter.ping("Initializing Scan")
+    resultcenter.ping("Initializing Scan", '1')
     logger.info("Scanning for changes. Itteration number: #" + str(itterationNumber))
     pdfUrlList = None
     nextScan = 0
@@ -239,7 +239,7 @@ while True:
     itterationNumber += 1
     logger.info("Running next scan in " + str(nextScan) + "s")
     for i in range(nextScan):
-        resp = resultcenter.ping("Next scan in " + str(nextScan - i) + "s")
+        resp = resultcenter.ping("Next scan in " + str(nextScan - i) + "s", '0')
         if (resp == "100"):
             logger.info("Running a force scan")
             break

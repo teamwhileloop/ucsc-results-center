@@ -13,7 +13,8 @@ if 'DEV_ENV' in os.environ and os.environ['DEV_ENV'].lower() == 'true':
 def submitDataSet(datasetJSON):
     headers = {
         'accessToken': os.environ['RESCENT_ACCESS_TOKEN'],
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'internal': '1'
     }
     # return True # DEBUG SKIP
     resp = requests.post(domain + '/admin/result/dataset', data=datasetJSON, headers=headers)
@@ -27,7 +28,8 @@ def submitDataSet(datasetJSON):
 def publishFacebookPost():
     headers = {
         'accessToken': os.environ['RESCENT_ACCESS_TOKEN'],
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'internal': '1'
     }
     resp = requests.post(domain + '/admin/result/facebook/publish', data='', headers=headers)
     if (resp.status_code == 200):
@@ -39,7 +41,8 @@ def publishFacebookPost():
 def recalculate(pattern):
     headers = {
         'accessToken': os.environ['RESCENT_ACCESS_TOKEN'],
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'internal': '1'
     }
     resp = requests.post(domain + '/admin/calculate/pattern/' + pattern, headers=headers)
     if (resp.status_code == 200):
@@ -48,10 +51,11 @@ def recalculate(pattern):
     logger.crit("Recalculation for pattern " + pattern + " failed. " + resp.text)
     return False
 
-def ping(status):
+def ping(status, killLock = '-1'):
     headers = {
         'accessToken': os.environ['RESCENT_ACCESS_TOKEN'],
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'kill-lock': killLock
     }
     try:
         resp = requests.post(domain + '/admin/monitoring/ping', data=json.dumps({
