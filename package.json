@@ -30,7 +30,7 @@
     "gulp-uglifycss": "^1.0.8",
     "gulp-util": "^3.0.8",
     "gulp-watch": "^4.3.11",
-    "highcharts": "^6.0.3",
+    "highcharts": "^7.2.2",
     "jquery": "^3.2.1",
     "lodash": "^4.17.4",
     "mysql": "^2.15.0",
